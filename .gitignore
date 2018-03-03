@@ -1,0 +1,8 @@
+*~
+*.pcm
+plots/*
+ROOTfiles
+hist/*
+*.so
+.root_history
+*.d
