@@ -6,3 +6,7 @@ hist/*
 *.so
 .root_history
 *.d
+*.pdf
+*.png
+
+

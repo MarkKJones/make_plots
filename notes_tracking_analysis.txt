@@ -1,0 +1,97 @@
+Study of tracking
+-----------------
+Study the effect of different tracking cuts.
+Modified code so that in the LeftRight selection,
+  the stub with Xpdiff = XP - K*X cut is rejected
+
+
+
+
+Analyze 100,000 events SHMS Run 1583
+
+p3of4     :  	163622 	[ 2.662 kHz ]
+pPR_HI    :	60895	[ 0.991 kHz ]
+pEL_HI    :	57367	[ 0.933 kHz ]
+pEL_REAL  :	129729	[ 2.111 kHz ]
+pEL_CLEAN :	53645	[ 0.873 kHz ]
+
+P1X : 957441 [ 15.579 kHz ] AND between + and - sides of P1X 
+P1Y : 727393 [ 11.836 kHz ] AND between + and - sides of P1Y
+P2X : 752456 [ 12.244 kHz ] AND between + and - sides of P2X
+P2Y : 339446 [ 5.523 kHz ] AND between + and - sides of P2Y
+
+P1XP1Y : 1369817 [ 22.289 kHz ] AND between P1X and P1Y planes 
+P2XP2Y : 874276 [ 14.226 kHz ] AND between P2X and P2Y planes    
+
+Setting 20
+----------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 0
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.400000
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.9670 +-   0.0008
+E SING FID TRACK EFFIC         :   0.9718 +-   0.0008
+HADRON SING FID TRACK EFFIC    :   0.9712 +-   0.0007
+
+
+Setting   18
+--------------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 0
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.400000
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.9799 +-   0.0006
+E SING FID TRACK EFFIC         :   0.9847 +-   0.0006
+HADRON SING FID TRACK EFFIC    :   0.9841 +-   0.0006
+
+Setting 17
+-----------
+pstub_max_xpdiff : 1000
+pfind_Stuball : 0
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.400000
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.8902 +-   0.0015
+E SING FID TRACK EFFIC         :   0.8958 +-   0.0015
+HADRON SING FID TRACK EFFIC    :   0.8945 +-   0.0014
+
+Setting 16
+-----------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 0
+  pxt_track_criterion : 100
+  pyt_track_criterion : 100
+  pxpt_track_criterion : 1
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.9906 +-   0.0004
+E SING FID TRACK EFFIC         :   0.9933 +-   0.0004
+HADRON SING FID TRACK EFFIC    :   0.9932 +-   0.0004
+
+Setting 15
+-----------
+pstub_max_xpdiff : 1000
+pfind_Stuball : 0
+  pxt_track_criterion : 100
+  pyt_track_criterion : 100
+  pxpt_track_criterion : 1
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.9681 +-   0.0008
+E SING FID TRACK EFFIC         :   0.9717 +-   0.0008
+HADRON SING FID TRACK EFFIC    :   0.9709 +-   0.0008
+
+Setting 19
+-----------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 1
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.200000
+  pypt_track_criterion : 1
+SING FID TRACK EFFIC           :   0.8712 +-   0.0016
+E SING FID TRACK EFFIC         :   0.8741 +-   0.0016
+HADRON SING FID TRACK EFFIC    :   0.8740 +-   0.0016
