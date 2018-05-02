@@ -29,7 +29,6 @@ void comp_hms_trig(TString basename, TString basename1) {
  gStyle->SetLabelSize(0.04,"XY");
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
-     TString outputpdf;
   static const Int_t adcnum=9;
  const char* adcname[adcnum]={
    "hASUM_adc",
@@ -99,6 +98,7 @@ void comp_hms_trig(TString basename, TString basename1) {
    "hPRE200_tdc"
 };
 //
+     TString outputpdf;
  outputpdf="plots/"+basename+"_hms_trig.pdf";
   TString inputroot;
    TFile *fhistroot[2];

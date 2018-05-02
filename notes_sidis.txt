@@ -1,0 +1,42 @@
+Study the HMS singles rates
+
+Look at runs with LD2
+3572 SHMS rate 800 kHz
+3573 SHMS rate 500 kHz
+3574 Nop HMS singles
+3575 HMS Prescale 10
+3650 20uA HMS only
+3648 10uA HMS only
+
+
+ Run = 3573
+ Integral coin = 133064
+ Integral hms = 9438
+ Yield coin = 39142.6
+ Yield hms = 738686
+ Yield  = 777829
+
+
+
+LH2 target
+-----------
+ Run = 3650
+ Integral coin = 0
+ Integral hms = 557448
+ Yield coin = 0
+ Yield hms = 384171
+ Yield  = 384171
+
+ Run = 3648
+ Integral coin = 0
+ Integral hms = 524013
+ Yield coin = 0
+ Yield hms = 270537
+ Yield  = 270537
+
+ Run = 3492
+ Integral coin = 368586
+ Integral hms = 36546
+ Yield coin = 15356.3
+ Yield hms = 403688
+ Yield  = 419044

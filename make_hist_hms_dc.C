@@ -24,7 +24,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_shms_dc(TString basename="",Int_t nrun=2043){
+void make_hist_hms_dc(TString basename="",Int_t nrun=2043){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -60,45 +60,45 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t dist[plnum][107];
  Double_t wire[plnum][107];
  Double_t time[plnum][107];
- tsimc->SetBranchAddress("P.dc.residual",resid) ;
- tsimc->SetBranchAddress("P.dc.residualExclPlane",exclresid) ;
+ tsimc->SetBranchAddress("H.dc.residual",resid) ;
+ tsimc->SetBranchAddress("H.dc.residualExclPlane",exclresid) ;
  for (Int_t ip=0;ip<plnum;ip++) {
-   tsimc->SetBranchAddress(Form("Ndata.P.dc.%s%s.dist",chname[ip],plname[ip]),&nhits[ip]) ;
-   tsimc->SetBranchAddress(Form("P.dc.%s%s.dist",chname[ip],plname[ip]),&dist[ip]) ;
-   tsimc->SetBranchAddress(Form("P.dc.%s%s.time",chname[ip],plname[ip]),&time[ip]) ;
-   tsimc->SetBranchAddress(Form("P.dc.%s%s.wirenum",chname[ip],plname[ip]),&wire[ip]) ;
+   tsimc->SetBranchAddress(Form("Ndata.H.dc.%s%s.dist",chname[ip],plname[ip]),&nhits[ip]) ;
+   tsimc->SetBranchAddress(Form("H.dc.%s%s.dist",chname[ip],plname[ip]),&dist[ip]) ;
+   tsimc->SetBranchAddress(Form("H.dc.%s%s.time",chname[ip],plname[ip]),&time[ip]) ;
+   tsimc->SetBranchAddress(Form("H.dc.%s%s.wirenum",chname[ip],plname[ip]),&wire[ip]) ;
  }
  Double_t etotnorm;
-   tsimc->SetBranchAddress("P.cal.etotnorm",&etotnorm) ;
+   tsimc->SetBranchAddress("H.cal.etotnorm",&etotnorm) ;
  Double_t starttime;
-   tsimc->SetBranchAddress("P.hod.starttime",&starttime) ;
+   tsimc->SetBranchAddress("H.hod.starttime",&starttime) ;
  Double_t npesum;
  if (nrun>=1721) {
    cout << " 3pass " << endl;
-    tsimc->SetBranchAddress("P.ngcer.npeSum",&npesum);
+    tsimc->SetBranchAddress("H.cer.npeSum",&npesum);
  }
  if (nrun<1721) {
    cout << " Onepass  nrun= " << nrun << endl;
-    tsimc->SetBranchAddress("P.hgcer.npeSum",&npesum);
+    tsimc->SetBranchAddress("H.cer.npeSum",&npesum);
  }
  Double_t sp1_id;
-   tsimc->SetBranchAddress("P.dc.sp1_id",&sp1_id) ;
+   tsimc->SetBranchAddress("H.dc.sp1_id",&sp1_id) ;
  Double_t ntrack;
-   tsimc->SetBranchAddress("P.dc.ntrack",&ntrack) ;
+   tsimc->SetBranchAddress("H.dc.ntrack",&ntrack) ;
  Double_t dcnsp;
-   tsimc->SetBranchAddress("P.dc.nsp",&dcnsp) ;
+   tsimc->SetBranchAddress("H.dc.nsp",&dcnsp) ;
  Double_t ndchit;
-   tsimc->SetBranchAddress("P.dc.nhit",&ndchit) ;
+   tsimc->SetBranchAddress("H.dc.nhit",&ndchit) ;
  Double_t sp2_id;
-   tsimc->SetBranchAddress("P.dc.sp2_id",&sp2_id) ;
+   tsimc->SetBranchAddress("H.dc.sp2_id",&sp2_id) ;
  Double_t xfp;
-   tsimc->SetBranchAddress("P.dc.x_fp",&xfp) ;
+   tsimc->SetBranchAddress("H.dc.x_fp",&xfp) ;
  Double_t xpfp;
-   tsimc->SetBranchAddress("P.dc.xp_fp",&xpfp) ;
+   tsimc->SetBranchAddress("H.dc.xp_fp",&xpfp) ;
  Double_t yfp;
-   tsimc->SetBranchAddress("P.dc.y_fp",&yfp) ;
+   tsimc->SetBranchAddress("H.dc.y_fp",&yfp) ;
  Double_t ypfp;
-   tsimc->SetBranchAddress("P.dc.yp_fp",&ypfp) ;
+   tsimc->SetBranchAddress("H.dc.yp_fp",&ypfp) ;
  Int_t nsp[2];
  Double_t stub_x[2][100];
  Double_t stub_xp[2][100];
@@ -106,11 +106,11 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t stub_yp[2][100];
  const char* chname2[2]={"1","2"};
  for (Int_t ich=0;ich<2;ich++) {
-   tsimc->SetBranchAddress(Form("Ndata.P.dc.Ch%s.stub_x",chname2[ich]),&nsp[ich]) ;
-   tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_x",chname2[ich]),&stub_x[ich]) ;
-   tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_xp",chname2[ich]),&stub_xp[ich]) ;
-   tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_y",chname2[ich]),&stub_y[ich]) ;
-   tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_yp",chname2[ich]),&stub_yp[ich]) ;
+   tsimc->SetBranchAddress(Form("Ndata.H.dc.Ch%s.stub_x",chname2[ich]),&nsp[ich]) ;
+   tsimc->SetBranchAddress(Form("H.dc.Ch%s.stub_x",chname2[ich]),&stub_x[ich]) ;
+   tsimc->SetBranchAddress(Form("H.dc.Ch%s.stub_xp",chname2[ich]),&stub_xp[ich]) ;
+   tsimc->SetBranchAddress(Form("H.dc.Ch%s.stub_y",chname2[ich]),&stub_y[ich]) ;
+   tsimc->SetBranchAddress(Form("H.dc.Ch%s.stub_yp",chname2[ich]),&stub_yp[ich]) ;
  }
    // Define histograms
  TH1F* hetotnorm;
@@ -313,7 +313,7 @@ Long64_t nentries = tsimc->GetEntries();
 		}
 		hetotnorm->Fill(etotnorm);
 		hetotnorm_npesum->Fill(etotnorm,npesum);
-		if (ntrack>=1 && nsp[0]>=1 && nsp[1]>=1) {
+		if (etotnorm>.6& ntrack>=1 && nsp[0]>=1 && nsp[1]>=1) {
                   hstarttime->Fill(starttime);
                   hnsp_dc_stub->Fill(dcnsp,nsp[0]+nsp[1]);
 		  hch1_nsp->Fill(nsp[0]);

@@ -101,8 +101,8 @@ Long64_t nentries = tsimc->GetEntries();
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		if (sumnpe>2 && etracknorm>.6) {
-		  hztar_yptar->Fill(yptar,reactz);
-		hytar_yptar->Fill(ytar,yptar);
+		  if (delta>0 && delta<5) hztar_yptar->Fill(yptar,reactz);
+		  if (delta>0 && delta<5) hytar_yptar->Fill(ytar,yptar);
                 if (reactz <5 && reactz>-5) hyptar_cent_foil->Fill(yptar);
 	        for (int iz = 0; iz < 5; iz++) {
 		  if (yptar>yp_cutlo[iz] && yptar <=yp_cuthi[iz]) hztar[iz]->Fill(reactz);

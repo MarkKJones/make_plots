@@ -24,7 +24,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_shms_hodo(TString basename="",Int_t nrun=2043){
+void make_hist_hms_hodo(TString basename="",Int_t nrun=2043){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -52,16 +52,20 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 // Define branches
  static const Int_t plnum=4;
  const char* plname[plnum]={"1x","1y","2x","2y"};
- static const Int_t npad[plnum]={13,13,14,21};
- Double_t negtimediff[plnum][21];
- Double_t postimediff[plnum][21];
- Double_t negadcmult[plnum][21];
- Double_t posadcmult[plnum][21];
+ static const Int_t npad[plnum]={16,10,16,10};
+ Double_t negtimediff[plnum][16];
+ Double_t postimediff[plnum][16];
+ Double_t negtime[plnum][16];
+ Double_t postime[plnum][16];
+ Double_t negadcmult[plnum][16];
+ Double_t posadcmult[plnum][16];
  for (Int_t ip=0;ip<plnum;ip++) {
-   tsimc->SetBranchAddress(Form("P.hod.%s.GoodNegAdcTdcDiffTime",plname[ip]),&negtimediff[ip]) ;
-   tsimc->SetBranchAddress(Form("P.hod.%s.GoodPosAdcTdcDiffTime",plname[ip]),&postimediff[ip]) ;
-   tsimc->SetBranchAddress(Form("P.hod.%s.GoodNegAdcMult",plname[ip]),&negadcmult[ip]) ;
-   tsimc->SetBranchAddress(Form("P.hod.%s.GoodPosAdcMult",plname[ip]),&posadcmult[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodNegAdcTdcDiffTime",plname[ip]),&negtimediff[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodPosAdcTdcDiffTime",plname[ip]),&postimediff[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodNegTdcTimeUnCorr",plname[ip]),&negtime[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodPosTdcTimeUnCorr",plname[ip]),&postime[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodNegAdcMult",plname[ip]),&negadcmult[ip]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.GoodPosAdcMult",plname[ip]),&posadcmult[ip]) ;
  }
    // Define histograms
  /*
@@ -75,11 +79,17 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  */
  TH2D *neg2dhist[plnum];
  TH2D *pos2dhist[plnum];
+ TH2D *neg2dtimehist[plnum];
+ TH2D *pos2dtimehist[plnum];
  for (Int_t ip=0;ip<plnum;ip++) {
-   neg2dhist[ip] = new  TH2D(Form("hist_%s_neg_pad",plname[ip]),Form("Plane %s ; Neg Pad ; ADC Time-Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,320,-40,40);
+   neg2dhist[ip] = new  TH2D(Form("hist_%s_neg_pad",plname[ip]),Form("Plane %s ; Neg Pad ; ADC Time-Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,320,-80,-40);
    HList.Add(neg2dhist[ip]);
-   pos2dhist[ip] = new  TH2D(Form("hist_%s_pos_pad",plname[ip]),Form("Plane %s ; Pos Pad ; ADC Time-Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,320,-40,40);
+   pos2dhist[ip] = new  TH2D(Form("hist_%s_pos_pad",plname[ip]),Form("Plane %s ; Pos Pad ; ADC Time-Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,320,-80,-40);
    HList.Add(pos2dhist[ip]);
+   neg2dtimehist[ip] = new  TH2D(Form("hist_%s_neg_time_pad",plname[ip]),Form("Plane %s ; Neg Pad ;Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,300,-100,100);
+   HList.Add(neg2dtimehist[ip]);
+   pos2dtimehist[ip] = new  TH2D(Form("hist_%s_pos_time_pad",plname[ip]),Form("Plane %s ; Pos Pad ; Tdc Time ns",plname[ip]),npad[ip],0,npad[ip]+1,300,-100,100);
+   HList.Add(pos2dtimehist[ip]);
  }
 // loop over entries
 Long64_t nentries = tsimc->GetEntries();
@@ -88,8 +98,10 @@ Long64_t nentries = tsimc->GetEntries();
                 if (i%10000==0) cout << " Entry = " << i << endl;
  for (Int_t ip=0;ip<plnum;ip++) {
  for (Int_t ipd=0;ipd<npad[ip];ipd++) {
-   if (negadcmult[ip][ipd]==1) neg2dhist[ip]->Fill(float(ipd+1),negtimediff[ip][ipd]);
-   if (posadcmult[ip][ipd]==1) pos2dhist[ip]->Fill(float(ipd+1),postimediff[ip][ipd]);
+   neg2dhist[ip]->Fill(float(ipd+1),negtimediff[ip][ipd]);
+   pos2dhist[ip]->Fill(float(ipd+1),postimediff[ip][ipd]);
+   neg2dtimehist[ip]->Fill(float(ipd+1),negtime[ip][ipd]);
+   pos2dtimehist[ip]->Fill(float(ipd+1),postime[ip][ipd]);
  } 
 }		
   	}

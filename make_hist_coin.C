@@ -28,7 +28,7 @@
 #include <TDecompSVD.h>
 using namespace std;
 
-void make_hist_coin(TString basename="",Int_t nrun=2043){
+void make_hist_coin(TString basename="",Int_t nrun=3288,Double_t pfac=0.985){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -60,6 +60,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.react.z",&e_reactz);
  Double_t  e_delta;
    tsimc->SetBranchAddress("P.gtr.dp",&e_delta);
+ Double_t  ptrig6;
+   tsimc->SetBranchAddress("T.coin.pTRIG6_tdctime",&ptrig6);
  Double_t  e_yptar;
    tsimc->SetBranchAddress("P.gtr.ph",&e_yptar);
  Double_t  e_xptar;
@@ -81,10 +83,15 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("P.kin.primary.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 250, 0.7,2.0);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 125, 0.7,2.0);
     HList.Add(hW);
+    TH1F *hWcalc = new TH1F("hWcalc",Form("Run %d Fac = %5.3f; W (GeV);Counts",nrun,pfac), 125, 0.7,2.0);
+    HList.Add(hWcalc);
+    TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etrack norm;Counts",nrun), 120, 0.0,1.2);
+    HList.Add(hetot);
     TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV) ;Counts",nrun), 300, -.3,.3);
-    TH1F *hDeltaDiff = new TH1F("hDeltaDiff",Form("Run %d ; DeltaDiff ;Counts",nrun), 300, -5,5);
+    TH1F *hDeltaDiff = new TH1F("hDeltaDiff",Form("Run %d  Fac = %5.3f; DeltaDiff ;Counts",nrun,pfac), 300, -5,5);
+    HList.Add(hDeltaDiff);
     TH2F *hEmissW = new TH2F("hEmissW",Form("Run %d ; Emiss (GeV) ;W (GeV)",nrun), 300, -.3,.3, 250, 0.7,1.2);
     TH2F *hEmissXfp = new TH2F("hEmissXfp",Form("Run %d ; Emiss (GeV) ; Xfp ",nrun), 300, -.3,.3, 80,-40,40);
     HList.Add(hEmissXfp);
@@ -94,28 +101,41 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hEmissXpfp);
     TH2F *hEmissYpfp = new TH2F("hEmissYpfp",Form("Run %d ; Emiss (GeV) ; Ypfp ",nrun), 300, -.3,.3, 80,-.02,.02);
     HList.Add(hEmissYpfp);
-    TH2F *hDeltaDiffXfp = new TH2F("hDeltaDiffXfp",Form("Run %d ; DeltaDiff (%) ; Xfp ",nrun), 300, -1,2, 80,-40,40);
-    TH2F *hDeltaDiffYfp = new TH2F("hDeltaDiffYfp",Form("Run %d ; DeltaDiff (%) ; Yfp ",nrun), 300, -1,2, 80,-40,40);
-    TH2F *hDeltaDiffXpfp = new TH2F("hDeltaDiffXpfp",Form("Run %d ; DeltaDiff (%) ; Xpfp ",nrun), 300, -1,2, 80,-.05,.05);
-    TH2F *hDeltaDiffYpfp = new TH2F("hDeltaDiffYpfp",Form("Run %d ; DeltaDiff (%) ; Ypfp ",nrun), 300, -1,2, 80,-.02,.02);
+    TH2F *hDeltaDiffXfp = new TH2F("hDeltaDiffXfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Xfp ",nrun,pfac), 300, -1,2, 80,-40,40);
+    TH2F *hDeltaDiffYfp = new TH2F("hDeltaDiffYfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Yfp ",nrun,pfac), 300, -1,2, 80,-40,40);
+    TH2F *hDeltaDiffXpfp = new TH2F("hDeltaDiffXpfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Xpfp ",nrun,pfac), 300, -1,2, 80,-.05,.05);
+    TH2F *hDeltaDiffYpfp = new TH2F("hDeltaDiffYpfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Ypfp ",nrun,pfac), 300, -1,2, 80,-.02,.02);
+    HList.Add(hDeltaDiffXfp);
+    HList.Add(hDeltaDiffXpfp);
+    HList.Add(hDeltaDiffYfp);
+    HList.Add(hDeltaDiffYpfp);
     TH2F *hWXfp = new TH2F("hWXfp",Form("Run %d ; W (GeV) ; Xfp ",nrun), 300, 0.7,1.2, 80,-40,40);
     TH2F *hWYfp = new TH2F("hWYfp",Form("Run %d ; W (GeV) ; Yfp ",nrun), 300, 0.7,1.2, 80,-40,40);
     TH2F *hWXpfp = new TH2F("hWXpfp",Form("Run %d ; W (GeV) ; Xpfp ",nrun), 300, 0.7,1.2, 80,-.05,.05);
     TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 300, 0.7,1.2, 80,-.02,.02);
   // loop over entries
-   Double_t cos_ts=TMath::Cos(14./180*3.14159);
-   Double_t sin_ts=TMath::Sin(14./180*3.14159);
+    Double_t th_cent=12.2;
+    if (nrun==3288) th_cent=12.2;
+    if (nrun==3371) th_cent=13.935;
+    if (nrun==3373) th_cent=9.93;
+    if (nrun==3374) th_cent=9.93;
+    if (nrun>=3375&&nrun<=3379) th_cent=8.5;
+   Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
+   Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
    Double_t Mp = .93827;
    Double_t Ei=10.6;
-   Double_t p_spec=8.7*.985;
+   Double_t p_spec=8.7*pfac;
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
-		if (gindex>-1) {
+		if (gindex>-1 ) {
 		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
 		Double_t delta_diff = 100*(e_calc - p_spec)/p_spec - e_delta;
 		hW->Fill(W);
+		Double_t Enew=p_spec*(1+e_delta/100.);
+		Double_t W_calc= TMath::Sqrt(-4*Enew*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.)+Mp*Mp+2*Mp*(Ei-Enew));
+		hWcalc->Fill(W_calc);
 		hEmiss->Fill(emiss);
 		hEmissW->Fill(emiss,W);
 		hEmissXfp->Fill(emiss,e_xfp);

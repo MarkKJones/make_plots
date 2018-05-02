@@ -1,0 +1,26 @@
+Fixed problem with hodo starttime correction
+---------------------------------------
+
+Investigate other issues.
+
+ RUn 1791 test1
+---------------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 0
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.400000
+  pypt_track_criterion : 1
+  pSmallAngleApprox = 1  , but did not have test the wires within .5cm
+E SING FID TRACK EFFIC         :   0.9883 +-   0.0004
+
+ RUn 1791 test2
+---------------
+pstub_max_xpdiff : 0.200000
+pfind_Stuball : 0
+  pxt_track_criterion : 20
+  pyt_track_criterion : 5
+  pxpt_track_criterion : 0.400000
+  pypt_track_criterion : 1
+  pSmallAngleApprox  : 1 , include  test the wires within .5cm
+E SING FID TRACK EFFIC         :   0.9879 +-   0.0004

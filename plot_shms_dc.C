@@ -40,7 +40,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"basename+"_hist.root";
+   outputhist= "hist/"+basename+"_hist.root";
  TObjArray HList(0);
      TString outputpdf;
     outputpdf=basename+".pdf";
