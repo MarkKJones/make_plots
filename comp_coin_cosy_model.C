@@ -33,9 +33,9 @@ const UInt_t nruntot=4;
  TString frun[nruntot]={"3288","3371","3374","3377"};
  TString fang[nruntot]={"12.2 deg  P_e = 8.44","14 deg P_e = 7.94","10 deg P_e = 9.05","8.5 deg P_e =9.43"};
 const UInt_t nver=4;
- TString vername[nver]={"orig","p15","p18","p20"};
+ TString vername[nver]={"orig","p15","p18","newfit"};
  Int_t colind[nver]={1,2,3,5};
- TString lname[nver]={"orig","p15","p18","p20"};
+ TString lname[nver]={"orig","p15","p18","newfit"};
 const UInt_t nplots=4;
  //
   TString inputroot;
@@ -47,6 +47,7 @@ const UInt_t nplots=4;
    for (UInt_t nf=0;nf<nruntot;nf++) {
    for (UInt_t nv=0;nv<nver;nv++) {
      inputroot="hist/coin_replay_coin_pElec_hProt_"+frun[nf]+"_quads_"+vername[nv]+"_coin_hist.root";
+     if (nv==3)inputroot="hist/coin_replay_coin_pElec_hProt_"+frun[nf]+"_"+vername[nv]+"_coin_hist.root"; 
      cout << " infile root = " << inputroot << endl;
      fhistroot[nf][nv] =  new TFile(inputroot);
      for (UInt_t nh=0;nh<nplots;nh++) {

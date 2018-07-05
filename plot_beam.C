@@ -49,24 +49,32 @@ gStyle->SetPalette(1,0);
 TFile *fsimc = new TFile(inputroot); 
 TTree *tsimc = (TTree*) fsimc->Get("E");
 // Define branches
+ Double_t  ibcm1;
+   tsimc->SetBranchAddress("ibcm1",&ibcm1);
  Double_t  SAXpos;
+   tsimc->SetBranchAddress("IPM3H07A.XPOS",&SAXpos);
  Double_t  SAXraw;
-   tsimc->SetBranchAddress("IPM3H07A.XPOS",&SAXraw);
+   tsimc->SetBranchAddress("IPM3H07A.XRAW",&SAXraw);
  Double_t  SAYpos;
+   tsimc->SetBranchAddress("IPM3H07A.YPOS",&SAYpos);
  Double_t  SAYraw;
-   tsimc->SetBranchAddress("IPM3H07A.YPOS",&SAYraw);
+   tsimc->SetBranchAddress("IPM3H07A.YRAW",&SAYraw);
  Double_t  SBXpos;
+   tsimc->SetBranchAddress("IPM3H07B.XPOS",&SBXpos);
  Double_t  SBXraw;
-   tsimc->SetBranchAddress("IPM3H07B.XPOS",&SBXraw);
+   tsimc->SetBranchAddress("IPM3H07B.XRAW",&SBXraw);
  Double_t  SBYpos;
+   tsimc->SetBranchAddress("IPM3H07B.YPOS",&SBYpos);
  Double_t  SBYraw;
-   tsimc->SetBranchAddress("IPM3H07B.YPOS",&SBYraw);
+   tsimc->SetBranchAddress("IPM3H07B.YRAW",&SBYraw);
  Double_t  SCXpos;
+   tsimc->SetBranchAddress("IPM3H07C.XPOS",&SCXpos);
  Double_t  SCXraw;
-   tsimc->SetBranchAddress("IPM3H07C.XPOS",&SCXraw);
+   tsimc->SetBranchAddress("IPM3H07C.XRAW",&SCXraw);
  Double_t  SCYpos;
+   tsimc->SetBranchAddress("IPM3H07C.YPOS",&SCYpos);
  Double_t  SCYraw;
-   tsimc->SetBranchAddress("IPM3H07C.YPOS",&SCYraw);
+   tsimc->SetBranchAddress("IPM3H07C.YRAW",&SCYraw);
    Double_t Xtar_AB;
    Double_t Ytar_AB;
    Double_t Xtar_AC;
@@ -112,7 +120,7 @@ TTree *tsimc = (TTree*) fsimc->Get("E");
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
-                if (SAXraw!=0) {
+                if (ibcm1>0.1) {
 		  hSAXraw->Fill(SAXraw);
 		  hSAYraw->Fill(SAYraw);
 		  hSBXraw->Fill(SBXraw);

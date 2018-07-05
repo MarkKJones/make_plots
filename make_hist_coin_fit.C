@@ -86,6 +86,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.react.z",&e_reactz);
  Double_t  e_delta;
    tsimc->SetBranchAddress("P.gtr.dp",&e_delta);
+ Double_t  ep;
+   tsimc->SetBranchAddress("P.gtr.p",&ep);
+ Double_t  pp;
+   tsimc->SetBranchAddress("H.gtr.p",&pp);
  Double_t  e_yptar;
    tsimc->SetBranchAddress("P.gtr.ph",&e_yptar);
  Double_t  e_xptar;
@@ -107,9 +111,6 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("P.kin.primary.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 250, 0.7,1.2);
-    TH1F *hW_calc = new TH1F("hWcalc",Form("Run %d ; W_calc (GeV);Counts",nrun), 250, 0.7,1.2);
-    HList.Add(hW);
     TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV) ;Counts",nrun), 300, -.3,.3);
     TH1F *hDeltaDiff = new TH1F("hDeltaDiff",Form("Run %d ; DeltaDiff ;Counts",nrun), 300, -1,2);
     TH1F *hDeltaCorrDiff = new TH1F("hDeltaCorrDiff",Form("Run %d ; DeltaDiff ;Counts",nrun), 300, -1,2);
@@ -130,10 +131,6 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     TH2F *hDeltaCOrrDiffYfp = new TH2F("hDeltaCOrrDiffYfp",Form("Run %d ; DeltaCOrrDiff (%) ; Yfp ",nrun), 300, -1,2, 80,-10,10);
     TH2F *hDeltaCOrrDiffXpfp = new TH2F("hDeltaCOrrDiffXpfp",Form("Run %d ; DeltaCOrrDiff (%) ; Xpfp ",nrun), 300, -1,2, 80,-.05,.05);
     TH2F *hDeltaCOrrDiffYpfp = new TH2F("hDeltaCOrrDiffYpfp",Form("Run %d ; DeltaCOrrDiff (%) ; Ypfp ",nrun), 300, -1,2, 80,-.02,.02);
-    TH2F *hWXfp = new TH2F("hWXfp",Form("Run %d ; W (GeV) ; Xfp ",nrun), 300, 0.7,1.2, 80,-10,10);
-    TH2F *hWYfp = new TH2F("hWYfp",Form("Run %d ; W (GeV) ; Yfp ",nrun), 300, 0.7,1.2, 80,-10,10);
-    TH2F *hWXpfp = new TH2F("hWXpfp",Form("Run %d ; W (GeV) ; Xpfp ",nrun), 300, 0.7,1.2, 80,-.05,.05);
-    TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 300, 0.7,1.2, 80,-.02,.02);
   // loop over entries
    Double_t cos_ts=TMath::Cos(12.2/180*3.14159);
    Double_t sin_ts=TMath::Sin(12.2/180*3.14159);
@@ -145,7 +142,8 @@ Long64_t nentries = tsimc->GetEntries();
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		if (gindex>-1) {
-		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
+		Double_t e_calc = Ei+Mp-pp;
+		Double_t Em = Ei+Mp-pp-ep;
 		Double_t delta_diff = 100*(e_calc - p_spec)/p_spec - e_delta;
                 Double_t delta_corr = 0.;
                   for( Int_t icoeff_fit=0; icoeff_fit<nparold; icoeff_fit++ ){
@@ -155,16 +153,15 @@ Long64_t nentries = tsimc->GetEntries();
 		       pow( e_yfp/100., yfpexpon[icoeff_fit] ) * 
 	               pow( e_ypfp, ypfpexpon[icoeff_fit] ) ;
 		  }
-		  Double_t Enew = p_spec*(1.+(e_delta-delta_corr)/100.);
-		  Double_t W_calc= TMath::Sqrt(-4*Enew*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.)+Mp*Mp+2*Mp*(Ei-Enew));
-		hW->Fill(W);
-		hW_calc->Fill(W_calc);
-		hEmiss->Fill(emiss);
-		hEmissW->Fill(emiss,W);
-		hEmissXfp->Fill(emiss,e_xfp);
-		hEmissYfp->Fill(emiss,e_yfp);
-		hEmissXpfp->Fill(emiss,e_xpfp);
-		hEmissYpfp->Fill(emiss,e_ypfp);
+		  Double_t delta_new = e_delta+delta_corr;
+		  Double_t ep_new = (delta_new/100.+1)*p_spec;
+		  Double_t Em_calc= Ei+Mp-pp-ep_new;
+		hEmiss->Fill(Em);
+		hEmissW->Fill(Em,W);
+		hEmissXfp->Fill(Em,e_xfp);
+		hEmissYfp->Fill(Em,e_yfp);
+		hEmissXpfp->Fill(Em,e_xpfp);
+		hEmissYpfp->Fill(Em,e_ypfp);
 		hDeltaDiff->Fill(delta_diff);
 		hDeltaCorrDiff->Fill(delta_diff-delta_corr);
 		hDeltaDiffXfp->Fill(delta_diff,e_xfp);
@@ -175,10 +172,6 @@ Long64_t nentries = tsimc->GetEntries();
 		hDeltaCOrrDiffYfp->Fill(delta_diff-delta_corr,e_yfp);
 		hDeltaCOrrDiffXpfp->Fill(delta_diff-delta_corr,e_xpfp);
 		hDeltaCOrrDiffYpfp->Fill(delta_diff-delta_corr,e_ypfp);
-		hWXfp->Fill(W,e_xfp);
-		hWYfp->Fill(W,e_yfp);
-		hWXpfp->Fill(W,e_xpfp);
-		hWYpfp->Fill(W,e_ypfp);
 		//
 		if ( TMath::Abs(delta_diff-delta_corr) < .5 && nfit<(nfit_max-100) && TMath::Abs(e_xfp) < 20. && TMath::Abs(e_xpfp) < .06 && TMath::Abs(e_yfp) < 20. && TMath::Abs(e_ypfp) < .06 ) {
 		  if (nfit%1000==0) cout << " nfit = " << nfit << endl;
