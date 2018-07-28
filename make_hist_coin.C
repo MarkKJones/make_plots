@@ -70,6 +70,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.gtr.ph",&e_yptar);
  Double_t  e_xptar;
    tsimc->SetBranchAddress("P.gtr.th",&e_xptar);
+ Double_t  h_yptar;
+   tsimc->SetBranchAddress("H.gtr.ph",&h_yptar);
+ Double_t  h_xptar;
+   tsimc->SetBranchAddress("H.gtr.th",&h_xptar);
  Double_t  e_yfp;
    tsimc->SetBranchAddress("P.dc.y_fp",&e_yfp);
  Double_t  e_ypfp;
@@ -89,6 +93,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    // Define histograms
     TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 300, 0.9,1.5);
     HList.Add(hW);
+    TH1F *hms_momdiff = new TH1F("hms_momdiff",Form("Run %d ; P(theta)-P ;Counts",nrun), 300, -.1,.1);
+    HList.Add(hms_momdiff);
     TH1F *hWcalc = new TH1F("hWcalc",Form("Run %d Fac = %5.3f; W (GeV);Counts",nrun,pfac),  300, 0.9,1.5);
     HList.Add(hWcalc);
     TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etrack norm;Counts",nrun), 120, 0.0,1.2);
@@ -132,32 +138,32 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
   Double_t Mp = .93827;
    Double_t Ei=10.587;
    Double_t p_spec=8.7*pfac;
-    if (nrun==3288) th_cent=12.2;
+   if (nrun==3288) th_cent=12.2;
     if (nrun==3371) th_cent=13.935;
     if (nrun==3373) th_cent=9.93;
     if (nrun==3374) th_cent=9.93;
     if (nrun>=3375&&nrun<=3379) th_cent=8.5;
+    Double_t htheta_lab;
     if (nrun ==1711) {
+      htheta_lab = -53.33;
       th_cent=25.01;
       Ei=2.221;
       p_spec=1.816*pfac;
    }
     if (nrun ==1713) {
-      th_cent=30.0;
-      Ei=2.221;
-      p_spec=1.816*pfac;
-   }
-    if (nrun ==1716) {
+      htheta_lab = -47.9;
       th_cent=30.0;
       Ei=2.221;
       p_spec=1.816*pfac;
    }
     if (nrun ==1718) {
+      htheta_lab = -47.9;
       th_cent=30.0;
       Ei=2.221;
       p_spec=1.686*pfac;
    }
     if (nrun ==1719) {
+      htheta_lab = -47.9;
       th_cent=30.0;
       Ei=2.221;
       p_spec=1.555*pfac;
@@ -174,12 +180,19 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    }
    Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
    Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
+   Double_t cos_hms=TMath::Cos(htheta_lab/180*3.14159);
+   Double_t sin_hms=TMath::Sin(htheta_lab/180*3.14159);
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		if (gindex>-1 && ptrig6 > 50 ) {
-		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
+		  //		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
+		Double_t theta_hms = TMath::ACos((cos_hms - h_yptar * sin_hms) / TMath::Sqrt( 1. + h_xptar*h_xptar + h_yptar * h_yptar )); // polar 			scattering angle relative to the beam line //rad
+		Double_t h_mom_calc= 2*Mp*Ei*(Ei+Mp)*TMath::Cos(theta_hms);
+		h_mom_calc=h_mom_calc/(Mp*Mp+2*Mp*Ei+Ei*Ei*TMath::Sin(theta_hms)*TMath::Sin(theta_hms));
+		hms_momdiff->Fill(h_mom_calc-p_mom);
+		Double_t e_calc = Ei+Mp-TMath::Sqrt(p_mom*p_mom+Mp*Mp);
 		Double_t delta_diff = 100*(e_calc - p_spec)/p_spec - e_delta;
 		hW->Fill(W);
 		Double_t Enew=p_spec*(1+e_delta/100.);

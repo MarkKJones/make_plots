@@ -58,6 +58,7 @@ const UInt_t nplots=4;
      for (UInt_t nh=0;nh<nplots;nh++) {
      fhist[nf][nv][nh] = (TH2F*)fhistroot[nf][nv]->Get(plname[nh]);
      fEmfp[nf][nv][nh] = (TH2F*)fhistroot[nf][nv]->Get(pl2name[nh]);
+     fEmfp[nf][nv][nh]->SetName(Form("%s_%d_%d_%d",plname[nh],nf,nv,nh));
      fDeltaDiff_fp[nf][nv][nh] = (TH2F*)fhistroot[nf][nv]->Get(pl3name[nh]);
      fprof[nf][nv][nh] = fhist[nf][nv][nh]->ProfileY(Form("%s_%d_%d_%d_py",plname[nh],nf,nv,nh),1,-1,"s");
      if (!fhist[nf][nv][nh]) cout<< nf  << " No 2d " << endl;
@@ -203,9 +204,13 @@ const UInt_t nplots=4;
      ctime3[nv][np]->Divide(2,2);
       for (UInt_t nr=0;nr<nruntot;nr++) {
          ctime3[nv][np]->cd(nr+1);
-	fprof[nr][nv][np]->Draw("colz");
+	 fEmfp[nr][nv][np]->FitSlicesX(0,0,-1,20);
+         TH1D *hfit = (TH1D*)gDirectory->Get(Form("%s_%d_%d_%d_1",plname[np],nr,nv,np));
 	TString title="Run "+frun[nr]+"  Replay version = "+vername[nv];
-	fprof[nr][nv][np]->SetTitle(title);
+	hfit->SetTitle(title);
+	hfit->SetMinimum(-.02);
+	hfit->SetMaximum(+.02);
+	hfit->Draw();
       }
       
           if (nv==0&&np==0) { 
