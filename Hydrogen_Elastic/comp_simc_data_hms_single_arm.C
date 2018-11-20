@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include<math.h>
 using namespace std;
-void comp_simc_data_hms_single_arm( TString fn1 , TString fn2 ) {
+void comp_simc_data_hms_single_arm( TString fn1 , TString fn2 , TString fn3 ) {
  gROOT->Reset();
  gStyle->SetOptStat(0);
  gStyle->SetOptFit(11);
@@ -28,20 +28,27 @@ void comp_simc_data_hms_single_arm( TString fn1 , TString fn2 ) {
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
      TString outputpdf;
-    outputpdf="plots/comp_simc_hms_single_arm.pdf";
+    outputpdf="plots/comp_simc_hms_single_arm"+fn2+".pdf";
     //
-const UInt_t nftot=2;
- Int_t colind[nftot]={1,2};
- TString lname[nftot]={"data","simc"};
+const UInt_t nftot=3;
+ Int_t colind[nftot]={1,2,3};
+ TString lname[nftot]={"data","simc","dummy"};
    TFile *fhistroot[nftot];
  //
 const UInt_t nplots=1;
  TString h1name[nplots]={"hW"};
+const UInt_t n2plots=3;
+ TString h2name[n2plots]={"hxptar","hyptar","hdelta"};
+const UInt_t n4plots=4;
+ TString h4name[n4plots]={"hxfp","hyfp","hxpfp","hypfp"};
  //
- TString inputroot[2];
- inputroot[0] = "hist/"+fn1+".root";
- inputroot[1] = "hist/"+fn2+".root";
+ TString inputroot[3];
+ inputroot[0] = "hist/"+fn1+"_hms_ep_elastic_hist.root";
+ inputroot[1] = "hist/"+fn2+"_simc_hms_ep_elastic_hist.root";
+ inputroot[2] = "hist/"+fn3+"_hms_ep_elastic_hist.root";
   TH1F *fhist[nftot][nplots];
+   TH1F *fhist2[nftot][n2plots];
+ TH1F *fhist4[nftot][n4plots];
   //
    for (UInt_t nf=0;nf<nftot;nf++) {
      cout << " infile root = " << inputroot[nf] << endl;
@@ -49,7 +56,13 @@ const UInt_t nplots=1;
    for (UInt_t nh=0;nh<nplots;nh++) {
      fhist[nf][nh] = (TH1F*)fhistroot[nf]->Get(h1name[nh]);
    }
+    for (UInt_t nh=0;nh<n2plots;nh++) {
+     fhist2[nf][nh] = (TH1F*)fhistroot[nf]->Get(h2name[nh]);
    }
+   for (UInt_t nh=0;nh<n4plots;nh++) {
+     fhist4[nf][nh] = (TH1F*)fhistroot[nf]->Get(h4name[nh]);
+   }
+  }
    // W histograms
     TCanvas *cW;
     TLegend *lW;
@@ -63,18 +76,61 @@ const UInt_t nplots=1;
       for (UInt_t nf=0;nf<nftot;nf++) {
 	if (nf==0) fhist[nf][nh]->Draw();
 	if (nf!=0) fhist[nf][nh]->Draw("same");
+        if (nf!=2) {
 	Double_t WMax = fhist[nf][nh]->GetBinCenter(fhist[nf][nh]->GetMaximumBin());
 	fW[nf] = new TF1(Form("fW_%d",nf),"gaus",WMax-.02,WMax+.02);
 	fhist[nf][nh]->SetLineColor(colind[nf]);
 	fhist[nf][nh]->Fit(Form("fW_%d",nf),"QR");
-	Wsum[nf]=fhist[nf][nh]->Integral(fhist[nf][nh]->FindBin(WMax-.02),fhist[nf][nh]->FindBin(WMax+.1));
+	Wsum[nf]=fhist[nf][nh]->Integral(fhist[nf][nh]->FindBin(fW[nf]->GetParameter(1)-3*fW[nf]->GetParameter(2)),fhist[nf][nh]->FindBin(fW[nf]->GetParameter(1)+3*fW[nf]->GetParameter(2)));
+	cout << nf << " " << Wsum[nf] << " " << WMax << " " << fW[nf]->GetParameter(1) << " " << fW[nf]->GetParameter(2) << endl;
+	} else {
+	  Wsum[nf]=fhist[nf][nh]->Integral(fhist[nf][nh]->FindBin(fW[0]->GetParameter(1)-3*fW[0]->GetParameter(2)),fhist[nf][nh]->FindBin(fW[0]->GetParameter(1)+3*fW[0]->GetParameter(2)));
+	}
         TString tt=lname[nf]+Form(" Int= %f",Wsum[nf]);
 	lW->AddEntry(fhist[nf][nh],tt);
-	cout << nf << " " << Wsum[nf] << WMax << " " << fW[nf]->GetParameter(1) << " " << fW[nf]->GetParameter(2) << endl;
        }
       lW->Draw();
       cW->Print(outputpdf+"(");
       cout << " ratio = " << Wsum[0]/Wsum[1] << endl;
+      Double_t backg = Wsum[2];
+      cout << " ratio = " << (Wsum[0]-backg)/Wsum[1] << " +/- " << TMath::Sqrt(Wsum[0]+Wsum[2])/Wsum[1]<< endl;
+	cout << " Data counts = " << Wsum[0] << " back = " << backg << " SIMC = " << Wsum[1] << endl;
+      //
+ //  histograms
+    TCanvas *cHMSfp;
+    TLegend *lHMSfp;
+     cHMSfp = new TCanvas("cHMSfp","HMSfp", 1000,700);
+     cHMSfp->Divide(2,2);
+      lHMSfp = new TLegend(.65,.75,.99,.95,"");
+      for (UInt_t nh=0;nh<n4plots;nh++) {
+      cHMSfp->cd(nh+1);
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       	if (nf==0) fhist4[nf][nh]->Draw();
+       	if (nf!=0) fhist4[nf][nh]->Draw("same");
+      	if (nf==0) fhist4[nf][nh]->SetLineColor(2);
+	if (nh==0 )lHMSfp->AddEntry(fhist4[nf][nh],lname[nf]);
+       }
+      if (nh==0 )lHMSfp->Draw();
+      }
+      cHMSfp->Print(outputpdf);
+      //
+  //  histograms
+    TCanvas *cHMS;
+    TLegend *lHMS;
+     cHMS = new TCanvas("cHMS","HMS", 1000,700);
+     cHMS->Divide(2,2);
+      lHMS = new TLegend(.65,.75,.99,.95,"");
+      for (UInt_t nh=0;nh<n2plots;nh++) {
+      cHMS->cd(nh+1);
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       	if (nf==0) fhist2[nf][nh]->Draw();
+       	if (nf!=0) fhist2[nf][nh]->Draw("same");
+      	if (nf==0) fhist2[nf][nh]->SetLineColor(2);
+	if (nh==0 )lHMS->AddEntry(fhist2[nf][nh],lname[nf]);
+       }
+      if (nh==0 )lHMS->Draw();
+      }
+      cHMS->Print(outputpdf+")");
       //
 }
 	   //

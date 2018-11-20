@@ -1,0 +1,67 @@
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200000.root
+uses new way of hodo fitting
+ptof_tolerance = 100.0
+   htof_tolerance = 3.0
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200001.root
+uses old way of hodo fitting
+ptof_tolerance = 100.0
+   htof_tolerance = 3.0
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200002.root
+uses old way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200003.root
+uses new way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200004.root
+uses new way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+Modified THcHodoscope to use beta=P/E for the track instead of beta from
+  the central momentum
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200005.root
+uses new way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+Modified THcHodoscope to use beta=P/E for the track instead of beta from
+  the central momentum
+Modified THcCoinTime sign on SHMSdeltapathlength
+
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200006.root
+uses new way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+Modified THcHodoscope to use beta=P/E for the track instead of beta from
+  the central momentum
+Modified THcCoinTime HMSdeltapathlength to be on xptar and delta.
+
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200007.root
+uses new way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+Modified THcHodoscope to use beta=P/E for the track instead of beta from
+  the central momentum
+Modified THcCoinTime HMSdeltapathlength to be on xptar and delta.
+
+ROOTfiles/coin_replay_coin_hElec_pProt_3420_200008.root
+uses old way of hodo fitting
+ptof_tolerance = 10.0
+   htof_tolerance = 3.0
+Modified THcHodoscope to use beta=P/E for the track instead of beta from
+  the central momentum
+Modified THcCoinTime HMSdeltapathlength to be on xptar and delta.
+
+
+
+
+
+
+

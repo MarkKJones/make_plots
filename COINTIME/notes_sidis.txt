@@ -1,0 +1,92 @@
+5434 7738.26 5 20.5881 0.280127 174805 123280 6153.94 7400.76  161.217
+   expect acc = 85.7 Hz gives real coin = 75 Hz
+5435 5383.21 5 45.3872 1 378449 268788 13515.9 16472  536.59
+   acc = T1*T3*80ns = 409 Hz expect real coin = 165  meas = 537-409 = 128   165/123 = 1.34
+5434 20.5881  5 8490.57 1.04748 5987.95 0.879665 298.907 0.196538 359.468 0.21553
+5435 45.3872  5 8338.24 1.24456 5922.12 1.04886  297.791 0.235199 362.922 0.259648
+
+5434  Ratio of tracked event/total events =  0.580336
+5435  Ratio of tracked event/total events =  0.497357
+
+Use CT_calc_all ( just cut on aero>2)
+5434  Integral = 8079 Yield = 1098.44 back = 138.545 sum-back = 959.891
+5435  Integral = 4886 Yield = 997.122 back = 239.383 sum-back = 757.739 1.26
+Use epicointime (tracks and aero>2)
+5434 Integral = 5491 Yield = 746.567 back = 69.2046 sum-back = 677.363
+5435  Integral = 3123 Yield = 637.333 back = 120.406 sum-back = 516.928  677/517=1.30
+
+After setting the reference time and tdc gates
+5434 Integral = 5610 Yield = 762.747 back = 70.0204 sum-back = 692.726
+5435  Integral = 3486 Yield = 711.413 back = 122.855 sum-back = 588.559
+
+*************************
+Use epicointime (tracks and aero>2)
+5369 Integral = 8381 Yield = 453.663 back = 66.4174 sum-back = 387.245
+5371  Integral = 2191 Yield = 429.101 back = 208.185 sum-back = 220.916
+
+Updated code
+5369 Integral = 8322 Yield = 450.469 back = 64.9018 sum-back = 385.567
+5371  Integral = 2490 Yield = 487.659 back = 225.812 sum-back = 261.848
+
+5369 Integral = 11003 Yield = 595.591 back = 113.781 sum-back = 481.81
+5371  Integral = 3558 Yield = 696.824 back = 336.661 sum-back = 360.163
+
+
+
+Update code Ctcalc_all
+5369 Integral = 12128 Yield = 656.487 back = 104.633 sum-back = 551.854
+5371  Integral = 4319 Yield = 845.864 back = 470.229 sum-back = 375.635
+
+Old code use raw time CTCalc_all
+5369 Integral = 18924 Yield = 1024.35 back = 177.708 sum-back = 846.646
+5371  Integral = 6037 Yield = 1182.33 back = 641.008 sum-back = 541.321
+
+
+Use new code raw time CTCalc_all
+5369  Integral = 19650 Yield = 1063.65 back = 187.289 sum-back = 876.363
+5371  Integral = 7887 Yield = 1544.65 back = 886.992 sum-back = 657.655
+
+Use new code raw time CTCalc_all with tof_tolerance = 10.
+
+5369 Integral = 21065 Yield = 1140.25 back = 177.275 sum-back = 962.971
+5371  Integral = 8757 Yield = 1715.03 back = 848.801 sum-back = 866.232
+
+Use new code raw time CTCalc_all with tof_tolerance = 10.
+
+5369 Integral = 21286 Yield = 1152.21 back = 177.059 sum-back = 975.15
+5371  Integral = 8826 Yield = 1728.55 back = 846.647 sum-back = 881.899
+
+5369  Ratio of tracked event/total events =  0.6447
+5371  Ratio of tracked event/total events =  0.503777
+Look at epicointime ROc2 with cut on trig1 time
+5369 Integral = 2367 Yield = 128.125 back = 16.6179 sum-back = 111.508
+5371  Integral = 532 Yield = 104.191 back = 49.5493 sum-back = 54.6413
+
+
+5369 20269   5 14.9877 0.986217 133052 117072 4518.18 5404.46 73.8064  
+expect acc = 48 Hz gives real coin= 25 Hz
+5371 6145.11 5 71.5047 1        611049 537452 21342.1 26437 1164 
+expect acc = t1*t3*80ns = 1041 Hz expect real coin = 118 Hz  meas 1164-1041=123 Hz
+5369 20269 5   8877.45 0.661802 7811.21 0.620788 301.46 0.121955 360.594 0.133381
+5371 6145.11 5 8545.58 1.17925 7516.32 1.10596 298.471 0.220387 369.725 0.245287
+
+5371 6145.11 5 71.5047 1 611049 537452 21342.1 26437 1164 8545.58 1.17925 7516.32 1.10596 298.471 0.220387 369.725 0.245287 16.2786 0.0514688
+5369 20269 5 14.9877 0.986217 133052 117072 4518.18 5404.46 73.8064 8877.45 0.661802 7811.21 0.620788 301.46 0.121955 360.594 0.133381 4.92447 0.015587
+
+
+5372 6200.35 5 71.109 1         608064 534847 21216.4 26284.6 1147.16 
+5373 7045.98 5 61.0166 1        525990 462984 18276.3 22490.4 866.107 
+5374 9259.32 5 43.0464 0.810387 374791 330049 12943 15765.7 462.643 
+5375 12785.8 5 30.127 1         264923 233505 9067.52 10943.3 235.647 
+5376 19520.3 5 14.9134 0.765481 132402 116728 4490.8 5371.25 73.2936 
+
+5376 8878.05 0.674397 7827.04 0.633221 301.126 0.124203 360.164 0.135833 4.91463 0.0158673
+5375 8793.54 0.829311 7750.7 0.778585 300.976 0.153427 363.239 0.168551 7.82178 0.0247337
+5374 8706.69 0.969699 7667.28 0.909979 300.675 0.180202 366.249 0.198884 10.7476 0.0340695
+5373 8620.44 1.1061 7587.84 1.03774 299.531 0.206182 368.594 0.22872 14.1946 0.0448839
+5372 8551.16 1.17437 7521.51 1.1014 298.365 0.219364 369.639 0.244163 16.1325 0.0510085
+
+
+
+
+5372  Ratio of tracked event/total events =  0.505085

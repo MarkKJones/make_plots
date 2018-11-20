@@ -1,0 +1,126 @@
+Version 6 is these parameters
+
+;htheta_offset = 7.445150905e-04  ; (rad) hyp_tar = hyp_tar + htheta_offset
+;hphi_offset   = 0.0 ; (rad) hxp_tar = hxp_tar + hphi_offset
+hphi_offset = 0.003 
+htheta_offset   = 7.445150905e-04
+---------------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_2105_ver6",13.5)
+Theta = 13.5
+ Mis_y = 0.07225 beam_x = 0.0150407
+ Ztar_expect  = 0.1 Ytar expect = -0.034282
+ Ztar meas    = 0.00565969 Ytar meas   = -0.135292
+yptar_exp = -0.000204059 yptar_meas = 0.000503711
+ Mis_x = 0.14277 beam_y = 0.0108628
+xptar_exp = 0.000914481 xptar_meas = 0.000476048
+ xs_meas = -0.0650066 ys_meas = -0.0471852
+
+-------------
+
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1337_ver6",15.0)
+ Theta = 15
+ Mis_y = 0.079 beam_x = 0.0381932
+ Ztar_expect  = 0.1 Ytar expect = -0.016228
+ Ztar meas    = 0.0837859 Ytar meas   = -0.122089
+yptar_exp = -9.65953e-05 yptar_meas = 0.000572743
+ Mis_x = 0.135 beam_y = -0.0103258
+xptar_exp = 0.000742108 xptar_meas = 0.000950296
+ xs_meas = -0.00925976 ys_meas = -0.0231303
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1337_ver6",15.)
+Info in <TUnixSystem::ACLiC>: creating shared library /home/cdaq/mkjones/make_plots/./HMS_SIEVE/plot_hist_hms_sieve_C.so
+ Theta = 15
+ Mis_y = 0.15 beam_x = 0.0381932
+ Ztar_expect  = 0.1 Ytar expect = -0.087228
+ Ztar meas    = 0.0837859 Ytar meas   = -0.122089
+yptar_exp = -0.000519214 yptar_meas = 0.000572743
+ Mis_x = 0.135 beam_y = -0.0103258
+xptar_exp = 0.000742108 xptar_meas = 0.000950296
+ xs_meas = -0.00925976 ys_meas = -0.0231303
+------------
+
+[cdaq@cdaql1 make_plots]$ root -l
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_2105_ver6",13.5)
+ Theta = 13.5
+ Mis_y = 0.15 beam_x = 0.0150407
+ Ztar_expect  = 0.1 Ytar expect = -0.112032
+ Ztar meas    = 0.00565969 Ytar meas   = -0.135292
+yptar_exp = -0.000666857 yptar_meas = 0.000503711
+ Mis_x = 0.14277 beam_y = 0.0108628
+xptar_exp = 0.000914481 xptar_meas = 0.000476048
+ xs_meas = -0.0650066 ys_meas = -0.0471852
+
+--------------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1342_ver6",22.0)
+ Theta = 22
+ Mis_y = 0.1224 beam_x = 0.0316616
+ Ztar_expect  = 0.1 Ytar expect = -0.0555855
+ Ztar meas    = 0.103101 Ytar meas   = -0.0690856
+yptar_exp = -0.000330866 yptar_meas = 0.000370324
+ Mis_x = 0.10588 beam_y = -0.00474341
+xptar_exp = 0.000602004 xptar_meas = 0.000899372
+ xs_meas = 0.05724 ys_meas = -0.0170726
+------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1347_ver6",30.)
+ Theta = 30
+ Mis_y = 0.196 beam_x = 0.0321829
+ Ztar_expect  = 0.1 Ytar expect = -0.118132
+ Ztar meas    = -0.06892 Ytar meas   = -0.124422
+yptar_exp = -0.000703164 yptar_meas = 0.000465408
+ Mis_x = 0.087 beam_y = -0.00425137
+xptar_exp = 0.000492551 xptar_meas = 0.00152038
+ xs_meas = 0.0469492 ys_meas = -0.0284859
+
+
+******** version 7 **********
+;htheta_offset = 7.445150905e-04  ; (rad) hyp_tar = hyp_tar + htheta_offset
+;hphi_offset   = 0.0 ; (rad) hxp_tar = hxp_tar + hphi_offset
+hphi_offset = 0.003 
+htheta_offset   = 0.0
+--------------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_2105_ver7",13.5)
+ Theta = 13.5
+ Mis_y = 0.07225 beam_x = 0.0150407
+ Ztar_expect  = 0.1 Ytar expect = -0.034282
+ Ztar meas    = 0.0287099 Ytar meas   = -0.128105
+yptar_exp = -0.00020406 yptar_meas = -0.000203038
+ Mis_x = 0.14277 beam_y = 0.0108628
+xptar_exp = 0.000914481 xptar_meas = 0.000476048
+ xs_meas = -0.0650066 ys_meas = -0.17037
+-------------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1337_ver7",15.)
+ Theta = 15
+ Mis_y = 0.079 beam_x = 0.0381932
+ Ztar_expect  = 0.1 Ytar expect = -0.016228
+ Ztar meas    = 0.0964035 Ytar meas   = -0.115942
+yptar_exp = -9.65953e-05 yptar_meas = -0.000163484
+ Mis_x = 0.135 beam_y = -0.0103258
+xptar_exp = 0.000742108 xptar_meas = 0.000950296
+ xs_meas = -0.00925976 ys_meas = -0.151768
+
+-----------------
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_1342_ver7",22.)
+Info in <TUnixSystem::ACLiC>: creating shared library /home/cdaq/mkjones/make_plots/./HMS_SIEVE/plot_hist_hms_sieve_C.so
+ Theta = 22
+ Mis_y = 0.1224 beam_x = 0.0316619
+ Ztar_expect  = 0.1 Ytar expect = -0.0555852
+ Ztar meas    = 0.112149 Ytar meas   = -0.0634581
+yptar_exp = -0.000330864 yptar_meas = -0.000353798
+ Mis_x = 0.10588 beam_y = -0.004743
+xptar_exp = 0.000602006 xptar_meas = 0.000899372
+ xs_meas = 0.05724 ys_meas = -0.135974
+
+******
+Seems like the mispointing_y at 15 and 13.5 is off.
+Trying a fixed mispointing_y = +0.15 gives better ytar.
+phi_offset=0 theta_offset=0
+
+root [0] .x HMS_SIEVE/plot_hist_hms_sieve.C+("hms_replay_matrixopt_2105_ver8",13.5)
+ Theta = 13.5
+ Mis_y = 0.15 beam_x = 0.0150402
+ Ztar_expect  = 0.1 Ytar expect = -0.112032
+ Ztar meas    = 0.0287099 Ytar meas   = -0.127986
+yptar_exp = -0.00066686 yptar_meas = -0.000203038
+ Mis_x = 0.14277 beam_y = 0.0108625
+xptar_exp = 0.000914479 xptar_meas = -0.00261098
+ xs_meas = -0.549734 ys_meas = -0.170377
+r
