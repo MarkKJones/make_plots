@@ -21,7 +21,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include<math.h>
+#include <math.h>
 #include <TRandom3.h>
 #include <TMatrixD.h>
 #include <TVectorD.h>
@@ -52,10 +52,13 @@ gStyle->SetPalette(1,0);
 TFile *fsimc = new TFile(inputroot); 
 TTree *tsimc = (TTree*) fsimc->Get("T");
 // Define branches
- Double_t  beamx;
-  tsimc->SetBranchAddress("H.rb.raster.fr_xcent",&beamx);
- Double_t  beamy;
-   tsimc->SetBranchAddress("H.rb.raster.fr_ycent",&beamy);
+ const char* bname[4]={"A","B","C","_tar"};
+ Double_t  beamx[4];
+ Double_t  beamy[4];
+ for (Int_t nb=0;nb<4;nb++) {
+   tsimc->SetBranchAddress(Form("H.rb.raster.fr_xbpm%s",bname[nb]),&beamx[nb]);
+   tsimc->SetBranchAddress(Form("H.rb.raster.fr_ybpm%s",bname[nb]),&beamy[nb]);
+ }
  Double_t  rastx;
    tsimc->SetBranchAddress("H.rb.raster.fr_xa",&rastx);
  Double_t  rasty;
@@ -107,10 +110,15 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hxrast);
    TH1F *hyrast = new TH1F("hyrast",Form("Run %d ; Yrast (cm) (+Y up) ;Counts",nrun), 300, -.3,.3);
     HList.Add(hyrast);
-    TH1F *hxbeam = new TH1F("hxbeam",Form("Run %d ; Xbeam (cm) (+X beam right);Counts",nrun), 300, -.3,.3);
-    HList.Add(hxbeam);
-    TH1F *hybeam = new TH1F("hybeam",Form("Run %d ; Ybeam (cm) (+Y up);Counts",nrun), 300, -.3,.3);
-    HList.Add(hybeam);
+    TH1F *hxbeam[4];
+    TH1F *hybeam[4];
+    Double_t zbpm[4]={-320.42,-224.86,-129.44,0.};
+ for (Int_t nb=0;nb<4;nb++) {
+   hxbeam[nb] = new TH1F(Form("hxbeam_%d",nb),Form("Run %d  Zbpm = %5.1f; Xbeam (cm) (+X beam right);Counts",nrun,zbpm[nb]), 300, -.3,.3);
+    HList.Add(hxbeam[nb]);
+    hybeam[nb] = new TH1F(Form("hybeam_%d",nb),Form("Run %d  Zbpm = %5.1f; Ybeam (cm) (+Y up);Counts",nrun,zbpm[nb]), 300, -.3,.3);
+    HList.Add(hybeam[nb]);
+ }
     TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etrack norm;Counts",nrun), 120, 0.0,1.2);
     HList.Add(hetot);
   // loop over entries
@@ -121,9 +129,11 @@ Long64_t nentries = tsimc->GetEntries();
                 hxrast_yrast->Fill(rastx,rasty);
                 hxrast->Fill(rastx);
                 hyrast->Fill(rasty);
-                hxbeam->Fill(beamx);
-                hxbeam_ybeam->Fill(beamx,beamy);
-                hybeam->Fill(beamy);
+                 for (Int_t nb=0;nb<4;nb++) {
+                   hxbeam[nb]->Fill(beamx[nb]);
+                   hybeam[nb]->Fill(beamy[nb]);
+		 }
+                   hxbeam_ybeam->Fill(beamx[3],beamy[3]);
 		if (gindex>-1  ) { 
                 hxrast_yrast_tr->Fill(rastx,rasty);
                 hxtar->Fill(e_xtar);
@@ -132,7 +142,7 @@ Long64_t nentries = tsimc->GetEntries();
                 hztar_xtar->Fill(e_reactz,e_xtar);
                 hztar_yptar->Fill(e_reactz,e_yptar);
                 hztar_xptar->Fill(e_reactz,e_xptar);
-                hztar_xrastbeam->Fill(e_reactz,rastx+beamx);
+                hztar_xrastbeam->Fill(e_reactz,rastx+beamx[3]);
 		//
 		}
 		//		
