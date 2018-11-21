@@ -68,7 +68,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t tdc_uncorr[plnum][iside][16];
  Double_t hmstdc_tofcorr[plnum][iside][16];
  Int_t hmshodo_tdccounter_nhits[plnum][iside];
- Double_t hmshodo_tdccounter[plnum][iside][16];
+ Double_t hmshodo_tdccounter[plnum][iside][100];
  Double_t hmshodo_nhits[plnum];
  Double_t hmshodo_Xpos[plnum];
   Double_t hmshodo_Ypos[plnum];
@@ -568,17 +568,19 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
  for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
    htdc_uncorr_pm[ipl][ipad]= new TH2F(Form("tdc_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form("%s pad_%d; HMS TDC POS ; HMS TDC NEG",plname[ipl],ipad),120,20,50,120,20,50.);
+   HList.Add(htdc_uncorr_pm[ipl][ipad]);
  for (Int_t is=0;is<iside;is++) {
-   htdc_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),80,20,40.);
+   htdc_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,20,50.);
    HList.Add(htdc_uncorr[ipl][is][ipad]);
  }}}
  TH1F *hshmstdc_uncorr[plnum][iside][21];
  TH2F *hshmstdc_uncorr_pm[plnum][21];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
  for (Int_t ipad=0;ipad<npadshms[ipl];ipad++) {
-   hshmstdc_uncorr_pm[ipl][ipad]= new TH2F(Form("shmstdc_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form("%s pad_%d; SHMS TDC POS ; SHMSTDC NEG",plname[ipl],ipad),120,35,65,120,35,65.);
+   hshmstdc_uncorr_pm[ipl][ipad]= new TH2F(Form("shmstdc_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form("%s pad_%d; SHMS TDC POS ; SHMSTDC NEG",plname[ipl],ipad),200,35,85,200,35,85.);
+   HList.Add(hshmstdc_uncorr_pm[ipl][ipad]);
  for (Int_t is=0;is<iside;is++) {
-   hshmstdc_uncorr[ipl][is][ipad]= new TH1F(Form("shmstdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; SHMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,35,65.);
+   hshmstdc_uncorr[ipl][is][ipad]= new TH1F(Form("shmstdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; SHMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),200,35,85.);
    HList.Add(hshmstdc_uncorr[ipl][is][ipad]);
  }}}
  TH1F *hRF_hmspad_tdiff[4][2][16];
@@ -601,13 +603,14 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
 TH2F *hCT_hpadY[16];
                    for (Int_t ipad=0;ipad<16;ipad++) {
 		     hCT_hpadY[ipad] = new TH2F(Form("hCT_hpadY_%d",ipad),Form("pad_%d; Y Paddle ; CT",ipad),10,0,10,16,32,38);
+                    
 		   }
 // loop over entries
     Long64_t nentries = tsimc->GetEntries();
-    nentries=50000;
-	for (int i = 0; i < nentries; i++) {
-      		tsimc->GetEntry(i);
-                if (i%50000==0) cout << " Entry = " << i << endl;
+    //  nentries=50000;
+	for (int ie = 0; ie < nentries; ie++) {
+      		tsimc->GetEntry(ie);
+                if (ie%50000==0) cout << " Entry = " << ie << endl;
 		Bool_t selcut=pntr>0 && hntr >0 && paero>2. && hcer>2. ;
 		Double_t trig1=0.09766*(pTRIG1_ROC2_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+300.;
 		Double_t trig4=0.09766*(pTRIG4_ROC2_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+300.;
@@ -623,36 +626,21 @@ TH2F *hCT_hpadY[16];
 		if (pntr>0 && hntr >0) haero_cut->Fill(paero);
 		if (nrun==3288) selcut=pntr>0 && hntr >0;
 		if (selcut) {
-		  cout << " pass selcut " << i << endl;
 		  Bool_t one_per_plane = hmshodo_nhits[0]==1&&hmshodo_nhits[1]==1&&hmshodo_nhits[2]==1&&hmshodo_nhits[3]==1;
 		  if (one_per_plane) {
- for (Int_t ipl=0;ipl<plnum;ipl++) {
- for (Int_t is=0;is<iside;is++) {
-   cout << ipl << " " << is << " " << hmshodo_tdccounter_nhits[ipl][is] <<" " << endl;
- for (Int_t ih=0;ih<hmshodo_tdccounter_nhits[ipl][is] ;ih++) {
-   cout << ih << " " << hmshodo_tdccounter[ipl][is][ih] << endl;
- }   
- }}		    
 		    if (hmshodo_tdccounter_nhits[0][0]==1&&hmshodo_tdccounter_nhits[0][1]==1&&hmshodo_tdccounter_nhits[1][0]==1&&hmshodo_tdccounter_nhits[1][1]==1&&hmshodo_tdccounter_nhits[2][0]==1&&hmshodo_tdccounter_nhits[2][1]==1&&hmshodo_tdccounter_nhits[3][0]==1&&hmshodo_tdccounter_nhits[3][1]==1) {
-		    if (hmshodo_tdccounter[0][0][0]==hmshodo_tdccounter[0][1][0]&&hmshodo_tdccounter[2][0][0]==hmshodo_tdccounter[2][1][0]&&hmshodo_tdccounter[0][0][0]==hmshodo_tdccounter[2][0][0]) {
-		      Int_t s1pad=TMath::Floor(hmshodo_tdccounter[0][0][0])-1;
-		      if(s1pad>-1 && s1pad<16) {
-			cout << " s1pad = " << s1pad << endl;
-			hCT_hpadY[s1pad]->Fill(hmshodo_tdccounter[1][0][0],CT_calc3);
-			   }
-		      }
+		      // if (hmshodo_tdccounter[0][0][0]==hmshodo_tdccounter[0][1][0]&&hmshodo_tdccounter[2][0][0]==hmshodo_tdccounter[2][1][0]&&hmshodo_tdccounter[0][0][0]==hmshodo_tdccounter[2][0][0]) {
+		    Int_t s1pad=TMath::Floor(hmshodo_tdccounter[0][0][0])-1;
+		    if(s1pad>-1 && s1pad<16) hCT_hpadY[s1pad]->Fill(hmshodo_tdccounter[1][0][0],CT_calc3);
+		      // }
 		    }
-  cout << "*****" << endl;
 		  }
-		cout << " here a " << i << endl;
 		  Double_t rfh=0.09766*(hRF_tdcTimeRaw-hT1_tdcTimeRaw)+200.;
  		  Double_t rfp=0.09766*(pRF_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+200.;
-		cout << " here b " << i << endl;
                 for (Int_t ipl=0;ipl<plnum;ipl++) {
                    for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
- 		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][0][ipad],tdc_uncorr[ipl][1][ipad]);
+ 		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][1][ipad],tdc_uncorr[ipl][0][ipad]);
                     for (Int_t is=0;is<iside;is++) {
-		      cout << " here b " << i << " " << ipl << " " << is << " " << ipad<< endl;
 		      if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000) {
                         hRF_hmspad_tdiff[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad]);
                         hRF_hmspad_tdiff_xpos[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Xpos[ipl]);
@@ -660,11 +648,10 @@ TH2F *hCT_hpadY[16];
 		      }
 		    htdc_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
 		   }}}
-		cout << " here 1 " << i << endl;
                   for (Int_t ipl=0;ipl<plnum;ipl++) {
                    for (Int_t ipad=0;ipad<npadshms[ipl];ipad++) {
 		     if (shmstdc_uncorr[ipl][0][ipad]<1000&&shmstdc_uncorr[ipl][1][ipad]<1000 ) {
-                        hshmstdc_uncorr_pm[ipl][ipad]->Fill(shmstdc_uncorr[ipl][0][ipad],shmstdc_uncorr[ipl][1][ipad]);
+                        hshmstdc_uncorr_pm[ipl][ipad]->Fill(shmstdc_uncorr[ipl][1][ipad],shmstdc_uncorr[ipl][0][ipad]);
 		     }
                    for (Int_t is=0;is<iside;is++) {
                      if (shmstdc_uncorr[ipl][is][ipad]<1000&&shmstdc_uncorr[ipl][is][ipad]>-500)   hRF_shmspad_tdiff[ipl][is][ipad]->Fill(rfp-shmstdc_tofcorr[ipl][is][ipad]);
@@ -760,7 +747,6 @@ TH2F *hCT_hpadY[16];
 		  hs1xdiff->Fill(ps1xfptime-hs1xfptime);
 		  hs1xdiff_ptrigdiff_ROC1_cut->Fill(ps1xfptime-hs1xfptime,pTRIG4_ROC1_tdcTime-pTRIG1_ROC1_tdcTime);
 		  hptrig1_ptrigdiff_ROC2_cut->Fill(pTRIG1_ROC2_tdcTime,pTRIG4_ROC2_tdcTime-pTRIG1_ROC2_tdcTime);
-		  cout << " here 2 " << i << endl;
 		hptrig1_ROC1->Fill(pTRIG1_ROC1_tdcTime);
  		hptrig4_ROC1->Fill(pTRIG4_ROC1_tdcTime);
 		hptrig1_ROC2->Fill(pTRIG1_ROC2_tdcTime);

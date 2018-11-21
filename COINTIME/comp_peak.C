@@ -32,11 +32,11 @@ void comp_peak() {
  //
      TString outputpdf;
      outputpdf="plots/comp_cointime_3420.pdf";
-    static const Int_t nftot=4;
+    static const Int_t nftot=3;
  TString inputroot[nftot];
    TFile *fhistroot[nftot];
-   TString nfName[nftot]={"3420_200004","3420_200005","3420_200007","3420_200008"};
-   TString nfTitle[nftot]={"pcut=10.,hcut=3.","pcut=10.,hcut=3., mod CT","pcut=10.,hcut=3., mod CT3 new","pcut=10.,hcut=3., mod CT3 old"};
+   TString nfName[nftot]={"3420_200004","3420_200005","3420_200007"};
+   TString nfTitle[nftot]={"original","Opposite SHMS Pathlength sign","HMS Pathlength use target"};
    for (Int_t n=0;n<nftot;n++) {
    inputroot[n]="hist/coin_replay_coin_hElec_pProt_"+nfName[n]+"_CTime_hist.root";
      cout << " infile root = " << inputroot[n] << endl;
@@ -69,6 +69,7 @@ void comp_peak() {
      can2d[ip]->Divide(2,2);
    for (Int_t nf=0;nf<nftot;nf++) {
      can2d[ip]->cd(nf+1);
+     hist2d[nf][ip]->GetXaxis()->SetRangeUser(7,15);
      hist2d[nf][ip]->Draw("colz");
    }    
    } 
