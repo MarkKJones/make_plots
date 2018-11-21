@@ -61,6 +61,7 @@ void plot_hist_CTime_planes(TString basename) {
    can2d->cd(ipl+1);
    htdc2d_plane[ipl]->Draw("colz");
  }
+ can2d->Print(outputpdf+"(");
   //
  TCanvas *can1d = new TCanvas("can1d","can1d",700,700);
  can1d->Divide(2,2);
@@ -68,6 +69,7 @@ void plot_hist_CTime_planes(TString basename) {
    can1d->cd(ipl+1);
    htdc1d_plane[ipl]->Draw();
  }
+ can1d->Print(outputpdf+")");
  
  //
 }
