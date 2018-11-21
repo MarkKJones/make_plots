@@ -442,6 +442,36 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hhs2x_t1_diff);
     TH1F *hhs2y_t1_diff = new TH1F("hhs2y_t1_diff",Form("Run %d ; hs2y_ROC1 - hT1_ROC1 ;Counts",nrun),120,220.,250.);
     HList.Add(hhs2y_t1_diff);
+    TH1F *hhs1x_pre40_diff = new TH1F("hhs1x_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs1x_pre40_diff);
+    TH2F *hhs1x_s1y_pre40_diff = new TH2F("hhs1x_s1y_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ; hs1y_ROC1 - hPRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s1y_pre40_diff);
+    TH2F *hhs1x_s2x_pre40_diff = new TH2F("hhs1x_s2x_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ; hs2x_ROC1 - hPRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s2x_pre40_diff);
+    TH2F *hhs1x_s2y_pre40_diff = new TH2F("hhs1x_s2y_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ; hs2y_ROC1 - hPRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s2y_pre40_diff);
+    TH1F *hhs1y_pre40_diff = new TH1F("hhs1y_pre40_diff",Form("Run %d ; hs1y_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs1y_pre40_diff);
+     TH1F *hhs2x_pre40_diff = new TH1F("hhs2x_pre40_diff",Form("Run %d ; hs2x_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs2x_pre40_diff);
+    TH1F *hhs2y_pre40_diff = new TH1F("hhs2y_pre40_diff",Form("Run %d ; hs2y_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs2y_pre40_diff);
+
+    TH1F *hhs1x_s1xsettime_pre40_diff = new TH1F("hhs1x_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1x_ROC1 - hS1X_PRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs1x_s1xsettime_pre40_diff);
+    TH2F *hhs1x_s1xsettime_s1y_pre40_diff = new TH2F("hhs1x_s1y_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1x_ROC1 - hS1X_PRE40_ROC1 ; hs1y_ROC1 - hS1XSETTIME_PRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s1xsettime_s1y_pre40_diff);
+    TH2F *hhs1x_s1xsettime_s2x_pre40_diff = new TH2F("hhs1x_s2x_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1x_ROC1 - hS1X_PRE40_ROC1 ; hs2x_ROC1 - hS1XSETTIME_PRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s1xsettime_s2x_pre40_diff);
+    TH2F *hhs1x_s1xsettime_s2y_pre40_diff = new TH2F("hhs1x_s2y_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1x_ROC1 - hS1X_PRE40_ROC1 ; hs2y_ROC1 - hS1XSETTIME_PRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
+    HList.Add(hhs1x_s1xsettime_s2y_pre40_diff);
+    TH1F *hhs1y_s1xsettime_pre40_diff = new TH1F("hhs1y_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1y_ROC1 - hS1X_PRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs1y_s1xsettime_pre40_diff);
+     TH1F *hhs2x_s1xsettime_pre40_diff = new TH1F("hhs2x_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs2x_ROC1 - h_PRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs2x_s1xsettime_pre40_diff);
+    TH1F *hhs2y_s1xsettime_pre40_diff = new TH1F("hhs2y_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs2y_ROC1 - h_PRE40_ROC1 ;Counts",nrun),120,220.,250.);
+    HList.Add(hhs2y_s1xsettime_pre40_diff);
+
 
      TH1F *hhPRE40_t1_diff = new TH1F("hhPRE40_t1_diff",Form("Run %d ; hPRE40_ROC1 - hT1_ROC1 ;Counts",nrun),160,340.,580.);
     HList.Add(hhPRE40_t1_diff);
@@ -573,6 +603,17 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    htdc_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,20,50.);
    HList.Add(htdc_uncorr[ipl][is][ipad]);
  }}}
+    //
+ TH1F *htdc_cut_uncorr[plnum][iside][16];
+ TH2F *htdc_cut_uncorr_pm[plnum][16];
+ for (Int_t ipl=0;ipl<plnum;ipl++) {
+ for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
+   htdc_cut_uncorr_pm[ipl][ipad]= new TH2F(Form("tdc_cut_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form("Cut S1x time %s pad_%d; HMS TDC POS ; HMS TDC NEG",plname[ipl],ipad),120,20,50,120,20,50.);
+   HList.Add(htdc_cut_uncorr_pm[ipl][ipad]);
+ for (Int_t is=0;is<iside;is++) {
+   htdc_cut_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_cut_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("Cut s1x time %s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,20,50.);
+   HList.Add(htdc_cut_uncorr[ipl][is][ipad]);
+ }}}
  TH1F *hshmstdc_uncorr[plnum][iside][21];
  TH2F *hshmstdc_uncorr_pm[plnum][21];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
@@ -648,7 +689,7 @@ TH2F *hCT_hpadY[16];
 		      }
 		    htdc_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
 		   }}}
-                  for (Int_t ipl=0;ipl<plnum;ipl++) {
+                   for (Int_t ipl=0;ipl<plnum;ipl++) {
                    for (Int_t ipad=0;ipad<npadshms[ipl];ipad++) {
 		     if (shmstdc_uncorr[ipl][0][ipad]<1000&&shmstdc_uncorr[ipl][1][ipad]<1000 ) {
                         hshmstdc_uncorr_pm[ipl][ipad]->Fill(shmstdc_uncorr[ipl][1][ipad],shmstdc_uncorr[ipl][0][ipad]);
@@ -683,6 +724,29 @@ TH2F *hCT_hpadY[16];
 		  hhs1y_t1_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhs2x_t1_diff->Fill(0.09766*(h2X_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhs2y_t1_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
+
+		  hhs1x_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s1y_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s2x_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h2X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s2y_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h2Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1y_pre40_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs2x_pre40_diff->Fill(0.09766*(h2X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs2y_pre40_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+                  if (TMath::Abs(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.-227.75)<0.25) {
+		  hhs1x_s1xsettime_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s1xsettime_s1y_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s1xsettime_s2x_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h2X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s1xsettime_s2y_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h2Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs1y_s1xsettime_pre40_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs2x_s1xsettime_pre40_diff->Fill(0.09766*(h2X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+		  hhs2y_s1xsettime_pre40_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+                for (Int_t ipl=0;ipl<plnum;ipl++) {
+                   for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
+ 		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_cut_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][1][ipad],tdc_uncorr[ipl][0][ipad]);
+                    for (Int_t is=0;is<iside;is++) {
+		    htdc_cut_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
+		   }}}
+		  }
 
 		  hps1x_t2_diff->Fill(0.09766*(p1X_tdcTimeRaw-pT2_tdcTimeRaw)+300.);
 		  hps1y_t2_diff->Fill(0.09766*(p1Y_tdcTimeRaw-pT2_tdcTimeRaw)+300.);
