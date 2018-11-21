@@ -97,7 +97,7 @@ TH1F *htdc_uncorr[plnum][iside][16];
    //
   //
    TCanvas *can2d_hms_2y[4];
-   npl=1;
+   npl=3;
    padnum=0;
    for (Int_t ip=0;ip<2;ip++) {
      can2d_hms_2y[ip] = new TCanvas(Form("can2d_hms_2y_%d",ip),Form("can2d_hms_2y_%d",ip),700,700);
