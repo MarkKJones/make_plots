@@ -66,6 +66,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  static const Int_t npadshms[plnum]={13,13,14,21};
  //
  Double_t tdc_uncorr[plnum][iside][16];
+ Double_t hmsadc_time[plnum][iside][16];
  Double_t hmstdc_tofcorr[plnum][iside][16];
  Int_t hmshodo_tdccounter_nhits[plnum][iside];
  Double_t hmshodo_tdccounter[plnum][iside][100];
@@ -82,6 +83,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    tsimc->SetBranchAddress(Form("Ndata.H.hod.%s.%sTdcCounter",plname[ipl],sname[is]),&hmshodo_tdccounter_nhits[ipl][is]) ;
    tsimc->SetBranchAddress(Form("H.hod.%s.%sTdcCounter",plname[ipl],sname[is]),&hmshodo_tdccounter[ipl][is]) ;
    tsimc->SetBranchAddress(Form("H.hod.%s.Good%sTdcTimeUnCorr",plname[ipl],sidename[is]),&tdc_uncorr[ipl][is]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.Good%sAdcPulseTime",plname[ipl],sidename[is]),&hmsadc_time[ipl][is]) ;
    tsimc->SetBranchAddress(Form("H.hod.%s.Good%sTdcTimeTOFCorr",plname[ipl],sidename[is]),&hmstdc_tofcorr[ipl][is]) ;
    tsimc->SetBranchAddress(Form("P.hod.%s.Good%sTdcTimeUnCorr",plname[ipl],sidename[is]),&shmstdc_uncorr[ipl][is]) ;
    tsimc->SetBranchAddress(Form("P.hod.%s.Good%sTdcTimeTOFCorr",plname[ipl],sidename[is]),&shmstdc_tofcorr[ipl][is]) ;
@@ -93,6 +95,10 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    tsimc->SetBranchAddress("T.coin.hRF_ROC1_tdcTime",&hRF_tdcTime);
  Double_t  hPRE40_ROC1_tdcTimeRaw;
  tsimc->SetBranchAddress("T.coin.hPRE40_ROC1_tdcTimeRaw",&hPRE40_ROC1_tdcTimeRaw);
+ Double_t  hSTOF_ROC1_tdcTimeRaw;
+ tsimc->SetBranchAddress("T.coin.hSTOF_ROC1_tdcTimeRaw",&hSTOF_ROC1_tdcTimeRaw);
+ Double_t  hSTOF_ROC2_tdcTimeRaw;
+ tsimc->SetBranchAddress("T.coin.hSTOF_ROC2_tdcTimeRaw",&hSTOF_ROC2_tdcTimeRaw);
  Double_t  pPRE40_ROC1_tdcTimeRaw;
  tsimc->SetBranchAddress("T.coin.pPRE40_ROC1_tdcTimeRaw",&pPRE40_ROC1_tdcTimeRaw);
  Double_t  hPRE40_ROC2_tdcTimeRaw;
@@ -107,6 +113,8 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    tsimc->SetBranchAddress("T.coin.pT2_tdcTimeRaw",&pT2_tdcTimeRaw);
  Double_t  hT1_tdcTimeRaw;
    tsimc->SetBranchAddress("T.coin.hT1_tdcTimeRaw",&hT1_tdcTimeRaw);
+ Double_t  hT2_tdcTimeRaw;
+   tsimc->SetBranchAddress("T.coin.hT2_tdcTimeRaw",&hT2_tdcTimeRaw);
  Double_t  h1X_tdcTimeRaw;
    tsimc->SetBranchAddress("T.coin.h1X_tdcTimeRaw",&h1X_tdcTimeRaw);
  Double_t  h1Y_tdcTimeRaw;
@@ -243,6 +251,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     TH1F *hps2yfptime= new TH1F("hps2yfptime",Form("Run %d ;SHMS s2Y fp time ;Counts",nrun), 200,0.,50.);
     HList.Add(hps2yfptime);
     TH1F *haero_cut = new TH1F("haero_cut",Form("Run %d ; Aero (track) ;Counts",nrun), 100, -1.,50.0);
+    TH1F *hht2_raw = new TH1F("hht2_raw",Form("Run %d ; HMS T2 (scin ref time);Counts",nrun), 1000, 0.,10000.0);
 
      TH2F *hps1xfptime_trig14diff = new TH2F("hps1xfptime_trig14diff",Form("Run %d ; ptrig4_roc1 - ptrig1_roc1; SHMS s1x fp time",nrun),100, -20.,20.0, 100,20.,60.);
     HList.Add(hps1xfptime_trig14diff);
@@ -362,7 +371,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hCTcalc_all1);
     TH1F *hCTcalc_all2 = new TH1F("hCTcalc_all2",Form("Run %d ; CT Calc 2  ;Counts",nrun),80, 20.,40.0);
     HList.Add(hCTcalc_all2);
-    TH1F *hCTcalc_all3 = new TH1F("hCTcalc_all3",Form("Run %d ; CT Calc 3  ;Counts",nrun),80, 20.,40.0);
+    TH1F *hCTcalc_all3 = new TH1F("hCTcalc_all3",Form("Run %d ; CT Calc 3  ;Counts",nrun),120, 20.,40.0);
     HList.Add(hCTcalc_all3);
     TH2F *hCTcalc_all2_sdiff = new TH2F("hCTcalc_all2_sdiff",Form("Run %d ; CT Calc 2  ; Start time diff",nrun),80, 20.,40.0,200,-10,40);
     HList.Add(hCTcalc_all2_sdiff);
@@ -401,6 +410,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    TH1F *hhRF = new TH1F("hhRF",Form("Run %d ; hRF ;Counts",nrun),2000, -500.,500.0);
     HList.Add(hhRF);
        TH1F *hhRF_hstart = new TH1F("hhRF_hstart",Form("Run %d ; hRF -hstart ;Counts",nrun),200, 0.,50.0);
+       TH1F *hhRF_hstart_stof = new TH1F("hhRF_hstart_stof",Form("Run %d ; hRF-hstof -hstart ;Counts",nrun),200, 0.,50.0);
        TH1F *hhRF_hstart_2 = new TH1F("hhRF_hstart_2",Form("Run %d ; hRF -hstart ;Counts",nrun),3200, -400.,400.0);
        TH1F *hhRF_hsx1fp = new TH1F("hhRF_hsx1fp",Form("Run %d ; hRF -hs1xfptime ;Counts",nrun),200, 0.,50.0);
        TH1F *hhRF_hsy1fp = new TH1F("hhRF_hsy1fp",Form("Run %d ; hRF -hs1yfptime ;Counts",nrun),200, 0.,50.0);
@@ -409,6 +419,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     //   TH1F *hhRF_hstart = new TH1F("hhRF_hstart",Form("Run %d ; hRF -hstart ;Counts",nrun),2400, -300.,300.0);
     HList.Add(hhRF_hstart);
     HList.Add(hhRF_hstart_2);
+    HList.Add(hhRF_hstart_stof);
     TH2F *hhRFhstart_hxfp = new TH2F("hhRFhstart_hxfp",Form("Run %d ; hRF -hstart   ; HMS xfp",nrun),200, 0.,50.0,90,-50,40);
     HList.Add(hhRFhstart_hxfp);
     TH2F *hhRFhstart_hyfp = new TH2F("hhRFhstart_hyfp",Form("Run %d ; hRF -hstart   ; HMS yfp",nrun),200, 0.,50.0,80,-20,20);
@@ -442,6 +453,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hhs2x_t1_diff);
     TH1F *hhs2y_t1_diff = new TH1F("hhs2y_t1_diff",Form("Run %d ; hs2y_ROC1 - hT1_ROC1 ;Counts",nrun),120,220.,250.);
     HList.Add(hhs2y_t1_diff);
+
     TH1F *hhs1x_pre40_diff = new TH1F("hhs1x_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
     HList.Add(hhs1x_pre40_diff);
     TH2F *hhs1x_s1y_pre40_diff = new TH2F("hhs1x_s1y_pre40_diff",Form("Run %d ; hs1x_ROC1 - hPRE40_ROC1 ; hs1y_ROC1 - hPRE40_ROC1",nrun),120,220.,250.,120,220.,250.);
@@ -456,6 +468,22 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hhs2x_pre40_diff);
     TH1F *hhs2y_pre40_diff = new TH1F("hhs2y_pre40_diff",Form("Run %d ; hs2y_ROC1 - hPRE40_ROC1 ;Counts",nrun),120,220.,250.);
     HList.Add(hhs2y_pre40_diff);
+
+
+    TH1F *hhs1x_stof_diff = new TH1F("hhs1x_stof_diff",Form("Run %d ; hs1x_ROC1 - hSTOF_ROC1 ;Counts",nrun),120,285.,315.);
+    HList.Add(hhs1x_stof_diff);
+    TH2F *hhs1x_s1y_stof_diff = new TH2F("hhs1x_s1y_stof_diff",Form("Run %d ; hs1x_ROC1 - hSTOF_ROC1 ; hs1y_ROC1 - hSTOF_ROC1",nrun),120,285.,315.,120,285.,315.);
+    HList.Add(hhs1x_s1y_stof_diff);
+    TH2F *hhs1x_s2x_stof_diff = new TH2F("hhs1x_s2x_stof_diff",Form("Run %d ; hs1x_ROC1 - hSTOF_ROC1 ; hs2x_ROC1 - hSTOF_ROC1",nrun),120,285.,315.,120,285.,315.);
+    HList.Add(hhs1x_s2x_stof_diff);
+    TH2F *hhs1x_s2y_stof_diff = new TH2F("hhs1x_s2y_stof_diff",Form("Run %d ; hs1x_ROC1 - hSTOF_ROC1 ; hs2y_ROC1 - hSTOF_ROC1",nrun),120,285.,315.,120,285.,315.);
+    HList.Add(hhs1x_s2y_stof_diff);
+    TH1F *hhs1y_stof_diff = new TH1F("hhs1y_stof_diff",Form("Run %d ; hs1y_ROC1 - hSTOF_ROC1 ;Counts",nrun),120,285.,315.);
+    HList.Add(hhs1y_stof_diff);
+     TH1F *hhs2x_stof_diff = new TH1F("hhs2x_stof_diff",Form("Run %d ; hs2x_ROC1 - hSTOF_ROC1 ;Counts",nrun),120,285.,315.);
+    HList.Add(hhs2x_stof_diff);
+    TH1F *hhs2y_stof_diff = new TH1F("hhs2y_stof_diff",Form("Run %d ; hs2y_ROC1 - hSTOF_ROC1 ;Counts",nrun),120,285.,315.);
+    HList.Add(hhs2y_stof_diff);
 
     TH1F *hhs1x_s1xsettime_pre40_diff = new TH1F("hhs1x_s1xsettime_pre40_diff",Form("s1x set time Run %d ; hs1x_ROC1 - hS1X_PRE40_ROC1 ;Counts",nrun),120,220.,250.);
     HList.Add(hhs1x_s1xsettime_pre40_diff);
@@ -481,7 +509,9 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    TH1F *hpRF_pstart = new TH1F("hpRF_pstart",Form("Run %d ; pRF -pstart ;Counts",nrun),200, 0.,50.0);
     HList.Add(hpRF_pstart);
    TH1F *hpRF_pstart_2 = new TH1F("hpRF_pstart_2",Form("Run %d ; pRF -pstart ;Counts",nrun),4000, -500.,500.0);
-    HList.Add(hpRF_pstart_2);
+    HList.Add(hpRF_pstart_2); 
+   tsimc->SetBranchAddress("T.coin.hT1_tdcTimeRaw",&hT1_tdcTimeRaw);
+
    TH1F *hpRF_ptrig1 = new TH1F("hpRF_ptrig1",Form("Run %d ; pRF -ptrig1 ;Counts",nrun),200, 0.,50.0);
     HList.Add(hpRF_ptrig1);
    TH1F *hpRF_ptrig4 = new TH1F("hpRF_ptrig4",Form("Run %d ; pRF -ptrig4 ;Counts",nrun),200, 0.,50.0);
@@ -595,12 +625,18 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     //
  TH1F *htdc_uncorr[plnum][iside][16];
  TH2F *htdc_uncorr_pm[plnum][16];
+ TH1F *hadc_pulsetime[plnum][iside][16];
+ TH2F *hadc_pulsetime_pm[plnum][16];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
  for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
-   htdc_uncorr_pm[ipl][ipad]= new TH2F(Form("tdc_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form("%s pad_%d; HMS TDC POS ; HMS TDC NEG",plname[ipl],ipad),120,20,50,120,20,50.);
+   htdc_uncorr_pm[ipl][ipad]= new TH2F(Form("tdc_uncorr_pm_%s_pad_%d",plname[ipl],ipad),Form(" %s pad_%d; HMS TDC POS ; HMS TDC NEG",plname[ipl],ipad),120,20,50,120,20,50.);
    HList.Add(htdc_uncorr_pm[ipl][ipad]);
+   hadc_pulsetime_pm[ipl][ipad]= new TH2F(Form("hadc_pulsetime_pm_%s_pad_%d",plname[ipl],ipad),Form("%s pad_%d; HMS ADC time POS ; HMS ADC time NEG",plname[ipl],ipad),120,65,95,120,65.,95.);
+   HList.Add(hadc_pulsetime_pm[ipl][ipad]);
  for (Int_t is=0;is<iside;is++) {
-   htdc_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,20,50.);
+   hadc_pulsetime[ipl][is][ipad]= new TH1F(Form("hadc_pulsetime_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %s pad_%d; HMS ADC time ;counts",plname[ipl],sidename[is],ipad),120,65.,95.);
+   HList.Add(hadc_pulsetime[ipl][is][ipad]);
+   htdc_uncorr[ipl][is][ipad]= new TH1F(Form("tdc_uncorr_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form(" %s %s pad_%d; HMS TDc uncorr;counts",plname[ipl],sidename[is],ipad),120,20,50.);
    HList.Add(htdc_uncorr[ipl][is][ipad]);
  }}}
     //
@@ -648,7 +684,8 @@ TH2F *hCT_hpadY[16];
 		   }
 // loop over entries
     Long64_t nentries = tsimc->GetEntries();
-    //  nentries=50000;
+    //
+      nentries=50000;
 	for (int ie = 0; ie < nentries; ie++) {
       		tsimc->GetEntry(ie);
                 if (ie%50000==0) cout << " Entry = " << ie << endl;
@@ -656,10 +693,10 @@ TH2F *hCT_hpadY[16];
 		Double_t trig1=0.09766*(pTRIG1_ROC2_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+300.;
 		Double_t trig4=0.09766*(pTRIG4_ROC2_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+300.;
 		Double_t CT_calc=(pTRIG1_ROC2_tdcTime-pTRIG4_ROC2_tdcTime)+(pstarttime-hstarttime);
-		Double_t CT_calc1=(391-pTRIG4_ROC2_tdcTime)+(pstarttime-hstarttime);
-		Double_t CT_calc2=(391-hTRIG1_ROC2_tdcTime-100)+(pstarttime-hstarttime);
-                Double_t ct_yfp_corr= (32.125-30.625)/(2.4+1.2)*hyfp;
-		Double_t CT_calc3=0.09766*(pTRIG1_ROC2_tdcTimeRaw-pTRIG4_ROC2_tdcTimeRaw)+(pfptime-hfptime);
+		Double_t CT_calc1=0.09766*((pTRIG1_ROC1_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw))+(pstarttime-hstarttime)-150;
+		//Double_t CT_calc2=(391-hTRIG1_ROC2_tdcTime-100)+(pstarttime-hstarttime);
+ 		Double_t CT_calc2=0.09766*((pTRIG1_ROC2_tdcTimeRaw-hPRE40_ROC2_tdcTimeRaw))+(pstarttime-hstarttime)-75;
+		Double_t CT_calc3=0.09766*((pTRIG1_ROC2_tdcTimeRaw-hSTOF_ROC2_tdcTimeRaw))+(pstarttime-hstarttime)-150;
 		hpbetanotrack->Fill(betanotrack);
 		haero->Fill(paero);
 		hptrig1raw_ROC2->Fill(pTRIG1_ROC2_tdcTimeRaw);
@@ -667,6 +704,7 @@ TH2F *hCT_hpadY[16];
 		if (pntr>0 && hntr >0) haero_cut->Fill(paero);
 		if (nrun==3288) selcut=pntr>0 && hntr >0;
 		if (selcut) {
+		  hht2_raw->Fill(hT2_tdcTimeRaw); 
 		  Bool_t one_per_plane = hmshodo_nhits[0]==1&&hmshodo_nhits[1]==1&&hmshodo_nhits[2]==1&&hmshodo_nhits[3]==1;
 		  if (one_per_plane) {
 		    if (hmshodo_tdccounter_nhits[0][0]==1&&hmshodo_tdccounter_nhits[0][1]==1&&hmshodo_tdccounter_nhits[1][0]==1&&hmshodo_tdccounter_nhits[1][1]==1&&hmshodo_tdccounter_nhits[2][0]==1&&hmshodo_tdccounter_nhits[2][1]==1&&hmshodo_tdccounter_nhits[3][0]==1&&hmshodo_tdccounter_nhits[3][1]==1) {
@@ -678,14 +716,15 @@ TH2F *hCT_hpadY[16];
 		  }
 		  Double_t rfh=0.09766*(hRF_tdcTimeRaw-hT1_tdcTimeRaw)+200.;
  		  Double_t rfp=0.09766*(pRF_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+200.;
+		  Double_t rfhstof=0.09766*(hRF_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+200.;
                 for (Int_t ipl=0;ipl<plnum;ipl++) {
                    for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
  		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][1][ipad],tdc_uncorr[ipl][0][ipad]);
                     for (Int_t is=0;is<iside;is++) {
 		      if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000) {
-                        hRF_hmspad_tdiff[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad]);
-                        hRF_hmspad_tdiff_xpos[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Xpos[ipl]);
-                        hRF_hmspad_tdiff_ypos[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Ypos[ipl]);
+                        hRF_hmspad_tdiff[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad]);
+                        hRF_hmspad_tdiff_xpos[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Xpos[ipl]);
+                        hRF_hmspad_tdiff_ypos[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Ypos[ipl]);
 		      }
 		    htdc_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
 		   }}}
@@ -720,7 +759,7 @@ TH2F *hCT_hpadY[16];
 		  hhRFraw->Fill(hRF_tdcTimeRaw);
 		  hhRF->Fill(0.09766*(hRF_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhPRE40_t1_diff->Fill(0.09766*(hPRE40_ROC1_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
-		  hhs1x_t1_diff->Fill(0.09766*(h1X_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
+	  hhs1x_t1_diff->Fill(0.09766*(h1X_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhs1y_t1_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhs2x_t1_diff->Fill(0.09766*(h2X_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
 		  hhs2y_t1_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hT1_tdcTimeRaw)+300.);
@@ -732,6 +771,14 @@ TH2F *hCT_hpadY[16];
 		  hhs1y_pre40_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
 		  hhs2x_pre40_diff->Fill(0.09766*(h2X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
 		  hhs2y_pre40_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
+
+		  hhs1x_stof_diff->Fill(0.09766*(h1X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s1y_stof_diff->Fill(0.09766*(h1X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.,0.09766*(h1Y_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s2x_stof_diff->Fill(0.09766*(h1X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.,0.09766*(h2X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs1x_s2y_stof_diff->Fill(0.09766*(h1X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.,0.09766*(h2Y_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs1y_stof_diff->Fill(0.09766*(h1Y_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs2x_stof_diff->Fill(0.09766*(h2X_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
+		  hhs2y_stof_diff->Fill(0.09766*(h2Y_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+360.);
                   if (TMath::Abs(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.-227.75)<0.25) {
 		  hhs1x_s1xsettime_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
 		  hhs1x_s1xsettime_s1y_pre40_diff->Fill(0.09766*(h1X_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.,0.09766*(h1Y_tdcTimeRaw-hPRE40_ROC1_tdcTimeRaw)+360.);
@@ -743,8 +790,10 @@ TH2F *hCT_hpadY[16];
                 for (Int_t ipl=0;ipl<plnum;ipl++) {
                    for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
  		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_cut_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][1][ipad],tdc_uncorr[ipl][0][ipad]);
+ 		     hadc_pulsetime_pm[ipl][ipad]->Fill(hmsadc_time[ipl][1][ipad],hmsadc_time[ipl][0][ipad]);
                     for (Int_t is=0;is<iside;is++) {
-		    htdc_cut_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
+		    htdc_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
+		    hadc_pulsetime[ipl][is][ipad]->Fill(hmsadc_time[ipl][is][ipad]);
 		   }}}
 		  }
 
@@ -760,8 +809,10 @@ TH2F *hCT_hpadY[16];
 
 		  hpPRE40_t2_diff->Fill(0.09766*(pPRE40_ROC2_tdcTimeRaw-pT2_tdcTimeRaw)+300.);
 		  Double_t rfhdiff=0.09766*(hRF_tdcTimeRaw-hT1_tdcTimeRaw)+200.-hstarttime;
+		  Double_t rfhdiffstof=0.09766*(hRF_tdcTimeRaw-hSTOF_ROC1_tdcTimeRaw)+200.-hstarttime;
 		  hhRF_hstart->Fill(rfhdiff);
 		  hhRF_hstart_2->Fill(rfhdiff);
+		  hhRF_hstart_stof->Fill(rfhdiffstof);
 		  hhRF_hsx1fp->Fill(rfhdiff-hs1xfptime);
 		  hhRF_hsy1fp->Fill(rfhdiff-hs1yfptime);
 		  hhRF_hsx2fp->Fill(rfhdiff-hs2xfptime);

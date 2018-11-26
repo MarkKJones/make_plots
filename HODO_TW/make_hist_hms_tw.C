@@ -53,25 +53,24 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  static const Int_t plnum=4;
  static const Int_t iside=2;
  const char* plname[plnum]={"1x","1y","2x","2y"};
- const char* sidename[isde]={"Neg","Pos"};
+ const char* sidename[iside]={"Neg","Pos"};
  static const Int_t npad[plnum]={16,10,16,10};
  //
  Double_t tw_corr[plnum][iside][16];
- Double_t pulseamp[plnum][iside[16];
+ Double_t pulseamp[plnum][iside][16];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
  for (Int_t is=0;is<iside;is++) {
- for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
-   tsimc->SetBranchAddress(Form("P.hod.%s.Good%sAdcTimeWalkCorr",plname[ipl],sidename[is],&tw_corr[ipl][is][ipad]) ;
-   tsimc->SetBranchAddress(Form("P.hod.%s.Good%sAdcPulseAmp",plname[ipl],sidename[is],&pulseamp[ipl][is][ipad]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.Good%sTdcTimeWalkCorr",plname[ipl],sidename[is]),&tw_corr[ipl][is]) ;
+   tsimc->SetBranchAddress(Form("H.hod.%s.Good%sAdcPulseAmp",plname[ipl],sidename[is]),&pulseamp[ipl][is]) ;
  }}  
- }
+ 
  //
- TH2F *hTW_adc[plnum][is][ipad];
+ TH2F *hTW_adc[plnum][iside][16];
  for (Int_t ipl=0;ipl<plnum;ipl++) {
  for (Int_t is=0;is<iside;is++) {
  for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
    hTW_adc[ipl][is][ipad]= new TH2F(Form("tw_adc_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %spad_%d; Adc Amp; TDc TW corr",plname[ipl],sidename[is],ipad),100,0,200.,100,-50,50);
-   HList.Add(Form("tw_adc_%s_%s_pad_%d",plname[ipl],sidename[is],ipad));
+   HList.Add(hTW_adc[ipl][is][ipad]);
  }}  
  }
  //
@@ -85,5 +84,7 @@ Long64_t nentries = tsimc->GetEntries();
    hTW_adc[ipl][is][ipad]->Fill(pulseamp[ipl][is][ipad],tw_corr[ipl][is][ipad]);
  }}}		
 	}
-//
+
 }
+ 
+			
