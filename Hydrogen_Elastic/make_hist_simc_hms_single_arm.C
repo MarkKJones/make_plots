@@ -154,6 +154,69 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Exp_eff = 99.8/100.*0.99*1.0;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
+    if (nrun ==6611) {
+      Nent_simc=100000.;
+      Normfac = 0.165892E+08;
+      Exp_charge= 5812.897/1000.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6595) {
+      Nent_simc=100000.;
+      Normfac = 0.169575E+08;
+      Exp_charge= 7285.215/1000./17.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6601) {
+      Nent_simc=100000.;
+      Normfac = 0.165659E+08;
+      Exp_charge= 6523.945/1000./9.; // do not use ps factor=9 in report
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6602) {
+      Nent_simc=100000.;
+      Normfac = 0.165694E+08;
+      Exp_charge= 6734.147/1000./3.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6609) {
+      Nent_simc=100000.;
+      Normfac = 0.165835E+08;
+      Exp_charge= 5477.710/1000./2.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6871) {
+      Nent_simc=100000.;
+      Normfac = 0.173024E+08;
+      Exp_charge= 1120.581/1000./33.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6875) {
+      Nent_simc=100000.;
+      Normfac = 0.172127E+08;
+      Exp_charge= 4783.038/1000./65.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6876) {
+      Nent_simc=100000.;
+      Normfac = 0.171463E+08;
+      Exp_charge= 3722.930/1000./9.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==6879) {
+      Nent_simc=100000.;
+      Normfac = 0.164582E+08;
+      Exp_charge= 12170.401/1000./1.;
+      Exp_eff = 99.8/100.*0.99*1.0;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
     //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {

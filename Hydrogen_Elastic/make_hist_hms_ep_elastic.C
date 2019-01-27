@@ -115,8 +115,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    // Define histograms
     TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
     HList.Add(hW);
-    TH1F *h_prot_mom_diff = new TH1F("h_prot_mom_diff",Form("Run %d ; P - P(eb,th_e) ;Counts",nrun), 100, -.2,.2);
-    HList.Add(h_prot_mom_diff);
+    TH1F *h_elec_mom_diff = new TH1F("h_elec_mom_diff",Form("Run %d ; P - P(eb,th_e) ;Counts",nrun), 100, -.2,.2);
+    HList.Add(h_elec_mom_diff);
     TH1F *hW_dcut[2];
      for (Int_t nd=0;nd<2;nd++) {
         hW_dcut[nd]= new TH1F(Form("hW_%d",nd),Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
@@ -150,20 +150,22 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(pdelta);
     TH1F *hdelta = new TH1F("hdelta",Form("Run %d ; HMS Delta;Counts",nrun), 100,-10.,10.);
     HList.Add(hdelta);
-    TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV);Counts",nrun), 200, -.05,.1);
     HList.Add(hEmiss);
-    TH1F *hPmiss = new TH1F("hPmiss",Form("Run %d ; Pmiss (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmiss = new TH1F("hPmiss",Form("Run %d ; Pmiss (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmiss);
     TH1F *hMmiss2 = new TH1F("hMmiss2",Form("Run %d ; Mmiss2 (GeV2);Counts",nrun), 400, -.05,.05);
     HList.Add(hMmiss2);
     TH1F *hMmiss2_el = new TH1F("hMmiss2_el",Form("Run %d ; Mmiss2 (GeV2) W el;Counts",nrun), 100, -.05,.05);
     HList.Add(hMmiss2_el);
-    TH1F *hPmissx = new TH1F("hPmissx",Form("Run %d ; Pmissx (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmissx = new TH1F("hPmissx",Form("Run %d ; Pmissx (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissx);
-    TH1F *hPmissy = new TH1F("hPmissy",Form("Run %d ; Pmissy (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmissy = new TH1F("hPmissy",Form("Run %d ; Pmissy (GeV);Counts",nrun), 200, -.1,.1);
      HList.Add(hPmissy);
-   TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 100, -.2,.2);
+     TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissz);
+    TH1F *hprot_mom_calc = new TH1F("hprot_mom_calc",Form("Run %d ; Proton mom calc;Counts",nrun), 100,2.0,3.0 );
+    HList.Add(hprot_mom_calc);
      TH1F *hetottracknorm = new TH1F("hetot",Form("Run %d ; Etottrack norm;Counts",nrun), 120, 0.0,1.2);
     HList.Add(hetottracknorm);
      TH2F *hWXfp = new TH2F("hWXfp",Form("Run %d ; W (GeV) ; Xfp ",nrun), 100, 0.8,1.2, 80,-40,40);
@@ -175,7 +177,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
         TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 100, 0.8,1.2, 80,-.02,.02);
    HList.Add(hWYpfp);
   // loop over entries
-    Double_t th_cent=7.5;
+    Double_t th_cent=17.83;
   Double_t Mp = .93827;
    Double_t Ei=10.600;
    Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
@@ -194,11 +196,14 @@ Long64_t nentries = tsimc->GetEntries();
 		  hetottracknorm->Fill(etottracknorm);
 		  //		  if (etottracknorm > 0.8 ) {
 		  		  if (1==1 ) {
-                  if (	TMath::Abs(emiss) < 0.1 &&	TMath::Abs(e_delta) < 8 ) {	  
+                  if (	W < 1.05 && TMath::Abs(e_delta) < 8 ) {
+		      Double_t theta_shms = TMath::ACos((cos_ts + p_yptar*sin_ts) / TMath::Sqrt( 1. + p_xptar*p_xptar + p_yptar * p_yptar ));
+		      Double_t pcalc=2*Mp*Ei*(Ei+Mp)*cos(theta_shms)/(Mp*Mp+2*Mp*Ei+Ei*Ei*sin(theta_shms)*sin(theta_shms));
+		      hprot_mom_calc->Fill(pcalc);
 		  hW->Fill(W);
 		  Double_t e_calc = Mp+Ei - Mp*Ei/(Mp+2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
 		  Double_t p_calc= TMath::Sqrt(e_calc*e_calc - Mp*Mp);
-		  h_prot_mom_diff->Fill(p_calc-p_mom);
+		  h_elec_mom_diff->Fill(p_calc-p_mom);
 		    Double_t dstep=4;
 		    Double_t dstart=2;
 		    if (nrun==6009) {

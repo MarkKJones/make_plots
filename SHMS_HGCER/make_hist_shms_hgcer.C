@@ -129,5 +129,7 @@ Long64_t nentries = tsimc->GetEntries();
 		}
 		}
 }
+ TFile hsimc(outputhist,"recreate");
+        HList.Write();
 //
 }

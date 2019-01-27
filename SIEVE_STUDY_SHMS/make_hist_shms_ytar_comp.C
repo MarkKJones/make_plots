@@ -24,7 +24,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_shms_ztar_sieve(TString basename="",Int_t nrun=2043){
+void make_hist_shms_ytar_comp(TString basename="",Int_t nrun=2043){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -40,8 +40,58 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_shms_ztar_sieve_hist.root";
+   outputhist= "hist/"+basename+"_shms_ytar_comp_hist.root";
  TObjArray HList(0);
+//
+    string oldcoeffsfilename="../hallc_replay/DATFILES/shms-2017-optimized_delta_newfit3.dat";
+  ifstream ifile(oldcoeffsfilename.c_str());
+  if(!ifile.is_open()) {
+    cout << "error opening reconstruction coefficient file = " << oldcoeffsfilename << endl;
+    return;    
+  }
+  vector<Double_t> xptarcoeffs_old;
+  vector<Double_t> yptarcoeffs_old;
+  vector<Double_t> ytarcoeffs_old;
+  vector<Double_t> deltacoeffs_old;
+  vector<Int_t> xfpexpon_old;
+  vector<Int_t> xpfpexpon_old;
+  vector<Int_t> yfpexpon_old;
+  vector<Int_t> ypfpexpon_old;
+  vector<Int_t> xtarexpon_old;
+  TString currentline;
+  int num_recon_terms_old;
+  string line="!";
+  int good=1;
+  while(good && line[0]=='!') {
+    good = getline(ifile,line).good();
+     cout << line << endl;
+  } 
+  while(good && line.compare(0,4," ---")!=0) {
+    good = getline(ifile,line).good();
+     cout << line << endl;
+  }
+  line=" ";
+  good = getline(ifile,line).good();
+  Double_t c1,c2,c3,c4;
+  Int_t e1,e2,e3,e4,e5;
+  while(good && line.compare(0,4," ---")!=0) {
+    sscanf(line.c_str()," %le %le %le %le %1d%1d%1d%1d%1d",&c1,&c2,&c3,&c4,&e1,&e2,&e3,&e4,&e5);
+    xptarcoeffs_old.push_back(c1);
+    ytarcoeffs_old.push_back(c2);
+    yptarcoeffs_old.push_back(c3);
+    deltacoeffs_old.push_back(c4);
+     xfpexpon_old.push_back(e1);
+    xpfpexpon_old.push_back(e2);
+    yfpexpon_old.push_back(e3);
+    ypfpexpon_old.push_back(e4);
+    xtarexpon_old.push_back(e5);       
+					cout << xfpexpon_old[num_recon_terms_old] << " " << yfpexpon_old[num_recon_terms_old] << " " << xpfpexpon_old[num_recon_terms_old] << " " << ypfpexpon_old[num_recon_terms_old] << " " << xtarexpon_old[num_recon_terms_old] << " " <<ytarcoeffs_old[num_recon_terms_old] << endl; 
+    num_recon_terms_old++;
+    good = getline(ifile,line).good();
+    cout << c1 << " " << c2 << " " <<c3 << " " <<c4 << " " << e1 << e2 << e3 << e4 << e5 << endl;
+  }
+  cout << "num recon terms in OLD matrix = " << num_recon_terms_old << endl;
+
 //
 TFile *fsimc = new TFile(inputroot); 
 TTree *tsimc = (TTree*) fsimc->Get("T");
@@ -84,6 +134,9 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    // Define histograms
    TH1F *hztar[9];
    TH1F *hytar[9];
+   TH1F *hytar_all;
+   TH1F *hytarcalc_all;
+   TH1F *hytarcalc_diff;
    TH1F *hyptar[9];
    TH1F *hyptar_cent_foil;
    TH2F *hytar_yptar;
@@ -96,6 +149,12 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    Double_t yp_cuthi[9]={-0.0236552,-0.0171921,-0.00992104,-0.00359254,0.00192807,0.00946841,0.0152583,0.0214522,0.0289925};
    hyptar_cent_foil = new TH1F("hyptar_cent_foil", Form("Run %d Cetner Foil; Yp_tar ; Counts",nrun), 140,-.035,.035);
    HList.Add(hyptar_cent_foil);
+   hytar_all = new TH1F("hytar_all", Form("Run %d ; Ytar ; Counts",nrun), 100,-4,4);
+   HList.Add(hytar_all);
+   hytarcalc_all = new TH1F("hytarcalc_all", Form("Run %d ; Ytar (calc) ; Counts",nrun), 100,-4,4);
+   HList.Add(hytarcalc_all);
+   hytarcalc_diff = new TH1F("hytarcalc_diff", Form("Run %d ; Ytar_calc-Ytar ; Counts",nrun), 100,-4,4);
+   HList.Add(hytarcalc_all);
    hytar_yptar = new TH2F("hytar_yptar", Form("Run %d ; Y_tar ; Yp_tar",nrun), 190,-4.,4.,60,-.035,.035);
    HList.Add(hytar_yptar);
    hztar_yptar = new TH2F("hztar_yptar", Form("Run %d ; Yp_tar ; Z_tar",nrun), 60,-.035,.035,120,-15.,15.);
@@ -117,6 +176,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 	TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etotnorm ; Counts",nrun),100,0.,2.);
 	TH1F *hngsum = new TH1F("hngsum",Form("Run %d ; NG Npe SUM ; Counts",nrun),100,0.,40.);
 // loop over entries
+	Double_t ytar_calc;
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
@@ -124,6 +184,29 @@ Long64_t nentries = tsimc->GetEntries();
 		hetot->Fill(etracknorm);
 		hngsum->Fill(sumhgnpe);
 		if (etracknorm>.9 && sumhgnpe > 2. && delta>-10 && delta<15) {
+		  //
+		ytar_calc=0;
+        for( int icoeffold=0; icoeffold<num_recon_terms_old; icoeffold++ ){
+	  Int_t t1=xfpexpon_old[icoeffold];
+ 	  Int_t t2=yfpexpon_old[icoeffold];
+	  Int_t t3=xpfpexpon_old[icoeffold];
+	  Int_t t4=ypfpexpon_old[icoeffold];
+	  Int_t t5=xtarexpon_old[icoeffold];
+       	Double_t etemp= 
+	  pow( xfp / 100.0, t1 ) * 
+	  pow( yfp / 100.0, t2 ) * 
+	  pow( xpfp, t3 ) * 
+	  pow( ypfp, t4 ) * 
+	  pow( xtar/100., t5 );
+	//	cout << etemp << " " << ytarcoeffs_old[icoeffold] << endl;
+        	ytar_calc += ytarcoeffs_old[icoeffold] * etemp;
+		//				cout << xfpexpon_old[icoeffold] << " " << yfpexpon_old[icoeffold] << " " << xpfpexpon_old[icoeffold] << " " << ypfpexpon_old[icoeffold] << " " << xtarexpon_old[icoeffold] << " " <<ytarcoeffs_old[icoeffold] << endl; 
+	  } // for icoeffold loop
+	//cout << " ytar = " << ytar << " " << ytar_calc*100 << endl;
+	hytar_all->Fill(ytar);
+	hytarcalc_all->Fill(ytar_calc*100);
+	hytarcalc_diff->Fill(ytar_calc*100-ytar);
+		  //
 		  hztar_yptar->Fill(yptar,reactz);
 		  hytar_yptar->Fill(ytar,yptar);
 		  if (reactz <5 && reactz>-5) {

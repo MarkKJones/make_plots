@@ -44,7 +44,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_hms_ep_elastic_hist.root";
+   outputhist= "hist/"+basename+"_shms_ep_elastic_hist.root";
  TObjArray HList(0);
  //
 
@@ -93,11 +93,11 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("P.kin.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 50, 0.8,1.2);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
     HList.Add(hW);
-    TH1F *hdelta = new TH1F("hdelta",Form("Run %d ; Delta (%) elastic ;Counts",nrun), 100, -15.,25.0);
+    TH1F *hdelta = new TH1F("hdelta",Form("Run %d ; Delta ;Counts",nrun), 100, -15.,25.0);
     HList.Add(hdelta);
-    TH2F *hWdelta = new TH2F("hWdelta",Form("Run %d ; Delta (%) ; W",nrun), 50, -15.,25.0, 50, .8,1.2);
+    TH2F *hWdelta = new TH2F("hWdelta",Form("Run %d ; Delta  ; W",nrun), 50, -15.,25.0, 50, .8,1.2);
     HList.Add(hWdelta);
     TH1F *hDeltaDp = new TH1F("hDeltaDp",Form("Run %d ; DeltaDP;Counts",nrun), 300, -1.,1.);
      HList.Add(hDeltaDp);
@@ -139,14 +139,14 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hybeam);
     TH1F *hWcalc = new TH1F("hWcalc",Form("Run %d Fac = %5.3f; W (GeV);Counts",nrun,pfac),  300, 0.9,1.5);
     HList.Add(hWcalc);
-    TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etrack norm;Counts",nrun), 120, 0.0,1.2);
+    TH1F *hetot = new TH1F("hetot",Form("Run %d ; Etrack norm;Counts",nrun), 120, 0.0,1.6);
     HList.Add(hetot);
     TH1F *hDeltaDiff = new TH1F("hDeltaDiff",Form("Run %d  Fac = %5.3f; DeltaDiff ;Counts",nrun,pfac), 300, -5,5);
     HList.Add(hDeltaDiff);
-    TH2F *hDeltaDiffXfp = new TH2F("hDeltaDiffXfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Xfp ",nrun,pfac), 300, -1,2, 80,-40,40);
-    TH2F *hDeltaDiffYfp = new TH2F("hDeltaDiffYfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Yfp ",nrun,pfac), 300, -1,2, 80,-40,40);
-    TH2F *hDeltaDiffXpfp = new TH2F("hDeltaDiffXpfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Xpfp ",nrun,pfac), 300, -1,2, 80,-.05,.05);
-    TH2F *hDeltaDiffYpfp = new TH2F("hDeltaDiffYpfp",Form("Run %d  Fac = %5.3f; DeltaDiff (%) ; Ypfp ",nrun,pfac), 300, -1,2, 80,-.02,.02);
+    TH2F *hDeltaDiffXfp = new TH2F("hDeltaDiffXfp",Form("Run %d  Fac = %5.3f; DeltaDiff  ; Xfp ",nrun,pfac), 300, -1,2, 80,-40,40);
+    TH2F *hDeltaDiffYfp = new TH2F("hDeltaDiffYfp",Form("Run %d  Fac = %5.3f; DeltaDiff  ; Yfp ",nrun,pfac), 300, -1,2, 80,-40,40);
+    TH2F *hDeltaDiffXpfp = new TH2F("hDeltaDiffXpfp",Form("Run %d  Fac = %5.3f; DeltaDiff  ; Xpfp ",nrun,pfac), 300, -1,2, 80,-.05,.05);
+    TH2F *hDeltaDiffYpfp = new TH2F("hDeltaDiffYpfp",Form("Run %d  Fac = %5.3f; DeltaDiff  ; Ypfp ",nrun,pfac), 300, -1,2, 80,-.02,.02);
     HList.Add(hDeltaDiffXfp);
     HList.Add(hDeltaDiffXpfp);
     HList.Add(hDeltaDiffYfp);
@@ -155,6 +155,18 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     TH2F *hWYfp = new TH2F("hWYfp",Form("Run %d ; W (GeV) ; Yfp ",nrun), 100, 0.8,1.2, 80,-40,40);
     TH2F *hWXpfp = new TH2F("hWXpfp",Form("Run %d ; W (GeV) ; Xpfp ",nrun), 100, 0.8,1.2, 80,-.05,.05);
     TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 100, 0.8,1.2, 80,-.02,.02);
+    TH1F *hxptar = new TH1F("hxptar",Form("Run %d ; SHMS Xp_tar;Counts",nrun), 100, -.1,.1);
+    HList.Add(hxptar);
+    TH1F *hyptar = new TH1F("hyptar",Form("Run %d ; SHMS Yp_tar;Counts",nrun), 100, -.1,.1);
+    HList.Add(hyptar);
+      TH1F *hxfp = new TH1F("hxfp",Form("Run %d ; SHMS X_fp;Counts",nrun), 100, -40.,40.);
+    HList.Add(hxfp);
+    TH1F *hyfp = new TH1F("hyfp",Form("Run %d ; SHMS Y_fp;Counts",nrun), 100, -20.,20.);
+    HList.Add(hyfp);
+    TH1F *hxpfp = new TH1F("hxpfp",Form("Run %d ; SHMS Xp_fp;Counts",nrun), 100, -.1,.1);
+    HList.Add(hxpfp);
+    TH1F *hypfp = new TH1F("hypfp",Form("Run %d ; SHMS Yp_fp;Counts",nrun), 100, -.05,.05);
+    HList.Add(hypfp);
   // loop over entries
     Double_t th_cent=19.995;
   Double_t Mp = .93827;
@@ -176,6 +188,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
        th_cent = 19.85;
        p_spec = 6.842;
    }
+    Double_t scalfac=1.0;
    Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
    Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
 Long64_t nentries = tsimc->GetEntries();
@@ -187,7 +200,16 @@ Long64_t nentries = tsimc->GetEntries();
                 hxbeam->Fill(beamx);
                 hybeam->Fill(beamy);
  		if (gindex>-1)  hetot->Fill(etracknorm);
-		if (gindex>-1  && e_delta > -10. && e_delta < 20. ) { 
+		if (etracknorm > 0.9 && gindex>-1  && e_delta > -10. && e_delta < 20.) { 
+		  if ( W> 0.850 &&W < 1.075) {
+		  hxfp->Fill(e_xfp,scalfac);		  
+		  hyfp->Fill(e_yfp,scalfac);		  
+		  hxpfp->Fill(e_xpfp,scalfac);		  
+		  hypfp->Fill(e_ypfp,scalfac);		  
+		  hxptar->Fill(e_xptar,scalfac);		  
+		  hyptar->Fill(e_yptar,scalfac);		  
+		  hdelta->Fill(e_delta,scalfac);
+		  }		  
                 hxtar->Fill(e_xtar);
                 hDeltaDp->Fill(DeltaDp);
                 hztar->Fill(e_reactz);
@@ -211,7 +233,6 @@ Long64_t nentries = tsimc->GetEntries();
 		Double_t W_calc= TMath::Sqrt(-4*Enew*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.)+Mp*Mp+2*Mp*(Ei-Enew));
 		hWcalc->Fill(W_calc);
 		hWdelta->Fill(e_delta,W);
-		if (TMath::Abs(W-.910)<.050) hdelta->Fill(e_delta);
 		if (W<1.075) {
 		hDeltaDiff->Fill(delta_diff);
 		hDeltaDiffXfp->Fill(delta_diff,e_xfp);

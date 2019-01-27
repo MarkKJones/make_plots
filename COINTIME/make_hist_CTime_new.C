@@ -28,7 +28,7 @@
 #include <TDecompSVD.h>
 using namespace std;
 
-void make_hist_CTime(TString basename="",Int_t nrun=1267,Double_t cpeak=45){
+void make_hist_CTime_new(TString basename="",Int_t nrun=1267,Double_t cpeak=45){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -55,7 +55,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  pTRIG6_ROC1_tdcTimeRaw;
    tsimc->SetBranchAddress("T.coin.pTRIG6_ROC1_tdcTimeRaw",&pTRIG6_ROC1_tdcTimeRaw);
  Double_t  pRF_tdcTime;
-   tsimc->SetBranchAddress("T.coin.pRF_ROC2_tdcTime",&pRF_tdcTime);
+   tsimc->SetBranchAddress("T.coin.pRF_tdcTime",&pRF_tdcTime);
 //
  static const Int_t plnum=4;
  static const Int_t iside=2;
@@ -90,9 +90,9 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
  }}
  //
  Double_t  pRF_tdcTimeRaw;
-   tsimc->SetBranchAddress("T.coin.pRF_ROC2_tdcTimeRaw",&pRF_tdcTimeRaw);
+   tsimc->SetBranchAddress("T.coin.pRF_tdcTimeRaw",&pRF_tdcTimeRaw);
  Double_t  hRF_tdcTime;
-   tsimc->SetBranchAddress("T.coin.hRF_ROC1_tdcTime",&hRF_tdcTime);
+   tsimc->SetBranchAddress("T.coin.hRF_tdcTime",&hRF_tdcTime);
  Double_t  hPRE40_ROC1_tdcTimeRaw;
  tsimc->SetBranchAddress("T.coin.hPRE40_ROC1_tdcTimeRaw",&hPRE40_ROC1_tdcTimeRaw);
  Double_t  hSTOF_ROC1_tdcTimeRaw;
@@ -106,7 +106,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
  Double_t  pPRE40_ROC2_tdcTimeRaw;
  tsimc->SetBranchAddress("T.coin.pPRE40_ROC2_tdcTimeRaw",&pPRE40_ROC2_tdcTimeRaw);
  Double_t  hRF_tdcTimeRaw;
-   tsimc->SetBranchAddress("T.coin.hRF_ROC1_tdcTimeRaw",&hRF_tdcTimeRaw);
+   tsimc->SetBranchAddress("T.coin.hRF_tdcTimeRaw",&hRF_tdcTimeRaw);
  Double_t  pT2_tdcTime;
    tsimc->SetBranchAddress("T.coin.pT2_tdcTime",&pT2_tdcTime);
  Double_t  pT2_tdcTimeRaw;
@@ -234,21 +234,21 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
    // Define histograms
     TH1F *haero = new TH1F("haero",Form("Run %d ; Aero ;Counts",nrun), 100, -1.,50.0);
     HList.Add(haero);
-    TH1F *hhs1xfptime= new TH1F("hhs1xfptime",Form("Run %d ;HMS s1X fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hhs1xfptime= new TH1F("hhs1xfptime",Form("Run %d ;HMS s1X fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hhs1xfptime);
-    TH1F *hhs1yfptime= new TH1F("hhs1yfptime",Form("Run %d ;HMS s1Y fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hhs1yfptime= new TH1F("hhs1yfptime",Form("Run %d ;HMS s1Y fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hhs1yfptime);
-    TH1F *hhs2xfptime= new TH1F("hhs2xfptime",Form("Run %d ;HMS s2X fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hhs2xfptime= new TH1F("hhs2xfptime",Form("Run %d ;HMS s2X fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hhs2xfptime);
-    TH1F *hhs2yfptime= new TH1F("hhs2yfptime",Form("Run %d ;HMS s2Y fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hhs2yfptime= new TH1F("hhs2yfptime",Form("Run %d ;HMS s2Y fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hhs2yfptime);
-    TH1F *hps1xfptime= new TH1F("hps1xfptime",Form("Run %d ;SHMS s1X fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hps1xfptime= new TH1F("hps1xfptime",Form("Run %d ;SHMS s1X fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hps1xfptime);
-    TH1F *hps1yfptime= new TH1F("hps1yfptime",Form("Run %d ;SHMS s1Y fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hps1yfptime= new TH1F("hps1yfptime",Form("Run %d ;SHMS s1Y fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hps1yfptime);
-    TH1F *hps2xfptime= new TH1F("hps2xfptime",Form("Run %d ;SHMS s2X fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hps2xfptime= new TH1F("hps2xfptime",Form("Run %d ;SHMS s2X fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hps2xfptime);
-    TH1F *hps2yfptime= new TH1F("hps2yfptime",Form("Run %d ;SHMS s2Y fp time ;Counts",nrun), 200,0.,50.);
+    TH1F *hps2yfptime= new TH1F("hps2yfptime",Form("Run %d ;SHMS s2Y fp time ;Counts",nrun), 200,0.,100.);
     HList.Add(hps2yfptime);
     TH1F *haero_cut = new TH1F("haero_cut",Form("Run %d ; Aero (track) ;Counts",nrun), 100, -1.,50.0);
     TH1F *hht2_raw = new TH1F("hht2_raw",Form("Run %d ; HMS T2 (scin ref time);Counts",nrun), 1000, 0.,10000.0);
@@ -304,15 +304,15 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hpbetatrack);
     TH1F *hhbetatrack = new TH1F("hhbetatrack",Form("Run %d ; HMS Beta track;Counts",nrun), 600, -1.,2.0);
     HList.Add(hhbetatrack);
-    TH1F *hpstarttime = new TH1F("hpstarttime",Form("Run %d ; SHMS Starttime;Counts",nrun), 280, -10.,60.0);
+    TH1F *hpstarttime = new TH1F("hpstarttime",Form("Run %d ; SHMS Starttime;Counts",nrun), 280, 20.,100.0);
     HList.Add(hpstarttime);
     TH1F *hs1xdiff = new TH1F("hs1xdiff",Form("Run %d ; S1X-H1X fptimes ;Counts",nrun), 280, -60.,60.0);
     HList.Add(hs1xdiff);
-    TH1F *hhstarttime = new TH1F("hhstarttime",Form("Run %d ; HMS Starttime;Counts",nrun), 280, -10.,60.0);
+    TH1F *hhstarttime = new TH1F("hhstarttime",Form("Run %d ; HMS Starttime;Counts",nrun), 280, 20.,100.0);
     HList.Add(hhstarttime);
-    TH2F *hhstarttime_hdelta = new TH2F("hhstarttime_hdelta",Form("Run %d ; HMS Starttime; HMS delta",nrun), 280, -10.,60.0,100,-10,10);
+    TH2F *hhstarttime_hdelta = new TH2F("hhstarttime_hdelta",Form("Run %d ; HMS Starttime; HMS delta",nrun), 280, 20.,100.0,100,-10,10);
     HList.Add(hhstarttime_hdelta);
-    TH2F *hpstarttime_pdelta = new TH2F("hpstarttime_pdelta",Form("Run %d ; SHMS Starttime; SHMS delta",nrun), 280, -10.,60.0,100,-10,20);
+    TH2F *hpstarttime_pdelta = new TH2F("hpstarttime_pdelta",Form("Run %d ; SHMS Starttime; SHMS delta",nrun), 280, 20.,100.0,100,-10,20);
     HList.Add(hpstarttime_pdelta);
     TH1F *hCoinTime_RAW_ROC1 = new TH1F("hcoinTime_RAW_ROC1",Form("Run %d ; CoinTime_RAW_ROC1  ;Counts",nrun),600, -50.,100.0);
     HList.Add(hCoinTime_RAW_ROC1);
@@ -579,9 +579,9 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
     HList.Add(hptrig4_ptrig1_ROC1_cut);
     TH2F *hptrig4_htrig1_ROC1_cut = new TH2F("hptrig4_htrig1_ROC1_cut",Form("Run %d ; ptrig4_ROC1 (HMS trig in SHMS ROC)  ; htrig1_ROC1 (HMS trig in HMS ROC) ",nrun),200, 260.,360.0,200, 0.,500.0);
     HList.Add(hptrig4_htrig1_ROC1_cut);
-    TH2F *hptrig4_hstarttime_ROC1_cut = new TH2F("hptrig4_hstarttime_ROC1_cut",Form("Run %d SHMS set time ; ptrig4_ROC1 (HMS trig in SHMS ROC)  ; HMS startime ",nrun),200, 260.,360.0,200, 0.,60.0);
+    TH2F *hptrig4_hstarttime_ROC1_cut = new TH2F("hptrig4_hstarttime_ROC1_cut",Form("Run %d SHMS set time ; ptrig4_ROC1 (HMS trig in SHMS ROC)  ; HMS startime ",nrun),200, 260.,360.0,200, 20.,100.0);
     HList.Add(hptrig4_hstarttime_ROC1_cut);
-    TH2F *hptrig1_pstarttime_ROC1_cut = new TH2F("hptrig1_pstarttime_ROC1_cut",Form("Run %d SHMS set time ; ptrig1_ROC1 (SHMS trig in SHMS ROC)  ; SHMS startime ",nrun),200, 260.,360.0,200, 0.,60.0);
+    TH2F *hptrig1_pstarttime_ROC1_cut = new TH2F("hptrig1_pstarttime_ROC1_cut",Form("Run %d SHMS set time ; ptrig1_ROC1 (SHMS trig in SHMS ROC)  ; SHMS startime ",nrun),200, 260.,360.0,200, 20.,100.0);
     HList.Add(hptrig1_pstarttime_ROC1_cut);
     TH2F *hptrig14diff_starttimediff_ROC1_cut ;
     TH2F *hptrig14diff_starttimediff_cut1 ;
@@ -608,7 +608,7 @@ Double_t shmstdc_tofcorr[plnum][iside][21];
           hptrig14diff_starttimediff_ROC1_cut= new TH2F("hptrig14diff_pstarttimediff_ROC1_cut",Form("Run %d ; ptrig4-ptrig1  ; SHMS startime-HMS starttime ",nrun),200, -20.,20.0,200, 15.,40.0);
           hptrig14diff_starttimediff_cut1= new TH2F("hptrig14diff_pstarttimediff_cut1",Form("Run %d ; ptrig4-ptrig1 roc2  ; SHMS startime-HMS starttime ",nrun),200, -20.,20.0,200, 15.,40.0);
     hptrig13diff_starttimediff_ROC1_cut= new TH2F("hptrig13diff_pstarttimediff_ROC1_cut",Form("Run %d ; ptrig3-ptrig1  ; SHMS startime-HMS starttime ",nrun),200, -20.,20.0,200, 15.,40.0);
-     hepiCoinTime_ptrig14diff= new TH2F("hepicoinTime_ptrig14diff",Form("Run %d ; epiCoinTimeW_ROC2  ;T4-T1 ROC2",nrun),800, 0.,100.0,200, -20.,20.0);
+     hepiCoinTime_ptrig14diff= new TH2F("hepicoinTime_ptrig14diff",Form("Run %d ; epiCoinTimeW_ROC2  ;T4-T1 RC2",nrun),800, 0.,100.0,200, -20.,20.0);
      hCTcalc_ptrig14diff= new TH2F("hCTcalc_ptrig14diff",Form("Run %d ; CT_calc ;T4-T1 ROC2",nrun),800, 0.,100.0,200, -20.,20.0);
      hepiCoinTime_ptrig14diff_roc1= new TH2F("hepicoinTime_ptrig14diff_roc1",Form("Run %d ; epiCoinTimeW_ROC1  ;T4-T1 ROC1",nrun),800, 0.,100.0,200, -20.,20.0);
    }
@@ -685,7 +685,7 @@ TH2F *hCT_hpadY[16];
 // loop over entries
     Long64_t nentries = tsimc->GetEntries();
     //
-      nentries=50000;
+    //  nentries=50000;
 	for (int ie = 0; ie < nentries; ie++) {
       		tsimc->GetEntry(ie);
                 if (ie%50000==0) cout << " Entry = " << ie << endl;
@@ -724,9 +724,9 @@ TH2F *hCT_hpadY[16];
  		     if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000 ) htdc_uncorr_pm[ipl][ipad]->Fill(tdc_uncorr[ipl][1][ipad],tdc_uncorr[ipl][0][ipad]);
                     for (Int_t is=0;is<iside;is++) {
 		      if (tdc_uncorr[ipl][0][ipad]<1000&&tdc_uncorr[ipl][1][ipad]<1000) {
-                        hRF_hmspad_tdiff[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad]);
-                        hRF_hmspad_tdiff_xpos[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Xpos[ipl]);
-                        hRF_hmspad_tdiff_ypos[ipl][is][ipad]->Fill(rfhstof-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Ypos[ipl]);
+                        hRF_hmspad_tdiff[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad]);
+                        hRF_hmspad_tdiff_xpos[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Xpos[ipl]);
+                        hRF_hmspad_tdiff_ypos[ipl][is][ipad]->Fill(rfh-hmstdc_tofcorr[ipl][is][ipad],hmshodo_Ypos[ipl]);
 		      }
 		    htdc_uncorr[ipl][is][ipad]->Fill(tdc_uncorr[ipl][is][ipad]);
 		   }}}

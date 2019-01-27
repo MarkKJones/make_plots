@@ -28,7 +28,7 @@ void comp_simc_data_hms_ep_elastic( TString fn1 , TString fn2 ) {
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
      TString outputpdf;
-    outputpdf="plots/comp_simc_hms_ep_elastic_"+fn2+".pdf";
+    outputpdf="plots/comp_simc_hms_ep_elastic_xptarcut_"+fn2+".pdf";
     //
 const UInt_t nftot=2;
  Int_t colind[nftot]={1,2};
@@ -40,8 +40,8 @@ const UInt_t nplots=6;
  //
 const UInt_t n2plots=3;
  TString h2name[n2plots]={"hxptar","hyptar","hdelta"};
-const UInt_t n3plots=3;
- TString h3name[n3plots]={"pxptar","pyptar","pdelta"};
+const UInt_t n3plots=4;
+ TString h3name[n3plots]={"pxptar","pyptar","pdelta","hprot_mom_calc"};
 const UInt_t n4plots=4;
  TString h4name[n4plots]={"hxfp","hyfp","hxpfp","hypfp"};
 const UInt_t n5plots=4;
@@ -78,21 +78,33 @@ const UInt_t n5plots=4;
    // W histograms
     TCanvas *cW;
     TLegend *lW;
+    Double_t ymax;
     TF1* fW[nftot];
     Double_t Wsum[2];
+    Double_t Wpeak[2];
+    Double_t Wpeakerr[nftot];
      cW = new TCanvas("cW","W", 1000,700);
      cW->Divide(2,3);
       lW = new TLegend(.65,.75,.99,.95,"");
       for (UInt_t nh=0;nh<nplots;nh++) {
       cW->cd(nh+1);
+      ymax=0;
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       if (fhist[nf][nh]->GetMaximum()> ymax) ymax = fhist[nf][nh]->GetMaximum();
+     }
      for (UInt_t nf=0;nf<nftot;nf++) {
        //	if (nf==0) fhist[nf][nh]->DrawNormalized();
        //	if (nf!=0) fhist[nf][nh]->DrawNormalized("same");
+       	if (nf==0) fhist[nf][nh]->SetMaximum(ymax);
        	if (nf==0) fhist[nf][nh]->Draw();
        	if (nf!=0) fhist[nf][nh]->Draw("same");
       	if (nf==0) fhist[nf][nh]->SetLineColor(2);
 	if (nh==0) {
  	Double_t WMax = fhist[nf][nh]->GetBinCenter(fhist[nf][nh]->GetMaximumBin());
+	fW[nf] = new TF1(Form("fW_%d",nf),"gaus",WMax-.02,WMax+.02);
+	fhist[nf][nh]->Fit(Form("fW_%d",nf),"QR");
+        Wpeak[nf]=fW[nf]->GetParameter(1);
+        Wpeakerr[nf]=fW[nf]->GetParError(1);
 	Wsum[nf]=fhist[nf][nh]->Integral(fhist[nf][nh]->FindBin(WMax-.02),fhist[nf][nh]->FindBin(WMax+.1));
 	     }
 	if (nh==0 )lW->AddEntry(fhist[nf][nh],lname[nf]);
@@ -101,7 +113,9 @@ const UInt_t n5plots=4;
       }
       cW->Print(outputpdf+"(");
       cout << " ratio = " << Wsum[0]/Wsum[1] << " =/- " << Wsum[0]/Wsum[1]*TMath::Sqrt(1./Wsum[0])<< endl;
-      //
+ 	cout << " Data W = " << Wpeak[0] << " Simc W = " << Wpeak[1] << " Data W - SIMC W = " << Wpeak[0]-Wpeak[1] << endl;
+	cout << Wpeak[0] << " " << Wpeakerr[0] << " " << Wpeak[1]  << " " << Wpeakerr[1] << " " << (Wpeak[0]-Wpeak[1]) << " " << TMath::Sqrt(Wpeakerr[0]*Wpeakerr[0]+Wpeakerr[1]*Wpeakerr[1])<< endl;
+     //
   //  histograms
     TCanvas *cSHMS;
     TLegend *lSHMS;

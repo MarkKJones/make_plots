@@ -110,9 +110,9 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     TH2F *hW_xtar[3];
      TH2F *hW_xptar[3];
      for (Int_t nz=0;nz<3;nz++) {
-       hW_xtar[nz] = new TH2F(Form("hW_xtar_%d",nz),Form("Run %d Zcut_cent=%3.1f;  W (GeV);Xtar (cm)",nrun,zcut_cent[nz]), 100, 0.75,1.0,100, -.3,.3);
+       hW_xtar[nz] = new TH2F(Form("hW_xtar_%d",nz),Form("Run %d Zcut_cent=%3.1f;  W (GeV);Xtar (cm)",nrun,zcut_cent[nz]), 40, 0.9,1.0,40, -.5,.5);
     HList.Add(hW_xtar[nz]);
-    hW_xptar[nz] = new TH2F(Form("hW_xptar_%d",nz),Form("Run %d Zcut_cent=%f5.2;  W (GeV);Xptar (rad)",nrun,zcut_cent[nz]), 100, 0.75,1.0,100, -.1,.1);
+    hW_xptar[nz] = new TH2F(Form("hW_xptar_%d",nz),Form("Run %d Zcut_cent=%5.2f;  W (GeV);Xptar (rad)",nrun,zcut_cent[nz]), 40, 0.9,1.0,40, -.1,.1);
     HList.Add(hW_xptar[nz]);
  }
    TH2F *hW_DeltaDp = new TH2F("hW_DeltaDp",Form("Run %d ; W (GeV) ; DeltaDP ",nrun), 100, 0.75,1.0 ,100, -.3,.3);
@@ -183,6 +183,14 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
        th_cent = 19.75;
        p_spec = 6.590;
    }
+    if (nrun ==6611 ) {
+       th_cent = 29.985;
+       p_spec = 2.478;
+   }
+    if (nrun ==6595 ) {
+       th_cent = 21.12;
+       p_spec = 3.007;
+   }
     if (nrun==4794) scalfac=.237/.363*(96046.593/34127.232); // for run 4793
     if (nrun==4794) scalfac=.237/.363*(32119.659/34127.232); // for run 4788
     if (nrun==4794) scalfac=.237/.363*(61659.676/34127.232); // for run 4798
@@ -214,7 +222,7 @@ Long64_t nentries = tsimc->GetEntries();
                 hDeltaDp->Fill(DeltaDp,scalfac);
                 hztar->Fill(e_reactz,scalfac);
 		      for (Int_t nz=0;nz<3;nz++) {
-			if (TMath::Abs(e_reactz-zcut_cent[nz]) < .5 ) {
+			if (TMath::Abs(e_reactz-zcut_cent[nz]) < 1.0 ) {
 			  if ( TMath::Abs(e_xptar) < .005) hW_xtar[nz]->Fill(W,e_xtar,scalfac);
                            if ( TMath::Abs(rasty) < .05)   hW_xptar[nz]->Fill(W,e_xptar,scalfac);
 			}

@@ -110,9 +110,9 @@ void fit_xfp_yfp_hist_hms_ztar_sieve(TString basename,TString label) {
 	nyline[nx] = new TLine(-8,(4-nx)*2.54,8,(4-nx)*2.54);
 	  }
 	    TCanvas *cs = new TCanvas("cs","ys v xs",1300,700);
-	    cs->Divide(3,1);
-	    for (int nf=0;nf<3;nf++) {
-	    cs->cd(nf+1);
+	    cs->Divide(1,1);
+	    for (int nf=1;nf<2;nf++) {
+	      //	    cs->cd(nf+1);
 	    hys_xs_foil[nf]->SetMinimum(10);
 	    hys_xs_foil[nf]->Draw("colz");
             TString nlabel = label+" "+foilname[nf];

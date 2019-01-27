@@ -24,7 +24,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_hms_tw(TString basename="",Int_t nrun=2043){
+void make_hist_shms_hgcer_ll(TString basename="",Int_t nrun=2043){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -40,7 +40,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_hist.root";
+   outputhist= "hist/"+basename+"_shms_hgcer_ll_hist.root";
  TObjArray HList(0);
      TString outputpdf;
     outputpdf=basename+".pdf";
@@ -49,42 +49,40 @@ gStyle->SetPalette(1,0);
  //
 TFile *fsimc = new TFile(inputroot); 
 TTree *tsimc = (TTree*) fsimc->Get("T");
-//
- static const Int_t plnum=4;
- static const Int_t iside=2;
- const char* plname[plnum]={"1x","1y","2x","2y"};
- const char* sidename[iside]={"Neg","Pos"};
- static const Int_t npad[plnum]={16,10,16,10};
- //
- Double_t tw_corr[plnum][iside][16];
- Double_t pulseamp[plnum][iside][16];
- for (Int_t ipl=0;ipl<plnum;ipl++) {
- for (Int_t is=0;is<iside;is++) {
-   tsimc->SetBranchAddress(Form("H.hod.%s.Good%sTdcTimeWalkCorr",plname[ipl],sidename[is]),&tw_corr[ipl][is]) ;
-   tsimc->SetBranchAddress(Form("H.hod.%s.Good%sAdcPulseAmp",plname[ipl],sidename[is]),&pulseamp[ipl][is]) ;
- }}  
- 
- //
- TH2F *hTW_adc[plnum][iside][16];
- for (Int_t ipl=0;ipl<plnum;ipl++) {
- for (Int_t is=0;is<iside;is++) {
- for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
-   hTW_adc[ipl][is][ipad]= new TH2F(Form("tw_adc_%s_%s_pad_%d",plname[ipl],sidename[is],ipad),Form("%s %spad_%d; Adc Amp; TDc TW corr",plname[ipl],sidename[is],ipad),100,0,200.,100,0,100);
-   HList.Add(hTW_adc[ipl][is][ipad]);
- }}  
- }
- //
+// Define branches
+ Double_t npeSum;
+   tsimc->SetBranchAddress("P.hgcer.npeSum",&npeSum) ;
+ Double_t Amp[4];
+   tsimc->SetBranchAddress("P.hgcer.goodAdcPulseAmp",&Amp) ;
+   //
+   TString temp=Form("Run %d ; NpeSUm  ; Counts",nrun);
+   TH1F *hcernpeSum = new TH1F("hcernpeSum",temp,160,0,40.);
+   HList.Add(hcernpeSum);
+   temp=Form("Run %d ; Pulse Amp cer0  ; Counts",nrun);
+   TH1F *hcer0PulseAmp= new TH1F("hcer0PulseAmp",temp,50,0,500.);
+   HList.Add(hcer0PulseAmp);
+   temp=Form("Run %d ; Pulse Amp cer1  ; Counts",nrun);
+   TH1F *hcer1PulseAmp= new TH1F("hcer1PulseAmp",temp,50,0,500.);
+  HList.Add(hcer1PulseAmp);
+  temp=Form("Run %d ; Pulse Amp cer2  ; Counts",nrun);
+   TH1F *hcer2PulseAmp= new TH1F("hcer2PulseAmp",temp,50,0,500.);
+   HList.Add(hcer2PulseAmp);
+   temp=Form("Run %d ; Pulse Amp cer3  ; Counts",nrun);
+   TH1F *hcer3PulseAmp= new TH1F("hcer3PulseAmp",temp,50,0,500.);
+  HList.Add(hcer3PulseAmp);
+   //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%10000==0) cout << " Entry = " << i << endl;
- for (Int_t ipl=0;ipl<plnum;ipl++) {
- for (Int_t is=0;is<iside;is++) {
- for (Int_t ipad=0;ipad<npad[ipl];ipad++) {
-   hTW_adc[ipl][is][ipad]->Fill(pulseamp[ipl][is][ipad],tw_corr[ipl][is][ipad]);
- }}}		
+		hcernpeSum->Fill(npeSum);
+		hcer0PulseAmp->Fill(Amp[0]);
+		hcer1PulseAmp->Fill(Amp[1]);
+		hcer2PulseAmp->Fill(Amp[2]);
+		hcer3PulseAmp->Fill(Amp[3]);
 	}
 
+
+
+
 }
- 
-			

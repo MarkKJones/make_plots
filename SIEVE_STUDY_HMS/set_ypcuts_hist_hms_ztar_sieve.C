@@ -38,7 +38,8 @@ void set_ypcuts_hist_hms_ztar_sieve(TString basename) {
      inputroot="hist/"+basename+"_hms_ztar_sieve_hist.root";
      cout << " infile root = " << inputroot << endl;
    fhistroot =  new TFile(inputroot);
-   TH1F *hyptar_cent_foil= (TH1F*)fhistroot->Get("hyptar_cent_foil");
+   TH1F *hyptar_cent_foil= (TH1F*)fhistroot->Get("hyptar_foil_1");
+   if (!hyptar_cent_foil) return;
    //
    TCanvas *cyp = new TCanvas("cyp","Yp center foil",700,700);
    cyp->Divide(1,1);

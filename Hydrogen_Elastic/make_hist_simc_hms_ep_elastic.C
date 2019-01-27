@@ -107,16 +107,18 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
     HList.Add(hdelta);
     TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
     HList.Add(hW);
-     TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV);Counts",nrun), 100, -.2,.2);
+     TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV);Counts",nrun), 200, -.05,.1);
     HList.Add(hEmiss);
-    TH1F *hPmiss = new TH1F("hPmiss",Form("Run %d ; Pmiss (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmiss = new TH1F("hPmiss",Form("Run %d ; Pmiss (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmiss);
-    TH1F *hPmissx = new TH1F("hPmissx",Form("Run %d ; Pmissx (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmissx = new TH1F("hPmissx",Form("Run %d ; Pmissx (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissx);
-    TH1F *hPmissy = new TH1F("hPmissy",Form("Run %d ; Pmissy (GeV);Counts",nrun), 100, -.2,.2);
+    TH1F *hPmissy = new TH1F("hPmissy",Form("Run %d ; Pmissy (GeV);Counts",nrun), 200, -.1,.1);
      HList.Add(hPmissy);
-   TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 100, -.2,.2);
+   TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissz);
+    TH1F *hprot_mom_calc = new TH1F("hprot_mom_calc",Form("Run %d ; Proton mom calc;Counts",nrun), 100,2.0,3.0 );
+    HList.Add(hprot_mom_calc);
      TH1F *hxfp = new TH1F("hxfp",Form("Run %d ; HMS X_fp;Counts",nrun), 100, -40.,40.);
     HList.Add(hxfp);
     TH1F *hyfp = new TH1F("hyfp",Form("Run %d ; HMS Y_fp;Counts",nrun), 100, -20.,20.);
@@ -181,13 +183,46 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Exp_eff = 100./100.*0.99*0.91;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
-    //
+    if (nrun ==6634) {
+      Nent_simc=100000.;
+      Normfac = 0.133479E+08;
+      Exp_charge= 9.701; //mC
+      Exp_eff = 100./100.*0.9915*0.9815;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==6881) {
+      Nent_simc=100000.;
+      Normfac = 0.781056E+07;
+      Exp_charge= 3.331; //mC
+      Exp_eff = 100./100.*0.9919*0.9783;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==2452) {
+      Nent_simc=100000.;
+      Normfac = 0.157892E+08;
+      Exp_charge= 173.521; //mC
+      Exp_eff = 100./100.*0.96*0.984;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     Double_t th_cent=29.305;
+  Double_t Mp = .93827;
+   Double_t Ei=3.833;
+   if (nrun==2452) {
+   th_cent=17.83;
+   Ei=10.600;
+   }
+  Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
+   Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
+   //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
-                if (TMath::Abs(emiss)<0.1 &&	TMath::Abs(e_delta) < 8  ) {	
-        	hW->Fill(W,Weight*simc_fac);
+                if (W < 1.05 && TMath::Abs(e_delta) < 8  ) {	
+ 		      Double_t theta_shms = TMath::ACos((cos_ts + p_yptar*sin_ts) / TMath::Sqrt( 1. + p_xptar*p_xptar + p_yptar * p_yptar ));
+		      Double_t pcalc=2*Mp*Ei*(Ei+Mp)*cos(theta_shms)/(Mp*Mp+2*Mp*Ei+Ei*Ei*sin(theta_shms)*sin(theta_shms));
+		      hprot_mom_calc->Fill(pcalc,Weight*simc_fac);
+       	hW->Fill(W,Weight*simc_fac);
 		  hEmiss->Fill(emiss,Weight*simc_fac);		  
 		  hPmiss->Fill(pmiss,Weight*simc_fac);		  
 		  hPmissx->Fill(pmissx,Weight*simc_fac);		  

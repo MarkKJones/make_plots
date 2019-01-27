@@ -85,25 +85,37 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    TH1F *hyptar[3][7];
    TH1F *hyptar_foil[3];
    TH1F *hys_foil[3];
+   TH1F *hxs_foil[3];
+   TH1F *hys_xscent_foil[3];
+   TH1F *hys2_xs2cent_foil[3];
    TH2F *hytar_yptar;
    TH2F *hyfp_yxfp_foil[3];
    TH2F *hys_xs_foil[3];
+   TH2F *hys2_xs2_foil[3];
    TH2F *hyfp_yxfp_foil_ypcut[3][7];
    TH2F *hztar_yptar;
    cout << " nrun = " << nrun << endl;
    Double_t yp_cutlo[3][7]={-0.0297144,-0.0213662,-0.0128833,-0.00359254,0.00623683,0.0155276,0.0250877
-  ,-0.0297144,-0.0213662,-0.0128833,-0.00359254,0.00623683,0.0155276,0.0250877
+  ,-0.0314526,-0.0241815,-0.0144868,-0.00513834,0.00542198,0.0135586,0.0239458
 ,-0.0297144,-0.0213662,-0.0128833,-0.00359254,0.00623683,0.0155276,0.0250877};
    Double_t yp_cuthi[3][7]={-0.0240592,-0.0154416,-0.00709341,0.00354385,0.0133732,0.0223947,0.029935
-     ,-0.0240592,-0.0154416,-0.00709341,0.00354385,0.0133732,0.0223947,0.029935
+     ,-0.0245278,-0.0155255,-0.00617706,0.00438326,0.0133855,0.0232533,0.03139
      ,-0.0240592,-0.0154416,-0.00709341,0.00354385,0.0133732,0.0223947,0.029935};
  	for (Int_t nf = 0; nf < 3; nf++) {
           hyptar_foil[nf] = new TH1F(Form("hyptar_foil_%d",nf), Form("Run %d Foil %d; Yp_tar ; Counts",nrun,nf), 140,-.045,.045);
           HList.Add(hyptar_foil[nf]);
           hys_foil[nf] = new TH1F(Form("hys_foil_%d",nf), Form("Run %d Foil %d; Ys ; Counts",nrun,nf), 140,-10.,10.);
           HList.Add(hys_foil[nf]);
+          hxs_foil[nf] = new TH1F(Form("hxs_foil_%d",nf), Form("Run %d Foil %d; Xs ; Counts",nrun,nf), 140,-15.,15.);
+          HList.Add(hxs_foil[nf]);
+          hys_xscent_foil[nf] = new TH1F(Form("hys_xscent_foil_%d",nf), Form("Run %d XS cent Foil %d; Ys ; Counts",nrun,nf), 140,-10.,10.);
+          HList.Add(hys_xscent_foil[nf]);
+          hys2_xs2cent_foil[nf] = new TH1F(Form("hys2_xs2cent_foil_%d",nf), Form("Run %d XS_new cent Foil %d; Ys_new ; Counts",nrun,nf), 140,-10.,10.);
+          HList.Add(hys2_xs2cent_foil[nf]);
           hys_xs_foil[nf] = new TH2F(Form("hys_xs_foil_%d",nf), Form("Run %d Foil %d; Ys ; Xs",nrun,nf), 70,-10.,10., 70,-15.,15.);
           HList.Add(hys_xs_foil[nf]);
+          hys2_xs2_foil[nf] = new TH2F(Form("hys2_xs2_foil_%d",nf), Form("Run %d Foil %d; Ys_new ; Xs_new",nrun,nf), 70,-10.,10., 70,-15.,15.);
+          HList.Add(hys2_xs2_foil[nf]);
 	  hyfp_yxfp_foil[nf] = new TH2F(Form("hyfp_yxfp_foil_%d",nf), Form("Run %d Foil %d; Xfp; Yfp",nrun,nf), 160,-40,40,80,-20,20);	  
           HList.Add(hyfp_yxfp_foil[nf]);
 	}
@@ -126,15 +138,15 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 	TH1F *hngsum = new TH1F("hngsum",Form("Run %d ; Npe SUM ; Counts",nrun),100,0.,40.);
 // loop over entries
 Long64_t nentries = tsimc->GetEntries();
- Double_t zlo[3]={-15.,-5,5};
- Double_t zhi[3]={-5., 5,15.};
- 
+ Double_t zlo[3]={-15.,-2.5,5};
+ Double_t zhi[3]={-5., 2.5,15.};
+ //nentries=200000;
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		hetot->Fill(etracknorm);
 		hngsum->Fill(sumnpe);
-				if (etracknorm>.9 && sumnpe > 2.&& delta>-8 && delta<8) {
+				if (etracknorm>.7 && sumnpe > 5.&& delta>-8 && delta<8) {
 		//		if (delta>-8 && delta<8) {
 				  //		hztar_yptar->Fill(yptar,reactz);
 		hetot_good->Fill(etracknorm);
@@ -148,9 +160,15 @@ Long64_t nentries = tsimc->GetEntries();
 		  	for (Int_t nf = 0; nf < 3; nf++) {
 		  		if (reactz <= zhi[nf] && reactz> zlo[nf]) {
 		  //if (TMath::Abs(reactz-(slope_hi*yptar+int_hi))<2.5  ) {
+		     Double_t ys_calc= yptar*168.;
+		     Double_t xs_calc= xptar*168.;
                      hyptar_foil[nf]->Fill(yptar);
                      hys_foil[nf]->Fill(ysieve);
+                     if (xsieve>-1 && xsieve < 1.5) hys_xscent_foil[nf]->Fill(ysieve);
+                     if (xsieve>-1 && xsieve < 1.5) hys2_xs2cent_foil[nf]->Fill(ys_calc);
+                     hxs_foil[nf]->Fill(xsieve);
                      hys_xs_foil[nf]->Fill(ysieve,xsieve);
+                     hys2_xs2_foil[nf]->Fill(ys_calc,xs_calc);
 		    hyfp_yxfp_foil[nf]->Fill(xfp,yfp);
 	        for (int iz = 0; iz < 7; iz++) {
 		  if (yptar>yp_cutlo[nf][iz] && yptar <=yp_cuthi[nf][iz]) {
