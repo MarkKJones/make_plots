@@ -1,0 +1,5 @@
+3288   ratio = 0.909151 =/- 0.00228817  Data sum = 155535 SIMC sum = 172223
+3371   ratio = 0.90251 =/- 0.00616555   Data sum = 21053 SIMC sum = 23633.6
+3374   ratio = 0.84014 =/- 0.002073     Data sum = 161854 SIMC sum = 194056
+3377   ratio = 0.753855 =/- 0.00140343  Data sum = 290688 SIMC sum = 379002
+
