@@ -44,7 +44,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_shms_ep_elastic_hist.root";
+   outputhist= "hist/"+basename+"_shms_single_arm_hist.root";
  TObjArray HList(0);
  //
 
@@ -62,6 +62,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.rb.raster.fr_ya",&rasty);
  Double_t  e_ytar;
    tsimc->SetBranchAddress("P.gtr.y",&e_ytar);
+   Double_t  npeSum;
+   tsimc->SetBranchAddress("P.ngcer.npeSum",&npeSum);
  Double_t  DeltaDp;
    tsimc->SetBranchAddress("P.extcor.delta_dp",&DeltaDp);
  Double_t  e_xtar;
@@ -69,7 +71,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  gindex;
    tsimc->SetBranchAddress("P.gtr.index",&gindex);
  Double_t  etracknorm;
-   tsimc->SetBranchAddress("P.cal.etracknorm",&etracknorm);
+   tsimc->SetBranchAddress("P.cal.etottracknorm",&etracknorm);
  Double_t  e_reactz;
    tsimc->SetBranchAddress("P.react.z",&e_reactz);
  Double_t  e_delta;
@@ -199,8 +201,9 @@ Long64_t nentries = tsimc->GetEntries();
                 hyrast->Fill(rasty);
                 hxbeam->Fill(beamx);
                 hybeam->Fill(beamy);
- 		if (gindex>-1)  hetot->Fill(etracknorm);
-		if (etracknorm > 0.9 && gindex>-1  && e_delta > -10. && e_delta < 20.) { 
+ 		if (gindex>-1 )  hetot->Fill(etracknorm);
+		if (gindex>-1 && e_delta > -10. && e_delta < 30. && npeSum>2. && etracknorm>.5) { 
+		hW->Fill(W);
 		  if ( W> 0.850 &&W < 1.075) {
 		  hxfp->Fill(e_xfp,scalfac);		  
 		  hyfp->Fill(e_yfp,scalfac);		  
@@ -209,8 +212,7 @@ Long64_t nentries = tsimc->GetEntries();
 		  hxptar->Fill(e_xptar,scalfac);		  
 		  hyptar->Fill(e_yptar,scalfac);		  
 		  hdelta->Fill(e_delta,scalfac);
-		  }		  
-                hxtar->Fill(e_xtar);
+               hxtar->Fill(e_xtar);
                 hDeltaDp->Fill(DeltaDp);
                 hztar->Fill(e_reactz);
 		      for (Int_t nz=0;nz<3;nz++) {
@@ -228,7 +230,6 @@ Long64_t nentries = tsimc->GetEntries();
                 hztar_xbeam->Fill(e_reactz,rastx+beamx);
 		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
 		Double_t delta_diff = 100*(e_calc - p_spec)/p_spec - e_delta;
-		hW->Fill(W);
 		Double_t Enew=p_spec*(1+e_delta/100.);
 		Double_t W_calc= TMath::Sqrt(-4*Enew*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.)+Mp*Mp+2*Mp*(Ei-Enew));
 		hWcalc->Fill(W_calc);
@@ -243,6 +244,7 @@ Long64_t nentries = tsimc->GetEntries();
 		hWYfp->Fill(W,e_yfp);
 		hWXpfp->Fill(W,e_xpfp);
 		hWYpfp->Fill(W,e_ypfp);
+		}
 		}
 		//
 		}

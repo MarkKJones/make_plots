@@ -86,6 +86,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    TH1F *hytar[9];
    TH1F *hyptar[9];
    TH1F *hyptar_cent_foil;
+   TH1F *hxptar_cent_foil;
    TH2F *hytar_yptar;
    TH2F *hyfp_yxfp_cent_foil;
    TH2F *hys_xs_cent_foil;
@@ -95,6 +96,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    Double_t yp_cutlo[9]={-0.0294451,-0.0236552,-0.0171921,-0.0100557,-0.00359254,0.00313991,0.00946841,0.0152583,0.0215868};
    Double_t yp_cuthi[9]={-0.0236552,-0.0171921,-0.00992104,-0.00359254,0.00192807,0.00946841,0.0152583,0.0214522,0.0289925};
    hyptar_cent_foil = new TH1F("hyptar_cent_foil", Form("Run %d Cetner Foil; Yp_tar ; Counts",nrun), 140,-.035,.035);
+   HList.Add(hyptar_cent_foil);
+   hxptar_cent_foil = new TH1F("hxptar_cent_foil", Form("Run %d Cetner Foil; Xp_tar ; Counts",nrun), 140,-.05,.05);
    HList.Add(hyptar_cent_foil);
    hytar_yptar = new TH2F("hytar_yptar", Form("Run %d ; Y_tar ; Yp_tar",nrun), 190,-4.,4.,60,-.035,.035);
    HList.Add(hytar_yptar);
@@ -123,11 +126,12 @@ Long64_t nentries = tsimc->GetEntries();
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		hetot->Fill(etracknorm);
 		hngsum->Fill(sumhgnpe);
-		if (etracknorm>.9 && sumhgnpe > 2. && delta>-10 && delta<15) {
+		if (etracknorm>.8 && sumhgnpe > 2. && delta>-10 && delta<15) {
 		  hztar_yptar->Fill(yptar,reactz);
 		  hytar_yptar->Fill(ytar,yptar);
 		  if (reactz <5 && reactz>-5) {
-                    hyptar_cent_foil->Fill(yptar);
+                    if (abs(xsieve) < 1) hyptar_cent_foil->Fill(yptar);
+                    if (abs(ysieve) < 1) hxptar_cent_foil->Fill(xptar);
 		    hyfp_yxfp_cent_foil->Fill(xfp,yfp);
 		    hys_xs_cent_foil->Fill(ysieve,xsieve);
 	           for (int iz = 0; iz < 9; iz++) {

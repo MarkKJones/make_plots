@@ -177,9 +177,9 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
         TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 100, 0.8,1.2, 80,-.02,.02);
    HList.Add(hWYpfp);
   // loop over entries
-    Double_t th_cent=17.83;
+    Double_t th_cent=25.78;
   Double_t Mp = .93827;
-   Double_t Ei=10.600;
+   Double_t Ei=8.2088;
    Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
    Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
 Long64_t nentries = tsimc->GetEntries();

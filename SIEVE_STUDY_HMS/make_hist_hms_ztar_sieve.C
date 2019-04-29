@@ -119,9 +119,9 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 	  hyfp_yxfp_foil[nf] = new TH2F(Form("hyfp_yxfp_foil_%d",nf), Form("Run %d Foil %d; Xfp; Yfp",nrun,nf), 160,-40,40,80,-20,20);	  
           HList.Add(hyfp_yxfp_foil[nf]);
 	}
-   hytar_yptar = new TH2F("hytar_yptar", Form("Run %d ; Y_tar ; Yp_tar",nrun), 190,-4.,4.,60,-.045,.045);
+   hytar_yptar = new TH2F("hytar_yptar", Form("Run %d ; Y_tar ; Yp_tar",nrun), 140,-7.,7.,60,-.045,.045);
    HList.Add(hytar_yptar);
-   hztar_yptar = new TH2F("hztar_yptar", Form("Run %d ; Yp_tar ; Z_tar",nrun), 60,-.045,.045,120,-15.,15.);
+   hztar_yptar = new TH2F("hztar_yptar", Form("Run %d ; Z_tar ; Yp_tar",nrun),140,-7.,7., 60,-.045,.045);
    HList.Add(hztar_yptar);
 	for (Int_t iz = 0; iz < 7; iz++) {
  	for (Int_t nf = 0; nf < 3; nf++) {
@@ -140,18 +140,26 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 Long64_t nentries = tsimc->GetEntries();
  Double_t zlo[3]={-15.,-2.5,5};
  Double_t zhi[3]={-5., 2.5,15.};
+ if (nrun==8262) {
+   zlo[0]=-7.5;
+   zhi[0]=-2.5;
+   zlo[1]=2.5;
+   zhi[1]=7.5;
+   zlo[2]=10.;
+   zhi[2]=10.;
+ }
  //nentries=200000;
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		hetot->Fill(etracknorm);
 		hngsum->Fill(sumnpe);
-				if (etracknorm>.7 && sumnpe > 5.&& delta>-8 && delta<8) {
+				if (etracknorm> .6 &&sumnpe > 2.&& delta>-8 && delta<8) {
 		//		if (delta>-8 && delta<8) {
 				  //		hztar_yptar->Fill(yptar,reactz);
 		hetot_good->Fill(etracknorm);
 		hytar_yptar->Fill(ytar,yptar);
-				 		hztar_yptar->Fill(yptar,reactz);
+		hztar_yptar->Fill(reactz,yptar);
 		Double_t slope_lo = 239.281 ;
 		Double_t slope_hi = 238.095;
 		Double_t int_lo = -3.01667;

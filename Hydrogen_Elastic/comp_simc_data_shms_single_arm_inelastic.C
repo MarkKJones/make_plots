@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include<math.h>
 using namespace std;
-void comp_simc_data_shms_single_arm( TString fn1 , TString fn2  ) {
+void comp_simc_data_shms_single_arm_inelastic( TString fn1 , TString fn2  ) {
  gROOT->Reset();
  gStyle->SetOptStat(0);
  gStyle->SetOptFit(11);
@@ -28,7 +28,7 @@ void comp_simc_data_shms_single_arm( TString fn1 , TString fn2  ) {
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
      TString outputpdf;
-    outputpdf="plots/comp_simc_shms_single_arm"+fn2+".pdf";
+    outputpdf="plots/comp_simc_shms_single_arm_inelastic_"+fn2+".pdf";
     //
 const UInt_t nftot=2;
  Int_t colind[nftot]={1,2};
@@ -43,8 +43,8 @@ const UInt_t n4plots=4;
  TString h4name[n4plots]={"hxfp","hyfp","hxpfp","hypfp"};
  //
  TString inputroot[nftot];
- inputroot[0] = "hist/"+fn1+"_shms_ep_elastic_hist.root";
- inputroot[1] = "hist/"+fn2+"_simc_shms_ep_elastic_hist.root";
+ inputroot[0] = "hist/"+fn1+"_shms_single_arm_inelastic_hist.root";
+ inputroot[1] = "hist/"+fn2+"_simc_shms_ep_inelastic_hist.root";
  // inputroot[2] = "hist/"+fn3+"_hms_ep_elastic_hist.root";
   TH1F *fhist[nftot][nplots];
    TH1F *fhist2[nftot][n2plots];

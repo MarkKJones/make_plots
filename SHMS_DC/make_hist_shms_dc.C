@@ -38,7 +38,7 @@ gStyle->SetPalette(1,0);
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.12);
    TString inputroot;
-   inputroot="Online_ROOTfiles/"+basename+".root";
+   inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
    outputhist= "hist/"+basename+"_shms_dc_hist.root";
  TObjArray HList(0);
@@ -79,7 +79,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  }
  if (nrun<1721) {
    cout << " Onepass  nrun= " << nrun << endl;
-    tsimc->SetBranchAddress("P.ngcer.npeSum",&npesum);
+    tsimc->SetBranchAddress("P.hgcer.npeSum",&npesum);
  }
  Double_t sp1_id;
    tsimc->SetBranchAddress("P.dc.sp1_id",&sp1_id) ;
@@ -88,7 +88,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t dcnsp;
    tsimc->SetBranchAddress("P.dc.nsp",&dcnsp) ;
  Double_t ndchit;
-   tsimc->SetBranchAddress("P.dc.nhit",&ndchit) ;
+   tsimc->SetBranchAddress("P.dc.tnhit",&ndchit) ;
  Double_t sp2_id;
    tsimc->SetBranchAddress("P.dc.sp2_id",&sp2_id) ;
  Double_t xfp;
@@ -100,10 +100,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t ypfp;
    tsimc->SetBranchAddress("P.dc.yp_fp",&ypfp) ;
  Int_t nsp[2];
- Double_t stub_x[2][100];
- Double_t stub_xp[2][100];
- Double_t stub_y[2][100];
- Double_t stub_yp[2][100];
+ Double_t stub_x[2][200];
+ Double_t stub_xp[2][200];
+ Double_t stub_y[2][200];
+ Double_t stub_yp[2][200];
  const char* chname2[2]={"1","2"};
  for (Int_t ich=0;ich<2;ich++) {
    tsimc->SetBranchAddress(Form("Ndata.P.dc.Ch%s.stub_x",chname2[ich]),&nsp[ich]) ;
@@ -112,6 +112,24 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_y",chname2[ich]),&stub_y[ich]) ;
    tsimc->SetBranchAddress(Form("P.dc.Ch%s.stub_yp",chname2[ich]),&stub_yp[ich]) ;
  }
+ TString temp;
+   // ntrack==0 histo
+ TH1F *hstarttime_ntr0;
+   temp=Form("Ntrck==0 Run %d ; Hod Starttime ; Counts",nrun);
+   hstarttime_ntr0 = new TH1F("hstarttime_ntr0",temp,140,0,70);
+   HList.Add(hstarttime_ntr0);
+ TH1F *hndchit_ntr0;
+   temp=Form("Ntrck==0 Run %d ; Number DC hits  ; Counts",nrun);
+   hndchit_ntr0= new TH1F("hndchit_ntr0",temp,20,0,20.);
+   HList.Add(hndchit_ntr0);
+ TH1F *hndchit_ntr0_ecalcut;
+   temp=Form("Ntrck==0 Run %d ; ecal>0.5 Number DC hits  ; Counts",nrun);
+   hndchit_ntr0_ecalcut= new TH1F("hndchit_ntr0_ecalcut",temp,20,0,20.);
+   HList.Add(hndchit_ntr0_ecalcut);
+  TH1F *h_nsp_ntr0_ecalcut;
+   temp=Form("Ntrck==0 Run %d ; ecal>0.5 Number DC sp  ; Counts",nrun);
+   h_nsp_ntr0_ecalcut= new TH1F("h_nsp_ntr0_ecalcut",temp,20,0,20.);
+   HList.Add(h_nsp_ntr0_ecalcut);
    // Define histograms
  TH1F* hetotnorm;
  TH2F* hetotnorm_npesum;
@@ -156,11 +174,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  TH1F* hch1_nsp;
  TH1F* hch2_nsp;
  TH2F* hnsp_dc_stub;
- TString temp;
  TH1F* hstarttime;
    temp=Form("Run %d ; Hod Starttime ; Counts",nrun);
    hstarttime = new TH1F("hstarttime",temp,140,0,70);
-   HList.Add(hxfp_resid_cut);
+   HList.Add(hstarttime);
    temp=Form("Run %d ; X_fp Resid cut ; Counts",nrun);
    hxfp_resid_cut = new TH1F("hxfp_resid_cut",temp,100,-50,50);
    HList.Add(hxfp_resid_cut);
@@ -290,6 +307,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    htime_dist[ip] = new TH2F(Form("time_dist_%s%s",chname[ip],plname[ip]),temp,200,-50,250,120,0,.6);
    HList.Add(htime_dist[ip]);
  }
+
 // loop over entries
  Int_t nch1;
  Int_t nch2;
@@ -313,7 +331,15 @@ Long64_t nentries = tsimc->GetEntries();
 		}
 		hetotnorm->Fill(etotnorm);
 		hetotnorm_npesum->Fill(etotnorm,npesum);
-		if (etotnorm>.6& ntrack>=1 && nsp[0]>=1 && nsp[1]>=1) {
+		if (ntrack==0) {
+                  hstarttime_ntr0->Fill(starttime);
+		  hndchit_ntr0->Fill(ndchit);
+		  if (etotnorm>.6) {
+                       hndchit_ntr0_ecalcut->Fill(ndchit);
+		       if (ndchit>=10) h_nsp_ntr0_ecalcut->Fill(dcnsp);
+                  }
+		}
+		if (etotnorm>.6 && ntrack>=1 && nsp[0]>=1 && nsp[1]>=1) {
                   hstarttime->Fill(starttime);
                   hnsp_dc_stub->Fill(dcnsp,nsp[0]+nsp[1]);
 		  hch1_nsp->Fill(nsp[0]);

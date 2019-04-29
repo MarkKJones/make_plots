@@ -154,13 +154,90 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Exp_eff =.9833;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
-    //
+     if (nrun ==4785) {
+      Nent_simc=100000.;
+      Normfac = 0.112592E+08 ;
+      Exp_charge= 36242.993/1000./1.0;
+      Exp_eff =0.9821;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==4788) {
+      Nent_simc=100000.;
+      Normfac = .113035E+08 ;
+      Exp_charge= 32103.140/1000./1.0;
+      Exp_eff =.9806;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==4791) {
+      Nent_simc=100000.;
+      Normfac = 0.106707E+08 ;
+      Exp_charge= 89083.534/1000./1.0;
+      Exp_eff =0.979;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+      if (nrun ==4793) {
+      Nent_simc=100000.;
+      Normfac = 0.113566E+08 ;
+      Exp_charge= 95849.709/1000./1.0;
+      Exp_eff =0.982;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==4797) {
+      Nent_simc=100000.;
+      Normfac =0.936453E+07  ;
+      Exp_charge= 62420.635/1000./9.0;
+      Exp_eff =0.976;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==4805) {
+      Nent_simc=100000.;
+      Normfac =  0.113736E+08;
+      Exp_charge= 30080.535/1000./3.0;
+      Exp_eff =0.9811;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==7166) {
+      Nent_simc=100000.;
+      Normfac =  0.922484E+07;
+      Exp_charge= 41343.595/1000./1.0;
+      Exp_eff =88.24/100.*0.9932;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==7167) {
+      Nent_simc=100000.;
+      Normfac =   0.112456E+08 ;
+      Exp_charge= 89105.875/1000./1.0;
+      Exp_eff =99/100.*.99;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     if (nrun ==7168) {
+      Nent_simc=100000.;
+      Normfac =  0.113501E+08  ;
+      Exp_charge= 169163.460/1000./1.0;
+      Exp_eff =99.80/100.*0.993;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+     }
+       if (nrun ==7190) {
+      Nent_simc=100000.;
+      Normfac =  0.115064E+08 ;
+      Exp_charge= 6725.374/1000./1.0;
+      Exp_eff =0.23*0.9939;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==7191) {
+      Nent_simc=100000.;
+      Normfac =  0.115064E+08 ;
+      Exp_charge= 7962.344/1000./2.0;
+      Exp_eff =56.7/100.*0.9939;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+      //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		hW->Fill(W,Weight*simc_fac);
-                if (W<1.075 &&  e_delta > -10. && e_delta < 20. ) {
+                if (W<1.075 &&  e_delta > -10. && e_delta < 30. ) {
 		  hxptar->Fill(e_xptar,Weight*simc_fac);		  
 		  hyptar->Fill(e_yptar,Weight*simc_fac);		  
 		  hdelta->Fill(e_delta,Weight*simc_fac);		  

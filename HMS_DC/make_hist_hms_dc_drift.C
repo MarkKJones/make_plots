@@ -60,12 +60,14 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t dist[plnum][107];
  Double_t wire[plnum][107];
  Double_t time[plnum][107];
+ Double_t rawtime[plnum][107];
  tsimc->SetBranchAddress("H.dc.residual",resid) ;
  tsimc->SetBranchAddress("H.dc.residualExclPlane",exclresid) ;
  for (Int_t ip=0;ip<plnum;ip++) {
    tsimc->SetBranchAddress(Form("Ndata.H.dc.%s%s.dist",chname[ip],plname[ip]),&nhits[ip]) ;
    tsimc->SetBranchAddress(Form("H.dc.%s%s.dist",chname[ip],plname[ip]),&dist[ip]) ;
    tsimc->SetBranchAddress(Form("H.dc.%s%s.time",chname[ip],plname[ip]),&time[ip]) ;
+   tsimc->SetBranchAddress(Form("H.dc.%s%s.rawtdc",chname[ip],plname[ip]),&rawtime[ip]) ;
    tsimc->SetBranchAddress(Form("H.dc.%s%s.wirenum",chname[ip],plname[ip]),&wire[ip]) ;
  }
  Double_t ntrack;
@@ -97,6 +99,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  TH1F* hwire[plnum];
  TH1F* hdist[plnum];
  TH1F* htime[plnum];
+ TH1F* hrawtime[plnum];
  TH1F* hresid[plnum];
  TH1F* hexclresid[plnum];
  TH2F* hwire_resid[plnum];
@@ -133,9 +136,12 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    temp=Form("Run %d ; Plane  %s%s Dist ; Counts",nrun,chname[ip],plname[ip]);
    hdist[ip] = new TH1F(Form("dist_%s%s",chname[ip],plname[ip]),temp,120,0.,.6);
    HList.Add(hdist[ip]);
-   temp=Form("Run %d ; Plane  %s%s Dist ; Counts",nrun,chname[ip],plname[ip]);
+   temp=Form("Run %d ; Plane  %s%s Time ; Counts",nrun,chname[ip],plname[ip]);
    htime[ip] = new TH1F(Form("time_%s%s",chname[ip],plname[ip]),temp,250,-50,250);
    HList.Add(htime[ip]);
+   temp=Form("Run %d ; Plane  %s%s Raw Time ; Counts",nrun,chname[ip],plname[ip]);
+   hrawtime[ip] = new TH1F(Form("rawtime_%s%s",chname[ip],plname[ip]),temp,250,-15000,-10000);
+   HList.Add(hrawtime[ip]);
   temp=Form("Run %d ; Plane  %s%s Wire ; Resid",nrun,chname[ip],plname[ip]);
    hwire_resid[ip] = new TH2F(Form("wire_resid_%s%s",chname[ip],plname[ip]),temp,nwires[ip],0,nwires[ip],200,-.2,.2);
    HList.Add(hwire_resid[ip]);
@@ -158,7 +164,7 @@ Long64_t nentries = tsimc->GetEntries();
                 if (i%10000==0) cout << " Entry = " << i << endl;
 		hetotnorm->Fill(etotnorm);
 		hetotnorm_npesum->Fill(etotnorm,npesum);
-	     		if (etotnorm > .8 && npesum>2. && ntrack>=1 ) {
+	     		if (etotnorm > .2 && npesum>.5 ) {
                   hstarttime->Fill(starttime);
                   for (Int_t ip=0;ip<plnum;ip++) {
                   hresid[ip]->Fill(resid[ip]);
@@ -169,6 +175,7 @@ Long64_t nentries = tsimc->GetEntries();
                    hwire[ip]->Fill(wire[ip][id]);
                    hdist[ip]->Fill(dist[ip][id]);
                    htime[ip]->Fill(time[ip][id]);
+                   hrawtime[ip]->Fill(rawtime[ip][id]);
                    hwire_time[ip]->Fill(wire[ip][id],time[ip][id]);
                    hwire_dist[ip]->Fill(wire[ip][id],dist[ip][id]);
                    htime_dist[ip]->Fill(time[ip][id],dist[ip][id]);

@@ -1,0 +1,92 @@
+Under hallc_replay branch april2019
+Use script SCRIPTS/SHMS/PRODUCTION/replay_production_shms_coin_all.C
+Use LUMI_STUDY
+For run 7572 needed to skip scalar event 178 which had a bad value for S1X.
+
+Use the following tracking parameters
+; Tracking parameters
+  pmax_pr_hits = 25, 25
+; pminhit(i)   minimum number of hits in each space point (one for each chamber)
+pmin_hit = 5,5
+; hmin_combos(i) minimum number of pairs in each space point ( one per chamber)
+; should be 3/3 for 4/6 tracking, and 4/4 for 5/6 tracking (JRA)
+pmin_combos = 4,4
+; hspace_point_criterion(i) minimum separation of distinct space points
+; recommended value for hspace_point_criterion ( based on meeting
+; Feb 2003)
+  pspace_point_criterion = 1.2, 1.2
+
+; The following four criteria are applied to the stub fit results at the
+; focal plane position to link stubs to tracks
+; maximum number of possible focal plane tracks, must be <= 20
+pntracks_max_fp = 10
+
+; The following four criteria are applied to the stub fit results at the
+; focal plane position to link stubs to tracks
+  pntracks_max_fp = 10
+  pxt_track_criterion = 100.0
+  pyt_track_criterion = 20.0
+  pxpt_track_criterion = 1.0
+  pypt_track_criterion = 1.0
+
+; Make a track of all single stubs normally 0
+  psingle_stub = 0
+
+; No small angle approximation for cosmic ray tests
+  pSmallAngleApprox = 1
+;
+ when selecting stub for chamber 
+;  be sure stub_xp - stub_x*fRatio_xpfp_to_xfp < pstub_max_xpdiff
+;   fRatio_xpfp_to_xfp is set in THcDriftChamber::ReadDatabase according to the spectrometer
+pstub_max_xpdiff=.2
+
+
+Phase 4 lumi scan
+7570 10 
+7571 20 
+7572 30 
+7574 50 
+
+SHMS
+run   charge  th  cut      frac    t4 rate  g rate t2 rate
+7570 5305.52 10 9.84778 0.911468 139.737 16642.9 20.3323 14.1897 0.0517158 1690.01 0.564392 2.06465 0.0593333 0.977354
+7571 7513.79 20 19.9927 0.603888 277.843 35046.6 41.3501 13.8972 0.0430066 1752.97 0.483012 2.06827 0.0288775 0.97603
+7572 13117.5 30 30.3618 0.605608 425.179 55730.5 61.7145 14.0038 0.0326736 1835.55 0.374074 2.03264 0.0177664 0.969094
+7574 56405.7 50 51.5584 0.868772 735.025 104423 104.841 14.2562 0.0158979 2025.33 0.18949 2.03344 0.018188 0.954791
+run  th  I_cut   S1X rate   S1Y    S2X    S2Y
+7570 10 9.84778 118665 122635 89081.7 43720.9 0.977354
+7571 20 19.9927 236952 244911 177026 88385.2 0.97603
+7572 30 30.3618 357955 370253 267383 135264 0.969094
+7574 50 51.5584 601499 620767 450012 230979 0.954791
+
+
+HMS
+
+
+
+**************************
+
+
+Phase 2 lumi scan March 1
+               ps2  ps3  SHMS tr wff     
+7499 30 30.416 33    2   0.9616 
+7500 20 20.552 33    2   0.9756  
+7501 55 55.147 33    2   0.9218
+
+
+
+Phase 1 lumi scan
+               ps2  ps3  SHMS tr wff     
+7419 57 57.110 129   2     0.8158
+7420 45,35,25,18 29.940 129   2     0.9161  
+7420 12209.3 45 46.3362 0.161932  9218.41 14854.8 2523.45 198.946 0.12765 320.587 0.162042 54.4597 0.756991 
+7420 15142.4 35 36.1721 0.257267  6976.28 10404.4 2117.94 192.864 0.112857 287.635 0.137823 58.5519 0.704988
+7420 10925 25 25.8087 0.260145  4822.62 6566.75 1617.18 186.861 0.130782 254.44 0.15261 62.6604 0.85882
+7420 8550.9 18 18.6471 0.281814  3407.02 4337.65 1220.23 182.711 0.146176 232.619 0.164936 65.4381 0.992147
+
+
+7420 12209.3 45 46.3362 0.161932  9218.41 14854.8 2970.99 198.946 0.12765 320.587 0.162042 64.1181 0.891244 0.849365
+7420 15142.4 35 36.1721 0.257267  6976.28 10404.4 2360.62 192.864 0.112857 287.635 0.137823 65.2607 0.785765 0.8972
+7420 10925 25 25.8087 0.260145  4822.62 6566.75 1751.64 186.861 0.130782 254.44 0.15261 67.8703 0.930226 0.923238
+7420 8550.9 18 18.6471 0.281814  3407.02 4337.65 1285.78 182.711 0.146176 232.619 0.164936 68.9535 1.04544 0.949019
+

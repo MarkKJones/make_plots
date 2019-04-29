@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include<math.h>
 using namespace std;
-void comp_simc_data_deut_shms_ep_elastic( TString fn1 , TString fn2 ) {
+void comp_simc_data_shms_ep_elastic( TString fn1 , TString fn2 ) {
  gROOT->Reset();
  gStyle->SetOptStat(0);
  gStyle->SetOptFit(11);
@@ -28,20 +28,20 @@ void comp_simc_data_deut_shms_ep_elastic( TString fn1 , TString fn2 ) {
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
      TString outputpdf;
-    outputpdf="plots/comp_simc_deut_shms_ep_elastic_"+fn2+".pdf";
+    outputpdf="plots/comp_simc_shms_ep_elastic_"+fn1+fn2+".pdf";
     //
 const UInt_t nftot=2;
  Int_t colind[nftot]={1,2};
  TString lname[nftot]={"data","simc"};
    TFile *fhistroot[nftot];
  //
-const UInt_t nplots=5;
- TString h1name[nplots]={"hW","h_edelta","h_pdelta","h_exptar","h_eyptar"};
+const UInt_t nplots=6;
+ TString h1name[nplots]={"hW","h_edelta","h_pdelta","h_exptar","h_eyptar","hprot_mom_calc"};
  //
-const UInt_t n2plots=3;
- TString h2name[n2plots]={"hxptar","hyptar","hdelta"};
-const UInt_t n3plots=4;
- TString h3name[n3plots]={"pxptar","pyptar","pdelta","hprot_mom_calc"};
+const UInt_t n2plots=4;
+ TString h2name[n2plots]={"h_eytar","h_hytar","h_pxptar","h_pyptar"};
+const UInt_t n3plots=5;
+ TString h3name[n3plots]={"hEmiss","hPmiss","hPmissx","hPmissy","hPmissz"};
 const UInt_t n4plots=4;
  TString h4name[n4plots]={"h_exfp","h_eyfp","h_expfp","h_eypfp"};
 const UInt_t n5plots=4;
@@ -50,8 +50,8 @@ const UInt_t n2dplots=3;
  TString h2dname[n2dplots]={"h_eyfp_xfp","h_expfp_xfp","h_eypfp_xfp"};
  //
  TString inputroot[2];
- inputroot[0] = "hist/"+fn1+"_deut_shms_ep_elastic_hist.root";
- inputroot[1] = "hist/"+fn2+"_simc_deut_shms_ep_elastic_hist.root";
+ inputroot[0] = "hist/"+fn1+"_shms_ep_elastic_hist.root";
+ inputroot[1] = "hist/"+fn2+"_simc_shms_ep_elastic_hist.root";
   TH1F *fhist[nftot][nplots];
   TH1F *fhist2[nftot][n2plots];
   TH1F *fhist3[nftot][n3plots];
@@ -64,6 +64,12 @@ const UInt_t n2dplots=3;
    fhistroot[nf] =  new TFile(inputroot[nf]);
    for (UInt_t nh=0;nh<nplots;nh++) {
      fhist[nf][nh] = (TH1F*)fhistroot[nf]->Get(h1name[nh]);
+   }
+   for (UInt_t nh=0;nh<n2plots;nh++) {
+     fhist2[nf][nh] = (TH1F*)fhistroot[nf]->Get(h2name[nh]);
+   }
+   for (UInt_t nh=0;nh<n3plots;nh++) {
+     fhist3[nf][nh] = (TH1F*)fhistroot[nf]->Get(h3name[nh]);
    }
    for (UInt_t nh=0;nh<n4plots;nh++) {
      fhist4[nf][nh] = (TH1F*)fhistroot[nf]->Get(h4name[nh]);
@@ -142,18 +148,50 @@ cout << " ratio = " << Wsum[0][nh]/Wsum[1][nh] << " =/- " << Wsum[0][nh]/Wsum[1]
       cpfp->Print(outputpdf);
    // W histograms
    // W histograms
-    TCanvas *c2d;
-     c2d= new TCanvas("c2d","2d xfp", 1000,700);
-     c2d->Divide(2,3);
-     Int_t npl=1;
-      for (UInt_t nh=0;nh<n2dplots;nh++) {
+    TCanvas *cytar;
+    TLegend *lytar;
+     cytar= new TCanvas("cytar","Ytar", 1000,700);
+     cytar->Divide(2,2);
+      lytar = new TLegend(.65,.75,.99,.95,"");
+      for (UInt_t nh=0;nh<n2plots;nh++) {
+      cytar->cd(nh+1);
+      ymax=0;
      for (UInt_t nf=0;nf<nftot;nf++) {
-      c2d->cd(npl++);
-       	fhist2d[nf][nh]->SetMaximum(1000);
-       	fhist2d[nf][nh]->Draw("colz");
+       if (fhist2[nf][nh]->GetMaximum()> ymax) ymax = fhist2[nf][nh]->GetMaximum();
+     }
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       	if (nf==0) fhist2[nf][nh]->SetMaximum(ymax*1.1);
+       	if (nf==0) fhist2[nf][nh]->Draw();
+       	if (nf!=0) fhist2[nf][nh]->Draw("same");
+      	if (nf==0) fhist2[nf][nh]->SetLineColor(2);
+	if (nh==0 )lytar->AddEntry(fhist2[nf][nh],lname[nf]);
        }
+     if (nh==0 ) lytar->Draw();
       }
-      c2d->Print(outputpdf);
+      cytar->Print(outputpdf);
+   //
+    TCanvas *ckin;
+    TLegend *lkin;
+     ckin= new TCanvas("ckin","Kin", 1000,700);
+     ckin->Divide(2,3);
+      lkin = new TLegend(.65,.75,.99,.95,"");
+      for (UInt_t nh=0;nh<n3plots;nh++) {
+      ckin->cd(nh+1);
+      ymax=0;
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       if (fhist3[nf][nh]->GetMaximum()> ymax) ymax = fhist3[nf][nh]->GetMaximum();
+     }
+     for (UInt_t nf=0;nf<nftot;nf++) {
+       	if (nf==0) fhist3[nf][nh]->SetMaximum(ymax*1.1);
+       	if (nf==0) fhist3[nf][nh]->Draw();
+       	if (nf!=0) fhist3[nf][nh]->Draw("same");
+      	if (nf==0) fhist3[nf][nh]->SetLineColor(2);
+	if (nh==0 )lkin->AddEntry(fhist3[nf][nh],lname[nf]);
+       }
+     if (nh==0 ) lkin->Draw();
+      }
+      ckin->Print(outputpdf);
+   // W histograms
    // W histograms
     TCanvas *cefp;
     TLegend *lefp;

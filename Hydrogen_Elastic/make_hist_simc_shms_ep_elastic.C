@@ -1,4 +1,3 @@
-
 #include <TSystem.h>
 #include <TString.h>
 #include "TFile.h"
@@ -29,7 +28,7 @@
 #include <TDecompSVD.h>
 using namespace std;
 
-void make_hist_simc_deut_shms_ep_elastic(TString basename="",Int_t nrun=3288){
+void make_hist_simc_shms_ep_elastic(TString basename="",Int_t nrun=3288){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -45,7 +44,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_simc_deut_shms_ep_elastic_hist.root";
+   outputhist= "hist/"+basename+"_simc_shms_ep_elastic_hist.root";
  TObjArray HList(0);
    //
 TFile *fsimc = new TFile(inputroot); 
@@ -71,14 +70,18 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
    tsimc->SetBranchAddress("ssypfp",&e_ypfp);
  Float_t  p_xptar;
    tsimc->SetBranchAddress("hsxptar",&p_xptar);
- Float_t  p_yptar;
+ Float_t  p_ytar;
+   tsimc->SetBranchAddress("hsytar",&p_ytar);
+  Float_t  p_yptar;
    tsimc->SetBranchAddress("hsyptar",&p_yptar);
- Float_t  p_delta;
+Float_t  p_delta;
    tsimc->SetBranchAddress("hsdelta",&p_delta);
  Float_t  e_xptar;
    tsimc->SetBranchAddress("ssxptar",&e_xptar);
  Float_t  e_yptar;
    tsimc->SetBranchAddress("ssyptar",&e_yptar);
+ Float_t  e_ytar;
+   tsimc->SetBranchAddress("ssytar",&e_ytar);
  Float_t  e_delta;
    tsimc->SetBranchAddress("ssdelta",&e_delta);
  Float_t  emiss;
@@ -94,6 +97,10 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
  Float_t  Weight;
    tsimc->SetBranchAddress("Weight",&Weight);
    // Define histograms
+    TH1F *h_eytar = new TH1F("h_eytar",Form("Run %d ; SHMS Ytar (cm);Counts",nrun), 100, -5,5.);
+    HList.Add(h_eytar);
+    TH1F *h_hytar = new TH1F("h_hytar",Form("Run %d ; HMS Ytar (cm);Counts",nrun), 100, -5,5.);
+    HList.Add(h_hytar);
     TH1F *h_pxptar = new TH1F("h_pxptar",Form("Run %d ; HMS Xp_tar;Counts",nrun), 100, -.1,.1);
     HList.Add(h_pxptar);
     TH1F *h_pyptar = new TH1F("h_pyptar",Form("Run %d ; HMS Yp_tar;Counts",nrun), 100, -.04,.04);
@@ -106,7 +113,7 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
     HList.Add(h_edelta);
     TH1F *h_pdelta = new TH1F("h_pdelta",Form("Run %d ; HMS Delta;Counts",nrun), 100,-10.,10.);
     HList.Add(h_pdelta);
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 250, 0.8,1.3);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 125, 0.8,1.3);
     HList.Add(hW);
     TH1F *hW_2 = new TH1F("hW_2",Form("Run %d ; W (GeV) (p_delta < 10);Counts",nrun), 250, 0.8,1.3);
     HList.Add(hW_2);
@@ -122,7 +129,7 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
      HList.Add(hPmissy);
    TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissz);
-    TH1F *hprot_mom_calc = new TH1F("hprot_mom_calc",Form("Run %d ; Proton mom calc;Counts",nrun), 100,2.0,3.0 );
+    TH1F *hprot_mom_calc = new TH1F("hprot_mom_calc",Form("Run %d ; (pcalc-p)/p ;Counts",nrun), 100,-0.1,.1 );
     HList.Add(hprot_mom_calc);
      TH1F *h_pxfp = new TH1F("h_pxfp",Form("Run %d ; HMS X_fp;Counts",nrun), 100, -40.,40.);
     HList.Add(h_pxfp);
@@ -245,9 +252,38 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Exp_eff = 100./100.*0.96*0.984;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
-     Double_t th_cent=29.305;
+    if (nrun ==7000) {
+      Nent_simc=200000.;
+      Normfac = 0.786524E+07;
+      Exp_charge= 173.521; //mC
+      Exp_eff = 100./100.*0.96*0.984;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==7214) {
+      Nent_simc=200000.;
+      Normfac = 0.670510E+07 ;
+      Exp_charge= 80.473; //mC
+      Exp_eff = 100./100.*0.96*0.984;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==7215) {
+      Nent_simc=200000.;
+      Normfac = 0.672480E+07 ;
+      Exp_charge= 28.529; //mC
+      Exp_eff = 100./100.*0.96*0.984;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+   }
+   if (nrun ==7217) {
+      Nent_simc=200000.;
+      Normfac = 0.873771E+07 ;
+      Exp_charge= 79.976; //mC
+      Exp_eff = 100./100.*0.94*0.98;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+     Double_t th_cent=25.6;
   Double_t Mp = .93827;
-   Double_t Ei=3.833;
+   Double_t Ei=10.600;
+   Double_t pcent=4.9302;
    if (nrun==2452) {
    th_cent=17.83;
    Ei=10.600;
@@ -263,10 +299,11 @@ Long64_t nentries = tsimc->GetEntries();
          	hW->Fill(W,Weight*simc_fac);
          	if (p_delta>-10. && p_delta<10.) hW_2->Fill(W,Weight*simc_fac);
          	if (p_delta>-8. && p_delta<8.) hW_3->Fill(W,Weight*simc_fac);
-                if (W < 1.05  ) {	
- 		      Double_t theta_shms = TMath::ACos((cos_ts + p_yptar*sin_ts) / TMath::Sqrt( 1. + p_xptar*p_xptar + p_yptar * p_yptar ));
-		      Double_t pcalc=2*Mp*Ei*(Ei+Mp)*cos(theta_shms)/(Mp*Mp+2*Mp*Ei+Ei*Ei*sin(theta_shms)*sin(theta_shms));
-		      hprot_mom_calc->Fill(pcalc,Weight*simc_fac);
+                if (W>0.85 && W < 1.05  ) {	
+ 		      Double_t theta_hms = TMath::ACos((cos_ts + p_yptar*sin_ts) / TMath::Sqrt( 1. + p_xptar*p_xptar + p_yptar * p_yptar ));
+		      Double_t pcalc=2*Mp*Ei*(Ei+Mp)*cos(theta_hms)/(Mp*Mp+2*Mp*Ei+Ei*Ei*sin(theta_hms)*sin(theta_hms));
+		      Double_t pmom = pcent*(1+p_delta/100.);
+		      hprot_mom_calc->Fill((pcalc-pmom)/pmom,Weight*simc_fac);
  		  hEmiss->Fill(emiss,Weight*simc_fac);		  
 		  hPmiss->Fill(pmiss,Weight*simc_fac);		  
 		  hPmissx->Fill(pmissx,Weight*simc_fac);		  
@@ -275,7 +312,9 @@ Long64_t nentries = tsimc->GetEntries();
 		  h_exptar->Fill(e_xptar,Weight*simc_fac);		  
 		  h_pxptar->Fill(p_xptar,Weight*simc_fac);		  
 		  h_eyptar->Fill(e_yptar,Weight*simc_fac);		  
+		  h_eytar->Fill(e_ytar,Weight*simc_fac);		  
 		  h_pyptar->Fill(p_yptar,Weight*simc_fac);		  
+		  h_hytar->Fill(p_ytar,Weight*simc_fac);		  
 		  h_edelta->Fill(e_delta,Weight*simc_fac);		  
 		  h_pdelta->Fill(p_delta,Weight*simc_fac);		  
 		  h_exfp->Fill(e_xfp,Weight*simc_fac);		  

@@ -62,11 +62,19 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.gtr.dp",&delta);
  Double_t  xfp;
    tsimc->SetBranchAddress("P.dc.x_fp",&xfp);
+ Double_t  npeSum;
+   tsimc->SetBranchAddress("P.ngcer.npeSum",&npeSum);
+   Double_t  gindex;
+   tsimc->SetBranchAddress("P.gtr.index",&gindex);
  Double_t  starttime;
    tsimc->SetBranchAddress("P.hod.starttime",&starttime);
    // Define histograms
     TH1F *hbetanotrack = new TH1F("hbetanotrack",Form("Run %d ; Beta notrack;Counts",nrun), 600, -1.,2.0);
     HList.Add(hbetanotrack);
+    TH2F *hnpeSumEtot = new TH2F("hnpeSumEtot",Form("Run %d ; Etot ;Npe SUm",nrun), 80,0.,2.,80, 0.,40.);
+    HList.Add(hnpeSumEtot);
+    TH1F *hnpeSum = new TH1F("hnpeSum",Form("Run %d ; Npe SUm;Counts",nrun), 80, 0.,40.);
+    HList.Add(hnpeSum);
     TH1F *hetottracknorm = new TH1F("hetottracknorm",Form("Run %d ; Etot tracknorm;Counts",nrun), 300, 0.,2.0);
     HList.Add(hetottracknorm);
     TH2F *hbetanotrack_delta = new TH2F("hbetanotrack_delta",Form("Run %d ; Beta notrack;Delta",nrun), 200, .5,1.5,100,-10,20);
@@ -81,7 +89,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
        hbeta_xfpcut[nx] = new TH1F(Form("hbeta_xfpcut_%d",nx),Form("Run %d Cut %d; Beta track;Counts",nrun,nx), 200, 0.5,1.5);
     HList.Add(hbeta_xfpcut[nx]);
     }
-    TH1F *hstarttime = new TH1F("hstarttime",Form("Run %d ; Starttime;Counts",nrun), 280, -10.,60.0);
+    TH1F *hstarttime = new TH1F("hstarttime",Form("Run %d ; Starttime;Counts",nrun), 200, 0.,100.0);
     HList.Add(hstarttime);
  // loop over entries
     Double_t xlow=-40.;
@@ -91,9 +99,11 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
+               if (1==1) {
+		 hnpeSum->Fill(npeSum);
+		 hnpeSumEtot->Fill(etottracknorm,npeSum);
 		hetottracknorm->Fill(etottracknorm);
-                if (etottracknorm> .7) {
-		hbetanotrack->Fill(betanotrack);
+ 		hbetanotrack->Fill(betanotrack);
 		hbetatrack->Fill(betatrack);
 		hstarttime->Fill(starttime);
                 hbetanotrack_delta->Fill(betanotrack,delta);

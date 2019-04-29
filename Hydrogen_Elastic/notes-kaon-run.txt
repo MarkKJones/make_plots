@@ -1,3 +1,24 @@
+Jpsi data at 10.6 GeV
+Run  th_shms  p_shms   Wpeak    ver2
+7166  16.01      6.3   0.9086  -0.004 
+7167  20.00      6.3   0.9086  -0.004
+7168  22.00      6.3   0.9025  -0.004
+7189  13.1       8.5   0.8900  -0.005
+7190  13.1       8.5   0.8900  -0.005
+
+ver2
+7166 Data W = 0.953101 Simc W = 0.9412 Data W - SIMC W = 0.0119005
+7167 Data W = 0.95383 Simc W = 0.945299 Data W - SIMC W = 0.00853155
+7168 Data W = 0.945379 Simc W = 0.944687 Data W - SIMC W = 0.000691871
+7190 Data W = 0.94325 Simc W = 0.943246 Data W - SIMC W = 3.92793e-06
+7191 Data W = 0.943835 Simc W = 0.943246 Data W - SIMC W = 0.000589045
+
+7166 1.12419 +/- 0.0112662
+7167 0.98897 +/- 0.0145547
+7168 0.956021 +/- 0.014787
+7190 0.95706 +/- 0.014
+7191 0.928294 +/- 0.0115775
+
 
 Data at 10.6005 GeV
 
@@ -58,6 +79,14 @@ Run
 4857-4863 start good  hpcentral = 6.590*0.997
 4864 Al dummy
 
+SHMS single arm elastic
+4785  19.995  6.3    Data W = 0.907719 Simc W = 0.945361 Data W - SIMC W = -0.0376426
+4788  18.0    6.842  Data W = 0.902985 Simc W = 0.944599 Data W - SIMC W = -0.0416134
+4791  16.25   6.842  Data W = 0.914796 Simc W = 0.942668 Data W - SIMC W = -0.0278725
+4793  19.85   6.842  Data W = 0.894297 Simc W = 0.944608 Data W - SIMC W = -0.0503111
+4797  13.80   6.842  Data W = 0.908376 Simc W = 0.941009 Data W - SIMC W = -0.0326329
+4805  13.70   8.035   Data W = 0.904435 Simc W = 0.943773 Data W - SIMC W = -0.0393377
+
 
 
 
@@ -96,8 +125,18 @@ Run   target    SHMS p  SHMS ang
 6623             2.834      23.980   0.968907 +/- 0.00629532
 6627             2.713      25.970   0.965486 +/- 0.00685173
 6629             2.583      28.180   0.995275 +/- 0.00743509
-6633             2.478      30.0     0.996485 +/- 0.00809135  
+6633             2.478      30.0     0.996485 +/- 0.00809135 
 
+Update shmsflags.param  data nrun_200003
+ptheta_offset = 0.0005
+pthetacentral_offset = 0.00 radians
+ppcentral_offset = -.4 %
+
+
+run 
+6621 ratio = 0.9671
+         Data W = 0.946939 Simc W = 0.942461 Data W - SIMC W = 0.00447732
+6623
 
 Coincidence
 Run   target    SHMS p  SHMS ang HMS p HMS angle
@@ -131,6 +170,9 @@ Run  Ebeam HMS p HMS angle
 6602 3.833 2.713   25.970  ratio = 1.00456 +/- 0.00498786
 6609 3.833 2.583   28.185   ratio = 1.02131 +/- 0.00619809
 6611 3.833 2.478   29.985  ratio = 1.04808 +/- 0.00547189
+
+Change the HMS central momentum to move W to match SIMC.
+
 
 HMS/SHMS coin
 Run   target    SHMS p  SHMS ang HMS p HMS angle  
@@ -182,6 +224,42 @@ SHMS Comparsion data/mc
 6875  ratio = 0.904359 +/- 0.00672019
 6876  ratio = 0.927621 +/- 0.00926372
 6879  ratio = 1.55252 +/- 0.0223414 large AL background
+
+Update shmsflags.param  data nrun_200002
+
+pthetacentral_offset = 0.0005 radians
+ppcentral_offset = -.4 %
+
+SHMS Comparsion data/mc 
+6871  ratio = 0.96799 +/- 0.007
+      Data W = 0.942522 Simc W = 0.941395 Data W - SIMC W = 0.00112662
+6875  ratio = 0.925364 +/- 0.00687116 
+      Data W = 0.942281 Simc W = 0.941795 Data W - SIMC W = 0.000486061
+6876  ratio = 0.964723 +/- 0.0095
+      Data W = 0.941521 Simc W = 0.942165 Data W - SIMC W = -0.000644039
+6879  ratio = 1.53769 +/- 0.022
+      Data W = 0.944371 Simc W = 0.943669 Data W - SIMC W = 0.000702112
+
+Update shmsflags.param  data nrun_200003
+ptheta_offset = 0.0005
+pthetacentral_offset = 0.00 radians
+ppcentral_offset = -.4 %
+
+SHMS Comparsion data/mc 
+6871  ratio = 0.96799 +/- 0.0074
+      Data W = 0.942522 Simc W = 0.941395 Data W - SIMC W = 0.00112662
+6875  ratio = 0.925364 +/- 0.0068
+      Data W = 0.942281 Simc W = 0.941795 Data W - SIMC W = 0.00048626
+6876  ratio = 0.964723 +/- 0.0095
+      Data W = 0.941521 Simc W = 0.942165 Data W - SIMC W = -0.00064
+6879  ratio = 1.53769 +/- 0.022
+      Data W = 0.944377 Simc W = 0.943669 Data W - SIMC W = 0.000707864
+
+
+
+
+
+
 
 
 COincidence

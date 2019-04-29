@@ -63,6 +63,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t pltdcpad[plnum][iside][100];
  Double_t pladcpad[plnum][iside][100];
  Double_t tw_corr[plnum][iside][21];
+ Double_t tw_uncorr[plnum][iside][21];
  Double_t pulseamp[plnum][iside][21];
   Double_t pcal_etrkNorm;
   Double_t pngcer_npeSum;
@@ -98,6 +99,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress(Form("P.hod.%s.TrackXPos",plname[ipl]),&TrackXPos[ipl]) ;
    tsimc->SetBranchAddress(Form("P.hod.%s.TrackYPos",plname[ipl]),&TrackYPos[ipl]) ;
  for (Int_t is=0;is<iside;is++) {
+   tsimc->SetBranchAddress(Form("P.hod.%s.Good%sTdcTimeWalkUnCorr",plname[ipl],sidename[is]),&tw_uncorr[ipl][is]) ;
    tsimc->SetBranchAddress(Form("P.hod.%s.Good%sTdcTimeWalkCorr",plname[ipl],sidename[is]),&tw_corr[ipl][is]) ;
    tsimc->SetBranchAddress(Form("Ndata.P.hod.%s.%sAdcCounter",plname[ipl],sidename2[is]),&pladchits[ipl][is]) ;
    tsimc->SetBranchAddress(Form("P.hod.%s.%sAdcCounter",plname[ipl],sidename2[is]),&pladcpad[ipl][is]) ;

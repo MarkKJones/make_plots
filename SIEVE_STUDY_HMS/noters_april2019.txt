@@ -1,0 +1,8 @@
+April 11th optics data at ebeam = 8.2 GEv
+No raster 20uA
+
+Run    target
+8261    1.5% C
+8262    optics 2
+8262    optics 1
+

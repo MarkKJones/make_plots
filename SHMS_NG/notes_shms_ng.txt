@@ -1,0 +1,17 @@
+SHMS RUn 1777
+HV = 2000,2230,2070,1918
+ Pmt = 0 peak = 308.076 sigma = 53.2662 npe = 33.4513
+ Pmt = 1 peak = 311.171 sigma = 62.6462 npe = 24.6722
+ Pmt = 2 peak = 362.781 sigma = 65.52 npe = 30.6578
+ Pmt = 3 peak = 289.551 sigma = 62.1468 npe = 21.7076
+
+
+SHMS run 2518
+HV = 1866,2103,1938,1825
+ Pmt = 0 peak = 155.632 sigma = 30.8396 npe = 25.4673
+ Pmt = 1 peak = 159.076 sigma = 29.5788 npe = 28.9233
+ Pmt = 2 peak = 170.726 sigma = 34.7159 npe = 24.1849
+ Pmt = 3 peak = 152.856 sigma = 32.5279 npe = 22.0828
+
+Cosmic 
+2171,2201,2330,2251

@@ -34,7 +34,7 @@ void plot_hist_CTime_uncorr(TString basename) {
  outputpdf="plots/"+basename+"_CTime_uncorr.pdf";
  TString  inputroot;
    TFile *fhistroot;
-     inputroot="hist/"+basename+"_CTime_hist.root";
+     inputroot="hist/"+basename+"_hms_hodo_hist.root";
      cout << " infile root = " << inputroot << endl;
    fhistroot =  new TFile(inputroot);
   static const Int_t plnum=4;
