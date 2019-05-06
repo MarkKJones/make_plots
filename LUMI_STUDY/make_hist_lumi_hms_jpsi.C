@@ -24,7 +24,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_lumi_hms_jpsi(TString basename="",Int_t nrun=2043,Double_t threshold_cut=2.0){
+void make_hist_lumi_hms_jpsi(TString basename="",Int_t nrun=2043,Double_t mean_current=2.0){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -65,7 +65,15 @@ TTree *tscal = (TTree*) fsimc->Get("TSH");
    tscal->SetBranchAddress("H.pTRIG4.scaler",&Scal_TRIG4);
  Double_t  Scal_TRIG5;
    tscal->SetBranchAddress("H.pTRIG5.scaler",&Scal_TRIG5);
+ Double_t  Scal_Splane[4];
+   tscal->SetBranchAddress("H.S1X.scaler",&Scal_Splane[0]);
+   tscal->SetBranchAddress("H.S1Y.scaler",&Scal_Splane[1]);
+   tscal->SetBranchAddress("H.S2X.scaler",&Scal_Splane[2]);
+   tscal->SetBranchAddress("H.S2Y.scaler",&Scal_Splane[3]);
 //loop through scalers
+    Double_t tot_scal_Splane[4]={0,0,0,0};
+     Double_t prev_Splane[4]={0,0,0,0};
+    Double_t tot_scal_cut_Splane[4]={0,0,0,0};
      Int_t nscal_reads=0;
      Int_t nscal_reads_cut=0;
      Double_t prev_read=-1;
@@ -95,6 +103,7 @@ TTree *tscal = (TTree*) fsimc->Get("TSH");
       Double_t tot_scal_time=0;
      Double_t prev_time=0;
      //
+   Double_t threshold_cut=3.;
 Long64_t scal_entries = tscal->GetEntries();
 Long64_t data_entries = tsimc->GetEntries();
 	for (int i = 0; i < scal_entries; i++) {
@@ -103,7 +112,7 @@ Long64_t data_entries = tsimc->GetEntries();
           event_flag[nscal_reads] = 0;
              scal_event_number[nscal_reads] = Scal_evNumber;
           ave_current+=Scal_BCM4B_current;
-	  if (Scal_BCM4B_current > threshold_cut) {
+	  if (TMath::Abs(Scal_BCM4B_current-mean_current) < threshold_cut) {
              event_flag[nscal_reads] = 1;
              ave_current_cut+=Scal_BCM4B_current;
  	     tot_scal_cut_time+=(Scal_time-prev_time);
@@ -112,7 +121,8 @@ Long64_t data_entries = tsimc->GetEntries();
  	     tot_scal_cut_TRIG1+=(Scal_TRIG1-prev_TRIG1);
  	     tot_scal_cut_TRIG4+=(Scal_TRIG4-prev_TRIG4);
  	     tot_scal_cut_TRIG5+=(Scal_TRIG5-prev_TRIG5);
-             charge_sum_cut+=(Scal_BCM4B_charge-prev_charge);
+ 	     for (Int_t s=0;s<4;s++) tot_scal_cut_Splane[s]+=(Scal_Splane[s]-prev_Splane[s]);
+            charge_sum_cut+=(Scal_BCM4B_charge-prev_charge);
              nscal_reads_cut++;
 	  }
 	  prev_charge = Scal_BCM4B_charge;
@@ -122,6 +132,7 @@ Long64_t data_entries = tsimc->GetEntries();
 	  prev_TRIG1 = Scal_TRIG1;
 	  prev_TRIG4 = Scal_TRIG4;
 	  prev_TRIG5 = Scal_TRIG5;
+	     for (Int_t s=0;s<4;s++) prev_Splane[s]=Scal_Splane[s];
 	  // cout <<  nscal_reads <<  " " << Scal_BCM4B_current << " " << event_flag[nscal_reads] << " " << Scal_TRIG1 << endl;
           nscal_reads++;
           charge_sum=Scal_BCM4B_charge;
@@ -131,14 +142,23 @@ Long64_t data_entries = tsimc->GetEntries();
 	  tot_scal_TRIG4=Scal_TRIG4;
 	  tot_scal_TRIG5=Scal_TRIG5;
           tot_scal_time=Scal_time;
+	  for (Int_t s=0;s<4;s++) tot_scal_Splane[s]=Scal_Splane[s];
 	}
    //
 	Double_t gevtyp;
 	tsimc->SetBranchAddress("g.evtyp",&gevtyp);
 	Double_t gevnum;
 	tsimc->SetBranchAddress("g.evnum",&gevnum);
-   Double_t ngcer_npeSum;
-   tsimc->SetBranchAddress("H.cer.npeSum",&ngcer_npeSum);
+	Double_t ntrack;
+	tsimc->SetBranchAddress("H.dc.ntrack",&ntrack);
+	Double_t goodscinhit;
+	tsimc->SetBranchAddress("H.hod.goodscinhit",&goodscinhit);
+	Double_t starttime;
+	tsimc->SetBranchAddress("H.hod.starttime",&starttime);
+ 	Double_t betanotrack;
+	tsimc->SetBranchAddress("H.hod.betanotrack",&betanotrack);
+   Double_t hgcer_npeSum;
+   tsimc->SetBranchAddress("H.cer.npeSum",&hgcer_npeSum);
    Double_t delta;
    tsimc->SetBranchAddress("H.gtr.dp",&delta);
    Double_t etotnorm;
@@ -146,37 +166,47 @@ Long64_t data_entries = tsimc->GetEntries();
    Double_t etottracknorm;
    tsimc->SetBranchAddress("H.cal.etottracknorm",&etottracknorm);
 	//
+	TH1F* h_starttime = new TH1F("h_starttime"," ; Startime (elec good scinhit)",60,0.,120.);
+	TH1F* h_ch1_nhit = new TH1F("h_ch1_nhit"," ; CH1 nhits",30,0.,30.);
+	TH1F* h_ch2_nhit = new TH1F("h_ch2_nhit"," ; CH2 nhits",30,0.,30.);
+	TH1F* h_starttime_ntrack = new TH1F("h_starttime_ntrack"," ; Startime (elec good scinhit ntrack)",60,0.,120.);
 	TH1F* h_etotnorm_all = new TH1F("h_etotnorm_all"," All events; etot  norm",100,0.,3.);
-	TH1F* h_etottracknorm_trig1 = new TH1F("h_etottracknorm_trig1"," Trig 1 ; etot track norm",100,0.,3.);
+	TH1F* h_etottracknorm_trig2 = new TH1F("h_etottracknorm_trig1"," Trig 2 ; etot track norm",100,0.,3.);
 	TH1F* h_etottracknorm_trig4 = new TH1F("h_etottracknorm_trig4"," Trig 4 ; etot track norm",100,0.,3.);
 	TH1F* h_etottracknorm_all = new TH1F("h_etottracknorm_all"," All events; etot track norm",100,0.,3.);
-	TH1F* h_ngcernpeSum_all = new TH1F("h_ngcernpeSum_all"," All events; NG cer npe sum",120,0.,30.);
-	TH1F* h_ngcernpeSum_all_etotcut = new TH1F("h_ngcernpeSum_all_etotcut"," All events; NG cer npe sum",120,0.,30.);
+	TH1F* h_hgcernpeSum_all = new TH1F("h_ngcernpeSum_all"," All events; HG cer npe sum",120,0.,30.);
+	TH1F* h_hgcernpeSum_all_etotcut = new TH1F("h_ngcernpeSum_all_etotcut"," All events; HG cer npe sum",120,0.,30.);
 	TH1F* h_etottracknorm_curcut = new TH1F("h_etottracknorm_curcut"," Current cut; etot track norm",100,0.,3.);
 	//
    Int_t nscal_reads_2=0;
    prev_read=-1;
-   Int_t ps2;
+   Int_t ps3;
    Double_t trackeff;
-   if (nrun==7570) ps2=17;
-   if (nrun==7570) trackeff=0.9417;
-   if (nrun==7571) ps2=3;
-   if (nrun==7571) trackeff=0.9393;
-   if (nrun==7572) ps2=5;
-   if (nrun==7572) trackeff=0.9339;
-   if (nrun==7574) ps2=17;
-   if (nrun==7574) trackeff=0.9288;
+   if (nrun==7570) ps3=17;
+   if (nrun==7571) ps3=3;
+   if (nrun==7572) ps3=5;
+   if (nrun==7574) ps3=17;
+   if (nrun==7499) ps3=2;
+   if (nrun==7500) ps3=2;
+   if (nrun==7501) ps3=2;
+   if (nrun==7419) ps3=2;
+   if (nrun==7420) ps3=2;
+   //Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < data_entries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
-		h_ngcernpeSum_all->Fill(ngcer_npeSum);
-		if (etottracknorm > 0.97) h_ngcernpeSum_all_etotcut->Fill(ngcer_npeSum);
-		if (etotnorm>0.6&&ngcer_npeSum!=0&& delta>-10&& delta<22) h_etottracknorm_all->Fill(etottracknorm);
- 		if (ngcer_npeSum>1&& delta>-8&& delta<8) h_etotnorm_all->Fill(etottracknorm);
-                if (event_flag[nscal_reads_2]==1&&etottracknorm>0.97&&ngcer_npeSum>1.&& delta>-8&& delta<8) {
+		h_hgcernpeSum_all->Fill(hgcer_npeSum);
+		if (etottracknorm > 0.97) h_hgcernpeSum_all_etotcut->Fill(hgcer_npeSum);
+		if (hgcer_npeSum>1&& delta>-8&& delta<8) h_etottracknorm_all->Fill(etottracknorm);
+ 		if (hgcer_npeSum>1&& delta>-8&& delta<8) h_etotnorm_all->Fill(etottracknorm);
+		if (event_flag[nscal_reads_2]==1&&etotnorm>0.97&&hgcer_npeSum>1&&goodscinhit==1) {
+		  h_starttime->Fill(starttime);
+		  if (ntrack >0) h_starttime_ntrack->Fill(starttime);
+		}
+                if (event_flag[nscal_reads_2]==1&&etottracknorm>0.97&&hgcer_npeSum>1.&& delta>-8&& delta<8) {
 		  h_etottracknorm_curcut->Fill(etottracknorm);
 		  if (gevtyp==2) {
-		    h_etottracknorm_trig1->Fill(etottracknorm);
+		    h_etottracknorm_trig2->Fill(etottracknorm);
 		      }
 		  if (gevtyp==4) {
 		    h_etottracknorm_trig4->Fill(etottracknorm);
@@ -189,12 +219,13 @@ Long64_t data_entries = tsimc->GetEntries();
 		}
 	}
 	//
-	Int_t good_ev1 = h_etottracknorm_trig1->Integral();
-	Double_t good_ev1_err = TMath::Sqrt(good_ev1);
+	Double_t calc_treff= float(h_starttime_ntrack->Integral())/float(h_starttime->Integral()) ;
+	Int_t good_ev2 = h_etottracknorm_trig2->Integral();
+	Double_t good_ev2_err = TMath::Sqrt(good_ev2);
 	Int_t good_ev4 = h_etottracknorm_trig4->Integral();
 	Double_t good_ev4_err = TMath::Sqrt(good_ev4);
-	Double_t good_ev = (good_ev1*ps2+good_ev4)/trackeff;
-	Double_t good_ev_err = TMath::Sqrt( (good_ev1_err*ps2)*(good_ev1_err*ps2) + (good_ev4_err)*(good_ev4_err))/trackeff;
+	Double_t good_ev = (good_ev2*ps3+good_ev4)/calc_treff;
+	Double_t good_ev_err = TMath::Sqrt( (good_ev2_err*ps3)*(good_ev2_err*ps3) + (good_ev4_err)*(good_ev4_err))/calc_treff;
 	//
         Double_t err_trig2 = 1./TMath::Sqrt(tot_scal_cut_TRIG2);
         Double_t err_trig3 = 1./TMath::Sqrt(tot_scal_cut_TRIG3);
@@ -202,7 +233,7 @@ Long64_t data_entries = tsimc->GetEntries();
         Double_t err_trig4 = 1./TMath::Sqrt(tot_scal_cut_TRIG4);
         Double_t err_trig5 = 1./TMath::Sqrt(tot_scal_cut_TRIG5);
 	cout << nrun << " " << charge_sum_cut << " " << threshold_cut << " "<< charge_sum_cut/tot_scal_cut_time << " " << tot_scal_cut_time/tot_scal_time << " " << " " << tot_scal_cut_TRIG3/tot_scal_cut_time << " " << tot_scal_cut_TRIG4/tot_scal_cut_time << " " << good_ev/tot_scal_cut_time  << " " << tot_scal_cut_TRIG3/charge_sum_cut << " " << err_trig3*tot_scal_cut_TRIG3/charge_sum_cut << " " << tot_scal_cut_TRIG4/charge_sum_cut << " " << err_trig4*tot_scal_cut_TRIG4/charge_sum_cut<< " " << good_ev/charge_sum_cut<< " " << good_ev_err/charge_sum_cut << " " << endl;
+cout << nrun << " " << mean_current << " "<< charge_sum_cut/tot_scal_cut_time << " "<< tot_scal_cut_Splane[0]/tot_scal_cut_time<< " "<< tot_scal_cut_Splane[1]/tot_scal_cut_time<< " "<< tot_scal_cut_Splane[2]/tot_scal_cut_time<< " "<< tot_scal_cut_Splane[3]/tot_scal_cut_time<< " " << calc_treff<< endl;
 // loop through data
-Long64_t nentries = tsimc->GetEntries();
 //
 }
