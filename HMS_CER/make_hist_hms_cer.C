@@ -50,21 +50,37 @@ gStyle->SetPalette(1,0);
 TFile *fsimc = new TFile(inputroot); 
 TTree *tsimc = (TTree*) fsimc->Get("T");
 // Define branches
+ static const Int_t plnum=4;
+ static const Int_t ns=2;
+ const char* sname[ns]={"Neg","Pos"};
+ const char* sname2[ns]={"neg","pos"};
+ const char* plname[plnum]={"1pr","2ta","3ta","4ta"};
+ Int_t  e_nhits[plnum][ns];
+ Double_t  energy[plnum][ns][13];
+  for (Int_t ip=0;ip<plnum;ip++) {
+ for (Int_t is=0;is<ns;is++) {
+   tsimc->SetBranchAddress(Form("Ndata.H.cal.%s.e%s",plname[ip],sname2[is]),&e_nhits[ip][is]) ;   
+   tsimc->SetBranchAddress(Form("H.cal.%s.e%s",plname[ip],sname2[is]),&energy[ip][is]) ;   
+ }}
  Double_t npeSum;
    tsimc->SetBranchAddress("H.cer.npeSum",&npeSum) ;
- Double_t Amp[4];
-   tsimc->SetBranchAddress("H.cer.goodAdcPulseAmp",&Amp) ;
+ Double_t etottracknorm;
+   tsimc->SetBranchAddress("H.cal.etottracknorm",&etottracknorm) ;
    //
    TString temp=Form("Run %d ; NpeSUm  ; Counts",nrun);
    TH1F *hcernpeSum = new TH1F("hcernpeSum",temp,160,0,40.);
    HList.Add(hcernpeSum);
-   temp=Form("Run %d ; Pulse Amp cer0  ; Counts",nrun);
-   TH1F *hcer0PulseAmp= new TH1F("hcer0PulseAmp",temp,50,0,200.);
-   HList.Add(hcer0PulseAmp);
-   temp=Form("Run %d ; Pulse Amp cer1  ; Counts",nrun);
-   TH1F *hcer1PulseAmp= new TH1F("hcer1PulseAmp",temp,50,0,200.);
-  HList.Add(hcer1PulseAmp);
-   //
+   temp=Form("Run %d ; Etottracknorm  ; Counts",nrun);
+   TH1F *hEtottracknorm = new TH1F("Etottracknorm",temp,150,0,1.5);
+   HList.Add(hEtottracknorm);
+   TH1F *HCalEnergy[plnum][ns][13];
+   TH1F *HCalEnergy_elec[plnum][ns][13];
+  for (Int_t ip=0;ip<plnum;ip++) {
+ for (Int_t is=0;is<ns;is++) {
+  for (Int_t ih=0;ih<13;ih++) {
+    HCalEnergy[ip][is][ih] = new TH1F(Form("cal_pion_%s_%s_%d",plname[ip],sname2[is],ih)," ; Pion Energy",200,0.,1.);
+    HCalEnergy_elec[ip][is][ih] = new TH1F(Form("cal_elec_%s_%s_%d",plname[ip],sname2[is],ih)," ; Elec Energy",200,0.,1.);
+  }}}   //
    //
 Long64_t nentries = tsimc->GetEntries();
 // nentries=10;
@@ -73,8 +89,18 @@ Long64_t nentries = tsimc->GetEntries();
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		hcernpeSum->Fill(npeSum);
-		hcer0PulseAmp->Fill(Amp[0]);
-		hcer1PulseAmp->Fill(Amp[1]);
+		if (npeSum>2.) {
+		  hEtottracknorm->Fill(etottracknorm);
+		}
+		 
+ for (Int_t is=0;is<ns;is++) {
+  for (Int_t ip=0;ip<plnum;ip++) {
+  for (Int_t ih=0;ih<e_nhits[ip][is];ih++) {
+    if (npeSum==0. && energy[ip][is][ih] > 0) HCalEnergy[ip][is][ih]->Fill(energy[ip][is][ih]);
+    if (npeSum>2. && etottracknorm>1. && energy[ip][is][ih] > 0) HCalEnergy_elec[ip][is][ih]->Fill(energy[ip][is][ih]);
+  }}   //
+		  
+		}
 	}
 	//
  TFile hsimc(outputhist,"recreate");

@@ -96,9 +96,6 @@ const UInt_t n4plots=4;
       lW->Draw();
       cW->Print(outputpdf+"(");
       cout << " ratio = " << Wsum[0]/Wsum[1] << endl;
-      Double_t backg = Wsum[2];
-      cout << " ratio = " << (Wsum[0]-backg)/Wsum[1] << " +/- " << TMath::Sqrt(Wsum[0]+Wsum[2])/Wsum[1]<< endl;
-	cout << " Data counts = " << Wsum[0] << " back = " << backg << " SIMC = " << Wsum[1] << endl;
 	cout << " Data W = " << Wpeak[0] << " Simc W = " << Wpeak[1] << " Data W - SIMC W = " << Wpeak[0]-Wpeak[1] << endl;
 	cout << Wpeak[0] << " " << Wpeakerr[0] << " " << Wpeak[1]  << " " << Wpeakerr[1] << " " << (Wpeak[0]-Wpeak[1]) << " " << TMath::Sqrt(Wpeakerr[0]*Wpeakerr[0]+Wpeakerr[1]*Wpeakerr[1])<< endl;
 

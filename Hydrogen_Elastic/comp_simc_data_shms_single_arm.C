@@ -43,7 +43,7 @@ const UInt_t n4plots=4;
  TString h4name[n4plots]={"hxfp","hyfp","hxpfp","hypfp"};
  //
  TString inputroot[nftot];
- inputroot[0] = "hist/"+fn1+"_shms_ep_elastic_hist.root";
+ inputroot[0] = "hist/"+fn1+"_shms_single_arm_hist.root";
  inputroot[1] = "hist/"+fn2+"_simc_shms_ep_elastic_hist.root";
  // inputroot[2] = "hist/"+fn3+"_hms_ep_elastic_hist.root";
   TH1F *fhist[nftot][nplots];

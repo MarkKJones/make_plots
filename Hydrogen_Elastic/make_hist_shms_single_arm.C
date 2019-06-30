@@ -95,7 +95,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("P.kin.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,1.1);
     HList.Add(hW);
     TH1F *hdelta = new TH1F("hdelta",Form("Run %d ; Delta ;Counts",nrun), 100, -15.,25.0);
     HList.Add(hdelta);
@@ -202,7 +202,7 @@ Long64_t nentries = tsimc->GetEntries();
                 hxbeam->Fill(beamx);
                 hybeam->Fill(beamy);
  		if (gindex>-1 )  hetot->Fill(etracknorm);
-		if (gindex>-1 && e_delta > -10. && e_delta < 30. && npeSum>2. && etracknorm>.5) { 
+		if (gindex>-1 && e_delta > -10. && e_delta < 30.  && etracknorm>.5) { 
 		hW->Fill(W);
 		  if ( W> 0.850 &&W < 1.075) {
 		  hxfp->Fill(e_xfp,scalfac);		  

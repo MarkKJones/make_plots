@@ -1,3 +1,57 @@
+SUmmer run
+
+RUn   target  SHMS p   SHMS ang
+8482   lh2    2.617   11.090      2.604  11.505
+8483   dummy
+8484   dummy
+8485   LH2   2.573    13.005     2.573   13.005 bad
+8486   LH2   2.573    13.005     2.573   13.005 
+8487   LH2   2.501   15.225       2.501  15.225
+8488   LH2
+8489   dummy
+
+coin
+8548  LH2
+Use Eb=2749
+Use HMS mom fac = 0.998
+USe SHMS mom fac = 1.0  
+ ratio = 0.93162 =/- 0.00163317
+ Data W = 0.944069 Simc W = 0.942627 Data W - SIMC W = 0.00144219
+  
+singles
+8552  LH2   2.300  21.195  2.300 -21.195
+8557  LH2   1.964  30.405  1.964 -30.395
+8564  LH2   1.848  33.645  1.848 -33.640
+8566  LH2   2.300  21.200  2.300 -21.200
+
+SHMS singles comparison
+
+run 8557
+ ratio = 0.949837 +/- 0.00951695
+ Data counts = 9961 back = 1 SIMC = 10487.1
+ Data W = 0.945413 Simc W = 0.94224 Data W - SIMC W = 0.00317316
+run 8564
+ ratio = 0.991708 +/- 0.00883273
+ Data counts = 12606 back = 1 SIMC = 12711.4
+ Data W = 0.946824 Simc W = 0.942399 Data W - SIMC W = 0.00442501
+run 8566
+ ratio = 0.898058 +/- 0.00843294
+ Data W = 0.943254 Simc W = 0.941743 Data W - SIMC W = 0.00151165
+
+
+HMS Comparison mom fac = .998
+ 
+run 8557
+ ratio = 1.10184
+ Data W = 0.942625 Simc W = 0.942261 Data W - SIMC W = 0.000363863
+run 8564
+ ratio = 1.00905
+ Data W = 0.943205 Simc W = 0.942405 Data W - SIMC W = 0.000800622
+run 8566
+ ratio = 1.03396
+ Data W = 0.940622 Simc W = 0.941868 Data W - SIMC W = -0.00124583
+
+
 Jpsi data at 10.6 GeV
 Run  th_shms  p_shms   Wpeak    ver2
 7166  16.01      6.3   0.9086  -0.004 

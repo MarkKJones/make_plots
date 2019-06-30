@@ -69,7 +69,7 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
  Float_t  e_delta;
    tsimc->SetBranchAddress("ssdelta",&e_delta);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.75,1.2);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,1.1);
     HList.Add(hW);
       TH1F *hxfp = new TH1F("hxfp",Form("Run %d ; SHMS X_fp;Counts",nrun), 100, -40.,40.);
     HList.Add(hxfp);
@@ -229,6 +229,48 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Normfac =  0.115064E+08 ;
       Exp_charge= 7962.344/1000./2.0;
       Exp_eff =56.7/100.*0.9939;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8482) {
+      Nent_simc=100000.;
+      Normfac =  0.119638E+08 ;
+      Exp_charge= 250.5/1000./257.0;
+      Exp_eff =99./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8486) {
+      Nent_simc=100000.;
+      Normfac =  0.119638E+08 ;
+      Exp_charge= 689.074/1000./257.0;
+      Exp_eff =99./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8487) {
+      Nent_simc=100000.;
+      Normfac =  0.119638E+08 ;
+      Exp_charge= 1697.681/1000./257.0;
+      Exp_eff =99./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8557) {
+      Nent_simc=100000.;
+      Normfac =  0.117513E+08;
+      Exp_charge= 3134.803/1000./9.0;
+      Exp_eff =100./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8564) {
+      Nent_simc=100000.;
+      Normfac =  0.116765E+08;
+      Exp_charge= 4414.566/1000./5.0;
+      Exp_eff =100./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
+       if (nrun ==8566) {
+      Nent_simc=100000.;
+      Normfac =  0.118243E+08;
+      Exp_charge= 1561.090/1000./5.0;
+      Exp_eff =10.4441/100.;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
   }
       //

@@ -113,7 +113,7 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("H.kin.primary.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,1.1);
     HList.Add(hW);
     TH1F *h_elec_mom_diff = new TH1F("h_elec_mom_diff",Form("Run %d ; P - P(eb,th_e) ;Counts",nrun), 100, -.2,.2);
     HList.Add(h_elec_mom_diff);

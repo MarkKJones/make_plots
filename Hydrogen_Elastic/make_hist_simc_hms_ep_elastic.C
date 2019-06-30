@@ -105,7 +105,7 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
     HList.Add(pdelta);
     TH1F *hdelta = new TH1F("hdelta",Form("Run %d ; HMS Delta;Counts",nrun), 100,-10.,10.);
     HList.Add(hdelta);
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,1.1);
     HList.Add(hW);
      TH1F *hEmiss = new TH1F("hEmiss",Form("Run %d ; Emiss (GeV);Counts",nrun), 200, -.05,.1);
     HList.Add(hEmiss);
@@ -202,6 +202,13 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Normfac = 0.157892E+08;
       Exp_charge= 173.521; //mC
       Exp_eff = 100./100.*0.96*0.984;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==8548) {
+      Nent_simc=200000.;
+       Normfac = 0.100515E+08;
+       Exp_charge= 43.985;//BCM1 , BCM4A = 55.979; //mC
+      Exp_eff = 100./100.;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
      Double_t th_cent=29.305;

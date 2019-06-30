@@ -28,7 +28,7 @@ void comp_simc_data_hms_ep_elastic( TString fn1 , TString fn2 ) {
  gStyle->SetTitleSize(0.06,"XY");
  gStyle->SetPadLeftMargin(0.14);
      TString outputpdf;
-    outputpdf="plots/comp_simc_hms_ep_elastic_xptarcut_"+fn2+".pdf";
+    outputpdf="plots/comp_simc_hms_ep_elastic_"+fn2+".pdf";
     //
 const UInt_t nftot=2;
  Int_t colind[nftot]={1,2};
