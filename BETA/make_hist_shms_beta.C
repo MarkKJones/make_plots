@@ -64,6 +64,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.dc.x_fp",&xfp);
  Double_t  npeSum;
    tsimc->SetBranchAddress("P.ngcer.npeSum",&npeSum);
+ Double_t  aeroSum;
+   tsimc->SetBranchAddress("P.aero.npeSum",&aeroSum);
    Double_t  gindex;
    tsimc->SetBranchAddress("P.gtr.index",&gindex);
  Double_t  starttime;
@@ -73,8 +75,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hbetanotrack);
     TH2F *hnpeSumEtot = new TH2F("hnpeSumEtot",Form("Run %d ; Etot ;Npe SUm",nrun), 80,0.,2.,80, 0.,40.);
     HList.Add(hnpeSumEtot);
-    TH1F *hnpeSum = new TH1F("hnpeSum",Form("Run %d ; Npe SUm;Counts",nrun), 80, 0.,40.);
+    TH1F *hnpeSum = new TH1F("hnpeSum",Form("Run %d ;Aero  Npe SUm;Counts",nrun), 80, 0.,40.);
     HList.Add(hnpeSum);
+    TH2F *hnpeSum_betatrack = new TH2F("hnpeSum_betatrack",Form("Run %d ;Aero  Npe SUm; Beta track",nrun), 80, 0.,40.,80,.5,1.5);
+    HList.Add(hnpeSum_betatrack);
     TH1F *hetottracknorm = new TH1F("hetottracknorm",Form("Run %d ; Etot tracknorm;Counts",nrun), 300, 0.,2.0);
     HList.Add(hetottracknorm);
     TH2F *hbetanotrack_delta = new TH2F("hbetanotrack_delta",Form("Run %d ; Beta notrack;Delta",nrun), 200, .5,1.5,100,-10,20);
@@ -83,6 +87,14 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hbetatrack_delta);
     TH1F *hbetatrack = new TH1F("hbetatrack",Form("Run %d ; Beta track;Counts",nrun), 600, -1.,2.0);
     HList.Add(hbetatrack);
+    TH2F *hbetatrack_delta_Proton = new TH2F("hbetatrack_delta_Proton",Form("Run %d ; Beta track_Proton;Delta",nrun), 200, .5,1.5,100,-10,20);
+    HList.Add(hbetatrack_delta_Proton);
+    TH1F *hbetatrack_Proton = new TH1F("hbetatrack_Proton",Form("Run %d ; Beta track_Proton;Counts",nrun), 600, -1.,2.0);
+    HList.Add(hbetatrack_Proton);
+    TH2F *hbetatrack_delta_Pion = new TH2F("hbetatrack_delta_Pion",Form("Run %d ; Beta track_Pion;Delta",nrun), 200, .5,1.5,100,-10,20);
+    HList.Add(hbetatrack_delta_Pion);
+    TH1F *hbetatrack_Pion = new TH1F("hbetatrack_Pion",Form("Run %d ; Beta track_Pion;Counts",nrun), 600, -1.,2.0);
+    HList.Add(hbetatrack_Pion);
     static const Int_t nxpcut=8;
     TH1F *hbeta_xfpcut[nxpcut];
     for (Int_t nx=0;nx<nxpcut;nx++) {
@@ -100,7 +112,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
                if (1==1) {
-		 hnpeSum->Fill(npeSum);
+		 hnpeSum->Fill(aeroSum);
+		 hnpeSum_betatrack->Fill(aeroSum,betatrack);
 		 hnpeSumEtot->Fill(etottracknorm,npeSum);
 		hetottracknorm->Fill(etottracknorm);
  		hbetanotrack->Fill(betanotrack);
@@ -108,7 +121,15 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
 		hstarttime->Fill(starttime);
                 hbetanotrack_delta->Fill(betanotrack,delta);
                 hbetatrack_delta->Fill(betatrack,delta);
-                   for (Int_t nx=0;nx<nxpcut;nx++) {
+		if (aeroSum > 5) {
+                 hbetatrack_delta_Pion->Fill(betatrack,delta);
+ 		 hbetatrack_Pion->Fill(betatrack);
+		}
+		if (aeroSum <0.5) {
+                 hbetatrack_delta_Proton->Fill(betatrack,delta);
+ 		 hbetatrack_Proton->Fill(betatrack);
+		}
+                  for (Int_t nx=0;nx<nxpcut;nx++) {
 		     xcent = xlow +nx*xfpstep+xfpstep/2.;
 		     if (TMath::Abs(xfp-xcent)<xfpstep) hbeta_xfpcut[nx]->Fill(betatrack); 
 		   }

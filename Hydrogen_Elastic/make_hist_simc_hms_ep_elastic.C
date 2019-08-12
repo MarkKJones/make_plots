@@ -207,7 +207,21 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
     if (nrun ==8548) {
       Nent_simc=200000.;
        Normfac = 0.100515E+08;
-       Exp_charge= 43.985;//BCM1 , BCM4A = 55.979; //mC
+       Exp_charge= 4.240;//BCM1 , BCM4A = 55.979; //mC
+      Exp_eff = 100./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==8570) {
+      Nent_simc=200000.;
+      Normfac = 0.110231E+08;
+       Exp_charge= 11.261;//BCM1 , BCM4A = 55.979; //mC
+      Exp_eff = 100./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+    if (nrun ==8776) {
+      Nent_simc=200000.;
+      Normfac = 0.112229E+08;
+       Exp_charge= 9.828;//BCM1 , BCM4A = 55.979; //mC
       Exp_eff = 100./100.;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }

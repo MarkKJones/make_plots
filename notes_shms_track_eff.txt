@@ -1,0 +1,28 @@
+REplayed run 6633
+Look at SHMS
+
+xlo-xhi = 4,11 and 4,10
+ylo-yhi = 4.11 and 6,14
+  pmax_pr_hits = 25, 25
+pmin_hit = 4, 4
+pmin_combos = 3, 3
+  pspace_point_criterion = 1.2, 1.2
+  pxt_track_criterion = 20.0
+  pyt_track_criterion = 5.0
+  pxpt_track_criterion = 0.4
+pstub_max_xpdiff=.2
+ pSmallAngleApprox = 1
+
+Code       Run     3/4 rate   shoulde   dide  eff   planes min ch hits  ntrack>0
+-------   ----    --------    -------  ----  ----  ------- ----------- ------------
+new     6633,50000  3kHz       7889    7734  0.9804   4    4,4 and 3,3 28242 (69.6%)
+orig    6633,50001  3          7425    7295  0.9825   4    4,4 and 3,3 28242 (69.6%)
+orig    6633,50002  3          9662    9473  0.9801   3    4,4 and 3,3 28243 (69.6%)
+orig    3377,50001  500kHz    22225   18753  0.8438   4    4,4 and 3,3 
+orig    3377,50002            30222   24240  0.8021   3    4,4 and 3,3 32065 (64.4%)
+new     3377,50000            26862   22456  0.8360   4    4,4 and 3,3 32064 (64.4%)
+new     3377,50004            31304   24779  0.7916   3    4,4 and 3,3 32068 (64.4%)
+new     3377,50005            31304   27880  0.8906   3    5,5 and 4,4 38984 (78.3%)
+new     3377,50006            26865   25231  0.9385   4    5,5 and 4,4 38985 (78.3%)
+newf    3377,50010            26583   24955  0.9388   4    5,5 and 4,4 38987 (78.3%)
+orig    3377,50010            22367   20961  0.9371   4    5,5 and 4,4 38988 (78.3%)

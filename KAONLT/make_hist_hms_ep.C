@@ -28,7 +28,7 @@
 #include <TDecompSVD.h>
 using namespace std;
 
-void make_hist_hms_ep_elastic(TString basename="",Int_t nrun=3288,Double_t pfac=0.981){
+void make_hist_hms_ep(TString basename="",Int_t nrun=3288,Double_t pfac=0.981){
    if (basename=="") {
      cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
      cin >> basename;
@@ -113,15 +113,8 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t  ThScat;
    tsimc->SetBranchAddress("H.kin.primary.scat_ang_rad",&ThScat);
    // Define histograms
-    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,1.1);
+    TH1F *hW = new TH1F("hW",Form("Run %d ; W (GeV);Counts",nrun), 200, 0.9,3.0);
     HList.Add(hW);
-    TH1F *h_elec_mom_diff = new TH1F("h_elec_mom_diff",Form("Run %d ; P - P(eb,th_e) ;Counts",nrun), 100, -.2,.2);
-    HList.Add(h_elec_mom_diff);
-    TH1F *hW_dcut[2];
-     for (Int_t nd=0;nd<2;nd++) {
-        hW_dcut[nd]= new TH1F(Form("hW_%d",nd),Form("Run %d ; W (GeV);Counts",nrun), 100, 0.8,1.2);
-    HList.Add(hW_dcut[nd]);
-      }
      TH1F *hxfp = new TH1F("hxfp",Form("Run %d ; HMS X_fp;Counts",nrun), 100, -40.,40.);
     HList.Add(hxfp);
     TH1F *hyfp = new TH1F("hyfp",Form("Run %d ; HMS Y_fp;Counts",nrun), 100, -20.,20.);
@@ -154,66 +147,26 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
     HList.Add(hEmiss);
     TH1F *hPmiss = new TH1F("hPmiss",Form("Run %d ; Pmiss (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmiss);
-    TH1F *hMmiss2 = new TH1F("hMmiss2",Form("Run %d ; Mmiss2 (GeV2);Counts",nrun), 400, -.05,.05);
+    TH1F *hMmiss2 = new TH1F("hMmiss2",Form("Run %d ; Mmiss2 (GeV2);Counts",nrun), 400, 0.,1.5);
     HList.Add(hMmiss2);
-    TH1F *hMmiss2_el = new TH1F("hMmiss2_el",Form("Run %d ; Mmiss2 (GeV2) W el;Counts",nrun), 100, -.05,.05);
-    HList.Add(hMmiss2_el);
     TH1F *hPmissx = new TH1F("hPmissx",Form("Run %d ; Pmissx (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissx);
     TH1F *hPmissy = new TH1F("hPmissy",Form("Run %d ; Pmissy (GeV);Counts",nrun), 200, -.1,.1);
      HList.Add(hPmissy);
      TH1F *hPmissz = new TH1F("hPmissz",Form("Run %d ; Pmissz (GeV);Counts",nrun), 200, -.1,.1);
     HList.Add(hPmissz);
-    TH1F *hprot_mom_calc = new TH1F("hprot_mom_calc",Form("Run %d ; Proton mom calc;Counts",nrun), 100,2.0,3.0 );
-    HList.Add(hprot_mom_calc);
      TH1F *hetottracknorm = new TH1F("hetot",Form("Run %d ; Etottrack norm;Counts",nrun), 120, 0.0,1.2);
     HList.Add(hetottracknorm);
-     TH2F *hWXfp = new TH2F("hWXfp",Form("Run %d ; W (GeV) ; Xfp ",nrun), 100, 0.8,1.2, 80,-40,40);
-    HList.Add(hWXfp);
-        TH2F *hWYfp = new TH2F("hWYfp",Form("Run %d ; W (GeV) ; Yfp ",nrun), 100, 0.8,1.2, 80,-40,40);
-   HList.Add(hWYfp);
-    TH2F *hWXpfp = new TH2F("hWXpfp",Form("Run %d ; W (GeV) ; Xpfp ",nrun), 100, 0.8,1.2, 80,-.05,.05);
-   HList.Add(hWXpfp);
-        TH2F *hWYpfp = new TH2F("hWYpfp",Form("Run %d ; W (GeV) ; Ypfp ",nrun), 100, 0.8,1.2, 80,-.02,.02);
-   HList.Add(hWYpfp);
-  // loop over entries
-    Double_t th_cent=25.78;
-  Double_t Mp = .93827;
-   Double_t Ei=8.2088;
-   Double_t cos_ts=TMath::Cos(th_cent/180*3.14159);
-   Double_t sin_ts=TMath::Sin(th_cent/180*3.14159);
-Long64_t nentries = tsimc->GetEntries();
+ Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
 		if (gindex>-1 && gpindex>-1 ) {
-		  /*		Double_t e_calc = Mp*Ei/(Mp + 2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
-		Double_t delta_diff = 100*(e_calc - p_spec)/p_spec - e_delta;
-		hW->Fill(W);
-		Double_t Enew=p_spec*(1+e_delta/100.);
-		Double_t W_calc= TMath::Sqrt(-4*Enew*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.)+Mp*Mp+2*Mp*(Ei-Enew));
-		hWcalc->Fill(W_calc);*/
 		  hetottracknorm->Fill(etottracknorm);
 		  //		  if (etottracknorm > 0.8 ) {
 		  		  if (1==1 ) {
-                  if (	TMath::Abs(e_delta) < 8 ) {
-		      Double_t theta_shms = TMath::ACos((cos_ts + p_yptar*sin_ts) / TMath::Sqrt( 1. + p_xptar*p_xptar + p_yptar * p_yptar ));
-		      Double_t pcalc=2*Mp*Ei*(Ei+Mp)*cos(theta_shms)/(Mp*Mp+2*Mp*Ei+Ei*Ei*sin(theta_shms)*sin(theta_shms));
-		      hprot_mom_calc->Fill(pcalc);
-		  hW->Fill(W);
-		  Double_t e_calc = Mp+Ei - Mp*Ei/(Mp+2*Ei*TMath::Sin(ThScat/2.)*TMath::Sin(ThScat/2.));
-		  Double_t p_calc= TMath::Sqrt(e_calc*e_calc - Mp*Mp);
-		  h_elec_mom_diff->Fill(p_calc-p_mom);
-		    Double_t dstep=4;
-		    Double_t dstart=2;
-		    if (nrun==6009) {
-		       dstep=4;
-		       dstart=-6;
-		    }
-                  for (Int_t nd=0;nd<2;nd++) {
-		       Double_t dcent=dstart+nd*dstep;
-                    if (TMath::Abs(e_delta-dcent)<dstep/2.) hW_dcut[nd]->Fill(W);
-                    }	  
+                  if (	TMath::Abs(e_delta) < 8 && p_delta>-10 && p_delta<22) {
+		    hW->Fill(W);
 		  hxfp->Fill(e_xfp);		  
 		  hyfp->Fill(e_yfp);		  
 		  hxpfp->Fill(e_xpfp);		  
@@ -230,19 +183,12 @@ Long64_t nentries = tsimc->GetEntries();
 		  pdelta->Fill(p_delta);		  
 		  hEmiss->Fill(emiss);		  
 		  hPmiss->Fill(pmiss);		  
-		  if (W>1.075) hMmiss2_el->Fill(emiss*emiss-pmiss*pmiss);	
+		  hMmiss2->Fill(emiss*emiss-pmiss*pmiss);	
 		  hPmissx->Fill(pmissx);		  
 		  hPmissy->Fill(pmissy);		  
 		  hPmissz->Fill(pmissz);
 		  }		  
-		  hMmiss2->Fill(emiss*emiss-pmiss*pmiss);		  
-		if (W<1.075) {
-		hWXfp->Fill(W,e_xfp);
-		hWYfp->Fill(W,e_yfp);
-		hWXpfp->Fill(W,e_xpfp);
-		hWYpfp->Fill(W,e_ypfp);
-		}
-		  } // etot cut
+				  } // etot cut
 		//
 		}
 		//		

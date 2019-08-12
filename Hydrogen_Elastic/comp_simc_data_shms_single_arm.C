@@ -75,7 +75,6 @@ const UInt_t n4plots=4;
      cW->Divide(1,1);
      cW->cd(1);
      Int_t nh=0;
-      lW = new TLegend(.59,.75,.99,.95,"");
       ymax=0;
      for (UInt_t nf=0;nf<nftot;nf++) {
        if (fhist[nf][nh]->GetMaximum()> ymax) ymax = fhist[nf][nh]->GetMaximum();
@@ -97,7 +96,7 @@ const UInt_t n4plots=4;
 	  Wsum[nf]=fhist[nf][nh]->Integral(fhist[nf][nh]->FindBin(fW[0]->GetParameter(1)-3*fW[0]->GetParameter(2)),fhist[nf][nh]->FindBin(fW[0]->GetParameter(1)+3*fW[0]->GetParameter(2)));
 	}
         TString tt=lname[nf]+Form(" Int= %f",Wsum[nf]);
-	lW->AddEntry(fhist[nf][nh],tt);
+	//lW->AddEntry(fhist[nf][nh],tt);
        }
       lW->Draw();
       cW->Print(outputpdf+"(");

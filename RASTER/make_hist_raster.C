@@ -53,17 +53,17 @@ TFile *fsimc = new TFile(inputroot);
 TTree *tsimc = (TTree*) fsimc->Get("T");
 //
  Double_t  rastx;
-   tsimc->SetBranchAddress("H.rb.raster.fr_xa",&rastx);
+   tsimc->SetBranchAddress("P.rb.raster.fr_xa",&rastx);
  Double_t  rasty;
-   tsimc->SetBranchAddress("H.rb.raster.fr_ya",&rasty);
+   tsimc->SetBranchAddress("P.rb.raster.fr_ya",&rasty);
  Double_t  rastxaRawAdc;
-   tsimc->SetBranchAddress("H.rb.raster.frxaRawAdc",&rastxaRawAdc);
+   tsimc->SetBranchAddress("P.rb.raster.frxaRawAdc",&rastxaRawAdc);
  Double_t  rastyaRawAdc;
-   tsimc->SetBranchAddress("H.rb.raster.fryaRawAdc",&rastyaRawAdc);
+   tsimc->SetBranchAddress("P.rb.raster.fryaRawAdc",&rastyaRawAdc);
  Double_t  rastxbRawAdc;
-   tsimc->SetBranchAddress("H.rb.raster.frxbRawAdc",&rastxbRawAdc);
+   tsimc->SetBranchAddress("P.rb.raster.frxbRawAdc",&rastxbRawAdc);
  Double_t  rastybRawAdc;
-   tsimc->SetBranchAddress("H.rb.raster.frybRawAdc",&rastybRawAdc);
+   tsimc->SetBranchAddress("P.rb.raster.frybRawAdc",&rastybRawAdc);
    //
      TH1F *hxrast = new TH1F("hxrast",Form("Run %d ; Xrast (cm) (+X beam right);Counts",nrun), 300, -.3,.3);
     HList.Add(hxrast);

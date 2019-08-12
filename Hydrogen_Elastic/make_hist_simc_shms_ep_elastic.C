@@ -275,9 +275,30 @@ Float_t  p_delta;
    }
    if (nrun ==7217) {
       Nent_simc=200000.;
-      Normfac = 0.873771E+07 ;
-      Exp_charge= 79.976; //mC
-      Exp_eff = 100./100.*0.94*0.98;
+      Normfac = 0.143824E+07  ;
+      Exp_charge=1.034; //mC
+      Exp_eff = 100./100.*0.94*0.98/2;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+   if (nrun ==8825) {
+      Nent_simc=200000.;
+      Normfac = 0.143824E+07 ;
+      Exp_charge= 1.034; //mC
+      Exp_eff = 100./100./3.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+   if (nrun ==8900) {
+      Nent_simc=200000.;
+      Normfac = 0.136112E+07 ;
+      Exp_charge= 1.106; //mC
+      Exp_eff = 84.1/100./3.*.99*.99;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+    }
+   if (nrun ==9369) {
+      Nent_simc=200000.;
+      Normfac = 0.119135E+07;
+      Exp_charge= 2.661; //mC
+      Exp_eff = 100./100./5.*.99*.99;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
     }
      Double_t th_cent=25.6;

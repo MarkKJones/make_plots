@@ -25,7 +25,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_carbon_elastic(Int_t nrun=2043,Int_t flag=0){
+void make_hist_carbon_elastic(Int_t nrun=2043,Int_t flag=1){
 gStyle->SetPalette(1,0);
  gStyle->SetOptStat(1000011);
  gStyle->SetOptFit(11);
@@ -36,7 +36,7 @@ gStyle->SetPalette(1,0);
  gStyle->SetPadLeftMargin(0.12);
    TString inputroot;
    TString basename;
-   basename=Form("shms_replay_matrixopt_%d_-1",nrun);
+   basename=Form("shms_replay_matrixopt_%d_orig",nrun);
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
    outputhist= "hist/"+basename+"_carbon_elastic_hist.root";
@@ -81,6 +81,31 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
    tsimc->SetBranchAddress("P.dc.x_fp",&xfp);
  Double_t  xpfp;
    tsimc->SetBranchAddress("P.dc.xp_fp",&xpfp);
+   //
+    vector<double> save_calc_delta;
+    vector<double> save_delta;
+    vector<double> save_nx;
+    vector<double> save_ny;
+    vector<double> save_nd;
+    vector<double> save_xsieve;
+    vector<double> save_ysieve;
+    vector<double> save_ex;
+    vector<double> save_xfp;
+    vector<double> save_yfp;
+    vector<double> save_ypfp;
+    vector<double> save_xpfp;
+    vector<double> save_xptar_true;
+    vector<double> save_ytar_true;
+    vector<double> save_yptar_true;
+    vector<double> save_xptar;
+    vector<double> save_ytar;
+    vector<double> save_yptar;
+  //
+    Int_t drun[19]={1657,1658,1659,1660,1661,1662,1663,1664,1665,1667,1668,1669,1670,1671,1672,1673,1674,1675,1676};
+    Double_t nd_run;
+    for (Int_t ndd=0;ndd<19;ndd++) {
+      if (drun[ndd]==nrun) nd_run=ndd;
+    }
     //
       TCutG* xpfp_xfp_cut[11];
       TCutG* ypfp_yfp_cut[11];
@@ -89,7 +114,28 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
       Int_t ind_ypfp_yfp=-1;
       Int_t ntot_xcut=0;
       Int_t ntot_ycut=0;
-    // Define histograms
+   if (flag==1) {
+     TString outputcut=Form("../shms_carbon/hist/%d_cut.root",nrun);
+    TFile fcut(outputcut);
+    for (Int_t nc=0;nc<11;nc++) {
+      xpfp_xfp_cut[nc] = (TCutG*)gROOT->FindObject(Form("xpfp_xfp_cut_%d",nc));
+      if (xpfp_xfp_cut[nc]) {
+      Int_t npt = xpfp_xfp_cut[nc]->GetN();
+      ntot_xcut++;
+      cout << " xpfp v xfp cut = " << nc << " npts = " << npt << " ntot = " << ntot_xcut<< endl;
+      }
+    }
+      cout << " get ypfp_v yfp cuts " << endl;
+    for (Int_t nc=0;nc<11;nc++) {
+      ypfp_yfp_cut[nc] = (TCutG*)gROOT->FindObject(Form("ypfp_yfp_cut_%d",nc));
+      if (ypfp_yfp_cut[nc]) {
+      Int_t npt = ypfp_yfp_cut[nc]->GetN();
+      ntot_ycut++;
+      cout  << " ypfp v yfp cut = " << nc << " npts = " << npt << endl;
+      }
+    }
+   }
+   // Define histograms
    TH2F *hxs_ys = new TH2F("hxs_ys", Form("Run %d ; Y_sieve ; X_sieve",nrun), 100,-10,10.,120,-15,15);
           HList.Add(hxs_ys);
 	  TH2F *hxpfp_ypfp = new TH2F("hxpfp_ypfp", Form("Run %d ; Yp_fp ; Xp_fp",nrun), 100,-.03,0.03,120,-.05,0.05);
@@ -98,24 +144,10 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
           HList.Add(hxpfp_ypfp);
 	  TH1F *hdelta = new TH1F("hdelta", Form("Run %d ; Delta ; Counts",nrun), 360,-15,30);
           HList.Add(hdelta);
-	  TH1F *hdelta1 = new TH1F("hdelta1", Form("Run %d ; Delta ; Counts",nrun), 500,-2,0);
-          HList.Add(hdelta1);
-	  TH2F *hdelta_the = new TH2F("hdelta_the", Form("Run %d ; Delta ; Theta",nrun), 500,-2,0,100,3,9);
-          HList.Add(hdelta_the);
-	  TH2F *hex_the = new TH2F("hex_the", Form("Run %d ; Ex ; Theta",nrun), 500,-10,20,100,3,7);
-          HList.Add(hex_the);
-	  TH1F *hthe = new TH1F("hthe", Form("Run %d ; Scat ang (deg) ; Counts",nrun), 360,3,9);
+	  TH1F *hthe = new TH1F("hthe", Form("Run %d ; Scat ang (deg) ; Counts",nrun), 360,5,10);
           HList.Add(hthe);
-	  TH1F *hEx = new TH1F("hEx", Form("Run %d ; Ex ; Counts",nrun), 90,-10.,20);
+	  TH1F *hEx = new TH1F("hEx", Form("Run %d ; Ex ; Counts",nrun), 400,-50.,50);
           HList.Add(hEx);
-	  static const Int_t nthcut=9;
-	  TH1F *hEx_thcut[nthcut];
-	  Double_t yscutlo[nthcut]={-7.6,-5.5,-4.0,-2.2,-0.6,1.0,2.6,4.3,5.9};
-	  Double_t yscuthi[nthcut]={-5.8,-4.2,-2.5,-0.8,+0.6,2.2,4.2,5.8,6.8};
-	  for (Int_t nth=0;nth<nthcut;nth++) {
-	    hEx_thcut[nth] = new TH1F(Form("hEx_thcut_%d",nth), Form("Run %d ; Ex thcut=%d ; Counts",nrun,nth), 90,-10.,20);
-          HList.Add(hEx_thcut[nth]);
-	  }
 	  TH2F *hxs_ys_bin[11][11];
 	  TH1F *hxptar[11][11];
 	  TH1F *hyptar[11][11];
@@ -138,20 +170,33 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
           HList.Add(hytar[ntx][nty]);
 	  }}
 // loop over entries
-	  Double_t Eb=2.749;
+	  Double_t Eb=2.221;
 	  Double_t Ex=0;
           Double_t Mc=12*.9315;
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
-		if (etotnorm>.6 && ntr>0 ) {
+		if (etotnorm>1. && ntr>0 ) {
 	  cuttest = 0;
-	Double_t epr=eprime;
+	if (flag==1) {
+	for (Int_t nx=0;nx<11;nx++) {
+	  if (xpfp_xfp_cut[nx] && xpfp_xfp_cut[nx]->IsInside(xfp,xpfp)) {
+	   ind_xpfp_xfp = nx;
+	     for (Int_t ny=0;ny<11;ny++) {
+	      if (ypfp_yfp_cut[ny] && ypfp_yfp_cut[ny]->IsInside(yfp,ypfp)) {
+                cuttest = 1;
+	        ind_ypfp_yfp = ny;
+              }
+	     }
+	  }
+	}
+	}
+	Double_t epr=eprime;//*1.018;
 		  Double_t A = 0.5;
 		  Double_t B = epr-Mc-Eb;
 		  Double_t C = epr*Eb*(TMath::Cos(eth)-1)+Mc*(Eb-epr);
-                  Ex=-10000;
+                  Ex=999./1000.;
 		  if ((B*B-4*A*C)>0) {
  		    Ex = (1./2./A)*(-B-TMath::Sqrt(B*B-4*A*C));
 		  }
@@ -159,16 +204,44 @@ Long64_t nentries = tsimc->GetEntries();
                 hxs_ys->Fill(ys,xs);
 		hxpfp_ypfp->Fill(ypfp,xpfp);
                 hdelta->Fill(delta);
-                hdelta1->Fill(delta);
-                hdelta_the->Fill(delta,eth*57.3);
-                hex_the->Fill(Ex*1000,eth*57.3);
                 hthe->Fill(eth*57.3);
- 	         for (Int_t nth=0;nth<nthcut;nth++) {
-		   if (ys>yscutlo[nth]&&ys<yscuthi[nth] ) hEx_thcut[nth]->Fill(Ex*1000);
-	         }
+                if (cuttest && Ex*1000<20 &&  Ex*1000>-20) {
+		 hxs_ys_bin[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(ys,xs);
+		 hxptar[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(xptar);
+		 hyptar[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(yptar);
+		 hytar[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(ytar);
+		 save_nx.push_back(float(ind_xpfp_xfp));
+		 save_ny.push_back(float(ind_ypfp_yfp));
+		 save_nd.push_back(nd_run);
+	save_xfp.push_back(xfp);
+	save_xpfp.push_back(xpfp);
+	save_yfp.push_back(yfp);
+	save_ypfp.push_back(ypfp);
+	save_xptar.push_back(xptar);
+	save_ytar.push_back(ytar);
+	save_yptar.push_back(yptar);
+	Double_t xptar_true = (5-ind_xpfp_xfp)*2.5/253.;
+	Double_t yptar_true = ( (5-ind_ypfp_yfp)*1.64+(0.019+40.*.01*0.052)*delta-(0.00019+40*.01*.00052)*delta*delta)/253.;
+		 hxptardiff[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(xptar-xptar_true);
+		 hyptardiff[ind_xpfp_xfp][ind_ypfp_yfp]->Fill(yptar-yptar_true);
+	save_xptar_true.push_back(xptar_true);
+	save_ytar_true.push_back(0.);
+	save_yptar_true.push_back(yptar_true);
+	save_delta.push_back(delta);
+	save_ex.push_back(Ex);		 
+		}
 		}
 	}
 	//
+	if (flag==1) {
+	    TString outputroot=Form("hist/"+basename+"_%d_tree.root",nrun);
+   TFile hroot(outputroot,"recreate");
+   TNtuple ntuple("fit","Select data","nx:ny:nd:xfp:xpfp:yfp:ypfp:xptar:yptar:ytar:xptarT:yptarT:ytarT:delta:ex");
+   for (UInt_t n=0;n<save_delta.size();n++) {
+     ntuple.Fill(save_nx[n],save_ny[n],save_nd[n],save_xfp[n],save_xpfp[n],save_yfp[n],save_ypfp[n],save_xptar[n],save_yptar[n],save_ytar[n],save_xptar_true[n],save_yptar_true[n],save_ytar_true[n],save_delta[n],save_ex[n]);
+   }
+   hroot.Write();
+     }
 	//
  TFile hsimc(outputhist,"recreate");
 	HList.Write();

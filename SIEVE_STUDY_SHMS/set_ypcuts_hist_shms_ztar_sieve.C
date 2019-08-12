@@ -45,10 +45,14 @@ void set_ypcuts_hist_shms_ztar_sieve(TString basename) {
    cyp->cd(1);
    hyptar_cent_foil->Draw();
 	  TCutG *cutg;     
-     TCutG *tempg = (TCutG*) gPad->WaitPrimitive("CUTG","CutG");
-      gPad->Update();
+	  TCutG *tempg ;
       Double_t xlo[9],xhi[9];
-    if (!tempg) cout << " no cut" << endl;
+      if (!tempg) {
+	cout << " no cut" << endl;
+        cyp->Update();
+       tempg = (TCutG*) gPad->WaitPrimitive("CUTG","CutG");
+        cyp->Update();
+      }
     if (tempg)		  {
           cutg=(TCutG*)(tempg->Clone());
       		  cutg->SetName("cuttemp");

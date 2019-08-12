@@ -273,6 +273,13 @@ TTree *tsimc = (TTree*) fsimc->Get("h666");
       Exp_eff =10.4441/100.;
       simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
   }
+       if (nrun ==9329) {
+      Nent_simc=200000.;
+      Normfac =  0.114180E+08;
+      Exp_charge= 994.650/1000./1.;
+      Exp_eff =100./100.;
+      simc_fac = Normfac*Exp_charge*Exp_eff/Nent_simc;
+  }
       //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {

@@ -172,12 +172,12 @@ Long64_t nentries = tsimc->GetEntries();
 		     Double_t xs_calc= xptar*168.;
                      hyptar_foil[nf]->Fill(yptar);
                      hys_foil[nf]->Fill(ysieve);
-                     if (xsieve>-1 && xsieve < 1.5) hys_xscent_foil[nf]->Fill(ysieve);
-                     if (xsieve>-1 && xsieve < 1.5) hys2_xs2cent_foil[nf]->Fill(ys_calc);
+                     if (xsieve>-1 && xsieve < 0.5) hys_xscent_foil[nf]->Fill(ysieve);
+                     if (xsieve>-1 && xsieve < 0.5) hys2_xs2cent_foil[nf]->Fill(ys_calc);
                      hxs_foil[nf]->Fill(xsieve);
                      hys_xs_foil[nf]->Fill(ysieve,xsieve);
                      hys2_xs2_foil[nf]->Fill(ys_calc,xs_calc);
-		    hyfp_yxfp_foil[nf]->Fill(xfp,yfp);
+		    if (xsieve>-1 && xsieve < 1.5) hyfp_yxfp_foil[nf]->Fill(xfp,yfp);
 	        for (int iz = 0; iz < 7; iz++) {
 		  if (yptar>yp_cutlo[nf][iz] && yptar <=yp_cuthi[nf][iz]) {
 		    hztar[nf][iz]->Fill(reactz);

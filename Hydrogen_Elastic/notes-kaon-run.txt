@@ -12,11 +12,33 @@ RUn   target  SHMS p   SHMS ang
 
 coin
 8548  LH2
-Use Eb=2749
-Use HMS mom fac = 0.998
-USe SHMS mom fac = 1.0  
- ratio = 0.93162 =/- 0.00163317
- Data W = 0.944069 Simc W = 0.942627 Data W - SIMC W = 0.00144219
+Use Eb=2.749
+Use HMS mom fac = 0.997
+USe SHMS mom fac = 0.996  
+ ratio = 0.963335 =/- 0.00534897
+ Data W = 0.942321 Simc W = 0.942627 Data W - SIMC W = -0.000305485
+
+
+8570
+Use Eb = 3.660 event=100000
+Use HMS mom fac = 0.997
+USe SHMS mom fac = 0.996  
+ ratio = 0.934166 =/- 0.0067323
+ Data W = 0.949296 Simc W = 0.943248 Data W - SIMC W = 0.00604813
+
+Use Eb = 3.650 event=100001
+Use HMS mom fac = 0.997
+USe SHMS mom fac = 0.996  
+ ratio = 0.930657 =/- 0.00671207
+ Data W = 0.943593 Simc W = 0.943194 Data W - SIMC W = 0.000399802 
+
+8786 LH2
+Eb=4.560
+Use HMS mom fac = 0.997
+USe SHMS mom fac = 0.996  
+ ratio = 0.932878 =/- 0.0116811
+ Data W = 0.94363 Simc W = 0.94355 Data W - SIMC W = 7.95705e-05
+
   
 singles
 8552  LH2   2.300  21.195  2.300 -21.195

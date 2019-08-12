@@ -1,0 +1,57 @@
+bg
+    Double_t vcs_cent=0.002;
+    Double_t vcs_sig =0.002;
+    Double_t W_cent=1.232;
+    Double_t W_sig=0.005;
+    Double_t Q2_cent=0.33;
+    Double_t Q2_sig=0.05;
+    Double_t Q2_cent_2=0.42;
+    Double_t Q2_sig_2=0.04;
+    Double_t thcm_cent=155;
+    Double_t thcm_sig=4;
+    if (kintype =="kin1a") thcm_cent=155;
+    if (kintype =="kin1b") thcm_cent=155;
+    if (kintype =="kin2b") thcm_cent=141;
+    if (kintype =="kin2a") thcm_cent=141;
+    if (kintype =="kin2b_pass1") thcm_cent=141;
+    if (kintype =="kin3b") thcm_cent=120.;
+    if (kintype =="kin1a") thcm_cent_2=145;
+    if (kintype =="kin1b") thcm_cent_2=145;
+    if (kintype =="kin2b") thcm_cent_2=134;
+    if (kintype =="kin2a") thcm_cent_2=134;
+    if (kintype =="kin2b_pass1") thcm_cent_2=134;
+    if (kintype =="kin3b") thcm_cent_2=112.;
+
+first pass kin 2B runs 8880-8884 dummy 8896
+kin1a runs 8937-8948
+
+kin1a INtegral = 180 Yield cnt/C  = 612.813   Taken 2.92   Dummy 9034 Total charge = 64.8194 mC data Total charge = 293.727 mC
+kin1b INtegral = 309 Yield cnt/C  = 887.435  Taken 4.25 C  Dummy 9164 Total charge = 59.6337 mC  Data 9163 Total charge = 348.194 mC 
+Dummy 9398-9399 Total charge = 83.4759 mC Data 9383-9396  Total charge = 227.264 mC
+kin2b_pass1 INtegral = 180 Yield cnt/C  = 1024.41  Dummy 8896 Total charge = 135.244 mC Data 8880-4 Total charge = 175.712 mC
+kin2b INtegral = 500 Yield cnt/C  = 1257.46  Taken 3.71 C  Dummy 9239 Total charge = 61.4848 mC  Data 9166 Total charge = 397.627 mC 
+kin3b INtegral = 497 Yield cnt/C  = 1365.5   Assume 5C   Dummy 9280 Total charge = 61.2689 mC  Data 9256 Total charge = 363.969 mC   
+
+all_kin1A       Integral = 166.071 Yield/C = 565.388 tot charge = 2.92 total vcs counts = 1650.93 Prescale of 2
+all_kin1B       Integral = 328.895 Yield/C = 944.584 tot charge = 4.25 total vcs counts = 4014.48
+all_kin2A       Integral = 515.198 Yield/C = 2266.96 tot charge = 1    total vcs counts = 2266.96
+all_kin2B       Integral = 594.66  Yield/C = 1495.52 tot charge = 3.71 total vcs counts = 5548.39
+all_kin2B_pass1 Integral = 310.32  Yield/C = 1766.09 tot charge = 1    total vcs counts = 1766.09
+all_kin3B       Integral = 744.347 Yield/C = 2045.08 tot charge = 4.4  total vcs counts = 8998.36
+
+all_kin1A       dummy cnts = 10    Ratio dummy/data = 0.0563698   3 dummy runs 0.115 C  , 1 run .064C
+all_kin1B       dummy cnts = 72    Ratio dummy/data = 0.165899    2 dummy runs 0.123 C  , 1 run .060C
+all_kin2B       dummy cnts = 198.4 Ratio dummy/data = 0.216736    4 dummy runs 0.268 C  , 1 run .062C
+all_kin2B_pass1 dummy cnts = 428.2 Ratio dummy/data = 0.952826    dummy had paddles OFF
+all_kin3B       dummy cnts = 305.2 Ratio dummy/data = 0.254843    2 dummy runs 0.140 C  , 1 run .061C
+
+Look at Hi Q2 bin Q2 = 0.42 +/- 0.4
+
+all_kin1A Integral = 122.449 Yield/C = 416.876 tot charge = 2.92 total vcs counts = 1217.28
+all_kin1B Integral = 397.472 Yield/C = 1141.54 tot charge = 4.25 total vcs counts = 4851.53
+all_kin2A Integral = 296.372 Yield/C = 1304.09 tot charge = 1    total vcs counts = 1304.09
+all_kin2B Integral = 439.48  Yield/C = 1105.26 tot charge = 3.71 total vcs counts = 4100.51
+all_kin3B Integral = 560.924 Yield/C = 1541.13 tot charge = 4.4 total  vcs counts = 6780.98
+
+all_kin1A dummy cnts = 19.2 Ratio dummy/data = 0.133148
+all_kin1B dummy cnts = 76.4 Ratio dummy/data = 0.150098

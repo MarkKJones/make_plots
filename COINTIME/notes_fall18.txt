@@ -1,0 +1,76 @@
+Look into problems with coincidenc time during Fall 2018
+SHMS reftime is T2 in the trigger tdc module
+Should be the same as in hodoscope tdc modules
+use kaonlt branch
+
+hpdiff_pre40_reftime histogram of 
+shms_pre40_diff=.09776*(pT2_tdcTimeRaw-pPRE40_ROC2_tdcTimeRaw)+pPre40_roc2_offset;
+h_diff_pre40_cointime histogram of shms_pre40_diff to epi Cointime
+h_diff_trig4_hstof hostogram of 
+hstofdiff = .09776*(pTRIG4_ROC2_tdcTimeRaw-hSTOF_ROC2_tdcTimeRaw)+stof_roc2_offset
+pTRIG4 is the HMS 3/4 trig 
+hSTOF is the HMS STOF
+h_hstofdiff_cointime
+is 2d plot of hstofdiff versus epi cointime + shms_pre40_diff
+
+RUn 5305
+pPre40_roc2_offset = 120
+Shows jitter in T2 reftime
+h_diff_pre40_cointime shows correlation
+Looking at hodoscope scintillators STOF is the reference time
+hstofdiff is wide
+h_hstofdiff_cointime shows a correlation
+
+RUn 6200
+Still shows jitter. Due to using trailing edge of signal
+h_diff_pre40_cointime shows correlation
+Looking at hodoscope scintillators STOF is the reference time
+hstofdiff is wide
+h_hstofdiff_cointime shows a correlation
+
+
+Run 6639
+Jitter is totally gone.
+h_diff_pre40_cointime has no correlation
+hstofdiff is still wide
+h_hstofdiff_cointime shows no correlation
+
+
+
+
+Use run 5305
+5304-5310
+gpbeam = 10.585
+gtargmass_amu = 1.00794
+htheta_lab = -14.91
+ptheta_lab = 9.425
+hpcentral = 4.204
+ppcentral = 6.053
+ppartmass = 0.493677
+hpartmass = 0.0005109
+
+
+
+
+
+****************
+Nov 13 2018 fix problem with jitter from using gate generator for delay.
+   replaced by cable delay. Good for coincidence runs after 6152
+
+Use run 6200
+
+
+
+
+
+******************
+Nov 27 changed the polarity of the reference time going into the injection
+ board for ROCs 1,2 and 3. Good for coincidence runs after 6576
+
+Use run 6635 elastic
+run 6639  kaonlt
+
+6635
+hpdiff_pre40_reftime one peak sigma = 0.07 ns ( 0.1 bin width)
+
+
