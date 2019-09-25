@@ -40,7 +40,7 @@ gStyle->SetPalette(1,0);
    TString inputroot;
    inputroot="ROOTfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_shms_ngcer_hist.root";
+   outputhist= "hist/"+basename+"_shms_cal_hist.root";
  TObjArray HList(0);
      TString outputpdf;
     outputpdf=basename+".pdf";
@@ -59,20 +59,20 @@ TTree *tsimc = (TTree*) fsimc->Get("T");
  Double_t preshow_energy[2][14];
    tsimc->SetBranchAddress("P.cal.pr.eneg",&preshow_energy[0]) ;
    tsimc->SetBranchAddress("P.cal.pr.epos",&preshow_energy[1]) ;
-Double_t npeSum;
-   tsimc->SetBranchAddress("P.ngcer.npeSum",&npeSum) ;
+Double_t ngnpeSum;
+   tsimc->SetBranchAddress("P.ngcer.npeSum",&ngnpeSum) ;
+Double_t hgnpeSum;
+   tsimc->SetBranchAddress("P.hgcer.npeSum",&hgnpeSum) ;
  Double_t etottracknorm;
    tsimc->SetBranchAddress("P.cal.etottracknorm",&etottracknorm) ;
-Double_t xAtCer;
-   tsimc->SetBranchAddress("P.ngcer.xAtCer",&xAtCer) ;
- Double_t yAtCer;
-   tsimc->SetBranchAddress("P.ngcer.yAtCer",&yAtCer) ;
 Double_t xAtCal;
    tsimc->SetBranchAddress("P.cal.xtrack",&xAtCal) ;
  Double_t yAtCal;
    tsimc->SetBranchAddress("P.cal.ytrack",&yAtCal) ;
  Double_t ntrack;
    tsimc->SetBranchAddress("P.gtr.index",&ntrack) ;
+ Double_t delta;
+   tsimc->SetBranchAddress("P.gtr.dp",&delta) ;
    //
    TString temp;
    //
@@ -105,46 +105,59 @@ Double_t xAtCal;
    temp=Form("Run %d ; Etottracknorm (npe cut)  ; Counts",nrun);
    TH1F *hetotnorm_npecut = new TH1F("hetotnorm_npecut",temp,100,0,2.0);
    HList.Add(hetotnorm_npecut);
-   temp=Form("Run %d ; NpeSUm  ; Counts",nrun);
+   temp=Form("Run %d ; NG NpeSUm  ; Counts",nrun);
    TH1F *hcernpeSum = new TH1F("hcernpeSum",temp,160,0,40.);
    HList.Add(hcernpeSum);
+   temp=Form("Run %d ; HG NpeSUm  ; Counts",nrun);
+   TH1F *hHGcernpeSum = new TH1F("hHGcernpeSum",temp,160,0,40.);
+   HList.Add(hHGcernpeSum);
    temp=Form("Run %d ; Cal  Y ; Cal X ",nrun);
    TH2F *h_calXY = new TH2F("h_calXY",temp,80,-80,80.,80,-80,80.0);
    TH2F *h_calXY_now= new TH2F("h_calXY_now",temp,80,-80,80.,80,-80,80.0);
    HList.Add(h_calXY);
    HList.Add(h_calXY_now);
-   temp=Form("Run %d ; Cer  Y ; Cer X ",nrun);
-   TH2F *h_cerXY = new TH2F("h_cerXY",temp,50,-50,50.,50,-50,50.0);
-   TH2F *h_cerXY_now= new TH2F("h_cerXY_now",temp,50,-50,50.,50,-50,50.0);
-   HList.Add(h_cerXY);
-   HList.Add(h_cerXY_now);
+   TH2F *h_calXY_le = new TH2F("h_calXY_le",temp,80,-80,80.,80,-80,80.0);
+   TH2F *h_calXY_le_now= new TH2F("h_calXY_le_now",temp,80,-80,80.,80,-80,80.0);
+   HList.Add(h_calXY_le);
+   HList.Add(h_calXY_le_now);
+   TH2F *h_calXY_he = new TH2F("h_calXY_he",temp,80,-80,80.,80,-80,80.0);
+   TH2F *h_calXY_he_now= new TH2F("h_calXY_he_now",temp,80,-80,80.,80,-80,80.0);
+   HList.Add(h_calXY_he);
+   HList.Add(h_calXY_he_now);
   //
 Long64_t nentries = tsimc->GetEntries();
 	for (int i = 0; i < nentries; i++) {
       		tsimc->GetEntry(i);
                 if (i%10000==0) cout << " Entry = " << i << endl;
-		if (1==1) {
-		hetotnorm->Fill(etottracknorm);
-		hcernpeSum->Fill(npeSum);
+		if (ntrack>-1&&delta>-10.&&delta<30.) {
+		  if (ngnpeSum==0 && hgnpeSum==0) hetotnorm->Fill(etottracknorm);
+		hcernpeSum->Fill(ngnpeSum);
+		hHGcernpeSum->Fill(hgnpeSum);
                 for (Int_t ns=0;ns<2;ns++) {
                 for (Int_t nr=0;nr<14;nr++) {
 		  h_preshow_adcint[ns][nr]->Fill(preshow_adcint[ns][nr]);
 		  h_preshow_adcamp[ns][nr]->Fill(preshow_adcamp[ns][nr]);
 		  h_preshow_energy[ns][nr]->Fill(preshow_energy[ns][nr]);
-		  if  (TMath::Abs(etottracknorm-.25) < .1 && npeSum==0)  {
+		  if  (TMath::Abs(etottracknorm-.25) < .1 && ngnpeSum==0)  {
                      h_preshow_adcint_pion[ns][nr]->Fill(preshow_adcint[ns][nr]);
                      h_preshow_adcamp_pion[ns][nr]->Fill(preshow_adcamp[ns][nr]);
 		     h_preshow_energy_pion[ns][nr]->Fill(preshow_energy[ns][nr]);
 		  }
 		}}
-		if (npeSum>2.) {
-                hetotnorm_npecut->Fill(etottracknorm);
+		if (ngnpeSum>10.) {
+		hHGcernpeSum->Fill(hgnpeSum);
+                 hetotnorm_npecut->Fill(etottracknorm);
+		if (abs(etottracknorm-.7)<.2) {
+		h_calXY_le->Fill(yAtCal,xAtCal,etottracknorm);
+		h_calXY_le_now->Fill(yAtCal,xAtCal);
+		} else {
 		h_calXY->Fill(yAtCal,xAtCal,etottracknorm);
 		h_calXY_now->Fill(yAtCal,xAtCal);
 		}
-		if (etottracknorm>.8) {
-		h_cerXY->Fill(yAtCer,xAtCer,npeSum);
-		h_cerXY_now->Fill(yAtCer,xAtCer);
+		if (abs(etottracknorm-1.)<.1) {
+		h_calXY_he->Fill(yAtCal,xAtCal,etottracknorm);
+		h_calXY_he_now->Fill(yAtCal,xAtCal);
+		}
 		}
 		}
 	}
