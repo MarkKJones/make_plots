@@ -25,7 +25,7 @@
 #include<math.h>
 using namespace std;
 
-void make_hist_carbon_elastic(Int_t nrun=2043,Int_t ntot=1000000){
+void make_hist_shms(Int_t nrun=2043,Int_t ntot=1000000){
 gStyle->SetPalette(1,0);
  gStyle->SetOptStat(1000011);
  gStyle->SetOptFit(11);
@@ -36,10 +36,10 @@ gStyle->SetPalette(1,0);
  gStyle->SetPadLeftMargin(0.12);
    TString inputroot;
    TString basename;
-   basename=Form("shms_replay_production_mkj_%d_%d",nrun,ntot);
-   inputroot="online-ROOTfiles/"+basename+".root";
+   basename=Form("shms_replay_production_default_0%d_%d",nrun,ntot);
+   inputroot="polhe_rootfiles/"+basename+".root";
    TString outputhist;
-   outputhist= "hist/"+basename+"_carbon_elastic_hist.root";
+   outputhist= "hist/"+basename+"_polhe_hist.root";
  TObjArray HList(0);
 //
 TFile *fsimc = new TFile(inputroot); 
