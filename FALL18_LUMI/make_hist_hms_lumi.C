@@ -65,6 +65,8 @@ Double_t  Scal_hEL_CLEAN;
    tscal->SetBranchAddress("H.hEL_CLEAN.scaler",&Scal_hEL_CLEAN);
 Double_t  Scal_hEL_REAL;
    tscal->SetBranchAddress("H.hEL_REAL.scaler",&Scal_hEL_REAL);
+Double_t  Scal_hCER;
+   tscal->SetBranchAddress("H.CER.scaler",&Scal_hCER);
 Double_t  Scal_TRIG2;
    tscal->SetBranchAddress("H.pTRIG2.scaler",&Scal_TRIG2);
  Double_t  Scal_TRIG3;
@@ -86,11 +88,12 @@ Double_t  Scal_TRIG2;
      Int_t nscal_reads=0;
      Int_t nscal_reads_cut=0;
      Double_t prev_read=-1;
-     Double_t ave_current=0;
-     Double_t ave_current_cut=0;
      Double_t charge_sum=0;
      Double_t charge_sum_cut=0;
      Double_t prev_charge=0;
+     Double_t charge_sum_corr=0;
+     Double_t charge_sum_cut_corr=0;
+     Double_t prev_charge_corr=0;
      Double_t event_flag[10000];
      Double_t scal_event_number[10000];
      Double_t tot_scal_EDTM=0;
@@ -102,6 +105,9 @@ Double_t  Scal_TRIG2;
      Double_t tot_scal_hEL_REAL=0;
      Double_t tot_scal_cut_hEL_REAL=0;
      Double_t prev_hEL_REAL=0;
+     Double_t tot_scal_hCER=0;
+     Double_t tot_scal_cut_hCER=0;
+     Double_t prev_hCER=0;
      Double_t tot_scal_TRIG2=0;
      Double_t tot_scal_TRIG3=0;
      Double_t prev_TRIG2=0;
@@ -135,22 +141,35 @@ Long64_t scal_entries = tscal->GetEntries();
  Double_t nlast=float(scal_entries);
  TH1F *h_cur_entry = new TH1F("h_cur_entry","; ENtry;current",nlast,0,nlast);
  TH1F *h_cur = new TH1F("h_cur","; Current ;",200,0,100);
-Long64_t data_entries = tsimc->GetEntries();
+	for (int i = 0; i < scal_entries; i++) {
+      		tscal->GetEntry(i);
+	  h_cur_entry->Fill(float(i),Scal_BCM1_current);
+	  if (Scal_BCM1_current > 3) h_cur->Fill(Scal_BCM1_current);
+	}
+ Double_t peak_current = h_cur->GetBinCenter(h_cur->GetMaximumBin());
+ cout << " Peak current = " << peak_current  <<" " <<  h_cur->GetMaximumBin() << endl;
+ Double_t Scal_BCM1_charge_corr=0;
 	for (int i = 0; i < scal_entries; i++) {
       		tscal->GetEntry(i);
                 if (i%50000==0) cout << " Entry = " << i << endl;
           event_flag[nscal_reads] = 0;
              scal_event_number[nscal_reads] = Scal_evNumber;
-          ave_current+=Scal_BCM1_current;
-	  h_cur_entry->Fill(float(i),Scal_BCM1_current);
-	  h_cur->Fill(Scal_BCM1_current);
-	  if (TMath::Abs(Scal_BCM1_current-mean_current) < threshold_cut) {
+	  Double_t BCM1_correction=1.;
+	  if (Scal_BCM1_current >2.) {
+	  if (Scal_BCM1_current <= 60) {
+	    BCM1_correction =1.0 + 0.045* ( log(60.)-log(Scal_BCM1_current))/( log(60.)-log(2.) );
+	  } else {
+	    BCM1_correction =1.0 + 0.010*(Scal_BCM1_current-60)/25.;
+	  } 
+	}
+	  Scal_BCM1_charge_corr+=Scal_BCM1_current*(Scal_time-prev_time)*BCM1_correction;
+	  if (TMath::Abs(Scal_BCM1_current-peak_current) < threshold_cut) {
              event_flag[nscal_reads] = 1;
-             ave_current_cut+=Scal_BCM4B_current;
  	     tot_scal_cut_time+=(Scal_time-prev_time);
  	     tot_scal_cut_EDTM+=(Scal_EDTM-prev_EDTM);
  	     tot_scal_cut_hEL_CLEAN+=(Scal_hEL_CLEAN-prev_hEL_CLEAN);
 	     tot_scal_cut_hEL_REAL+=(Scal_hEL_REAL-prev_hEL_REAL);
+	     tot_scal_cut_hCER+=(Scal_hCER-prev_hCER);
  	     tot_scal_cut_TRIG2+=(Scal_TRIG2-prev_TRIG2);
  	     tot_scal_cut_TRIG3+=(Scal_TRIG3-prev_TRIG3);
  	     tot_scal_cut_TRIG1+=(Scal_TRIG1-prev_TRIG1);
@@ -161,13 +180,16 @@ Long64_t data_entries = tsimc->GetEntries();
 	     //	     cout << i << " " << tot_scal_cut_Splane[0] << " " << Scal_Splane[0] << " " << prev_Splane[0] << endl;
 
              charge_sum_cut+=(Scal_BCM1_charge-prev_charge);
-             nscal_reads_cut++;
+             charge_sum_cut_corr+=(Scal_BCM1_charge_corr-prev_charge_corr);
+              nscal_reads_cut++;
 	  }
 	  prev_charge = Scal_BCM1_charge;
+	  prev_charge_corr = Scal_BCM1_charge_corr;
 	  prev_time = Scal_time;
 	  prev_EDTM = Scal_EDTM;
 	  prev_hEL_CLEAN = Scal_hEL_CLEAN;
 	  prev_hEL_REAL = Scal_hEL_REAL;
+	  prev_hCER = Scal_hCER;
 	  prev_TRIG2 = Scal_TRIG2;
 	  prev_TRIG3 = Scal_TRIG3;
 	  prev_TRIG1 = Scal_TRIG1;
@@ -178,9 +200,11 @@ Long64_t data_entries = tsimc->GetEntries();
 	  // cout <<  nscal_reads <<  " " << Scal_BCM4B_current << " " << event_flag[nscal_reads] << " " << Scal_TRIG1 << endl;
           nscal_reads++;
           charge_sum=Scal_BCM1_charge;
+          charge_sum_corr=Scal_BCM1_charge_corr;
 	  tot_scal_EDTM=Scal_EDTM;
 	  tot_scal_hEL_CLEAN=Scal_hEL_CLEAN;
 	  tot_scal_hEL_REAL=Scal_hEL_REAL;
+	  tot_scal_hCER=Scal_hCER;
 	  tot_scal_TRIG2=Scal_TRIG2;
 	  tot_scal_TRIG3=Scal_TRIG3;
 	  tot_scal_TRIG1=Scal_TRIG1;
@@ -233,22 +257,23 @@ Long64_t data_entries = tsimc->GetEntries();
 	TH1F* h_goodev2 = new TH1F("h_goodev2"," ; hgoodEv2",10,0.,10.);
 	TH1F* h_goodev = new TH1F("h_goodev"," ; Good ev2 with PID cuts",10,0.,10.);
 	TH1F* h_goodevTrack = new TH1F("h_goodevTrack"," ; Good ev2 with PID/track cuts",10,0.,10.);
+Long64_t data_entries = tsimc->GetEntries();
 	
   Int_t nscal_reads_2=0;
 	for (int i = 0; i < data_entries; i++) {
       		tsimc->GetEntry(i);
 		//
                 if (i%50000==0) cout << " Entry = " << i << endl;
-		if (event_flag[nscal_reads_2]==1&&gevtyp==2 ) {
+		if (event_flag[nscal_reads_2]==1&&(gevtyp==2|| gevtyp==3) ) {
 		  if (EDTM_timeraw>0) h_EDTM_CUT->Fill(EDTM_timeraw); 
 		    h_ev2->Fill(gevtyp);
 		    if (EDTM_timeraw==0) h_goodev2->Fill(gevtyp);
 		    h_etotnorm->Fill(Hetotnorm);
 		    if (Hetotnorm > .6) h_npeSum->Fill(Hhgcer_npeSum);
-		if (hgoodscinhit==1 && hgoodstarttime==1) h_hStartTime->Fill(hstarttime);
-	        if (hgoodscinhit==1 && hgoodstarttime==1 && hntrack>0) h_hStartTime_track->Fill(hstarttime);
-		 if (Hetotnorm > 0.6&&Hhgcer_npeSum>1&& hstarttime!=-1000 && EDTM_timeraw==0) {
+		 	 if (Hetotnorm > 0.6&&Hhgcer_npeSum>1 && hgoodstarttime==1 && hstarttime!=-1000 && EDTM_timeraw==0) {
 		   h_goodev->Fill(gevtyp);
+	    	   if (hgoodscinhit==1 && hgoodstarttime==1) h_hStartTime->Fill(hstarttime);
+	           if (hgoodscinhit==1 && hgoodstarttime==1 && hntrack>0) h_hStartTime_track->Fill(hstarttime);
 		   if (hntrack>0 && abs(hdelta) < 8) {
 		     h_goodevTrack->Fill(gevtyp);
 		   }
@@ -258,31 +283,38 @@ Long64_t data_entries = tsimc->GetEntries();
 	 if (gevnum>scal_event_number[nscal_reads_2])  nscal_reads_2++;
 	}
 	//
+	cout << " Starttime = " << h_hStartTime->Integral();
 	Int_t nev2 = h_ev2->Integral();
 	Int_t good_ev2 = h_goodev2->Integral();
 	Double_t good_ev2_err = TMath::Sqrt(good_ev2);
 	Int_t nEDTM = h_EDTM_CUT->Integral();
-	Double_t clt = (good_ev2-nEDTM)/(tot_scal_cut_TRIG3-tot_scal_cut_EDTM);
-	Double_t calc_treff= float(h_hStartTime_track->Integral())/float(h_hStartTime->Integral()) ;
+	Double_t clt = (good_ev2)/(tot_scal_cut_TRIG3);
+	Double_t clt_err = sqrt( (1-clt)*clt/tot_scal_cut_TRIG2);
 	Double_t lt=  nEDTM/tot_scal_cut_EDTM;
+	//	Double_t lt_err = sqrt( (1-lt)*lt/tot_scal_cut_EDTM);
+	Double_t lt_err = (tot_scal_cut_EDTM-nEDTM)/tot_scal_cut_EDTM;
+	Double_t calc_treff= float(h_hStartTime_track->Integral())/float(h_hStartTime->Integral()) ;
 	Double_t good_ev = float(h_goodev->Integral())/clt;
 	Double_t good_ev_err = TMath::Sqrt(h_goodev->Integral())/clt;
 	Double_t good_evTrack = float(h_goodevTrack->Integral())/clt/calc_treff;
 	Double_t good_evTrack_err = TMath::Sqrt(h_goodevTrack->Integral())/clt/calc_treff;
- 	//
-        cout << " data " << endl;
-	cout << nrun << " "<< charge_sum_cut/tot_scal_cut_time << " " << clt<< " " << lt  << " " << calc_treff << " " << good_ev2/tot_scal_cut_time << " " << good_ev/charge_sum_cut << " " <<  good_ev_err/charge_sum_cut << " " << good_evTrack/charge_sum_cut << " " <<  good_evTrack_err/charge_sum_cut << endl;
-	//
        Double_t err_hEL_CLEAN = 1./TMath::Sqrt(tot_scal_cut_hEL_CLEAN);
         Double_t err_hEL_REAL = 1./TMath::Sqrt(tot_scal_cut_hEL_REAL);
+        Double_t err_hCER = 1./TMath::Sqrt(tot_scal_cut_hCER);
         Double_t err_trig2 = 1./TMath::Sqrt(tot_scal_cut_TRIG2);
         Double_t err_trig3 = 1./TMath::Sqrt(tot_scal_cut_TRIG3);
         Double_t err_trig1 = 1./TMath::Sqrt(tot_scal_cut_TRIG1);
         Double_t err_trig4 = 1./TMath::Sqrt(tot_scal_cut_TRIG4);
         Double_t err_trig5 = 1./TMath::Sqrt(tot_scal_cut_TRIG5);
         Double_t err_trig6 = 1./TMath::Sqrt(tot_scal_cut_TRIG6);
+ 	//
+        cout << " data " << endl;
+	cout << nrun << " "<< charge_sum_cut/tot_scal_cut_time  << " "<< charge_sum_cut_corr/tot_scal_cut_time << " " << clt << " " << clt_err<< " " << lt<< " " << lt_err  << " " << calc_treff << " " << good_ev2/tot_scal_cut_time << " " << good_ev/charge_sum_cut << " " <<  good_ev_err/charge_sum_cut << " " << good_evTrack/charge_sum_cut << " " <<  good_evTrack_err/charge_sum_cut << " " << tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << err_hEL_CLEAN*tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << tot_scal_cut_hEL_REAL/charge_sum_cut << " " << err_hEL_REAL*tot_scal_cut_hEL_REAL/charge_sum_cut << " " <<tot_scal_cut_hEL_REAL/tot_scal_cut_time<< " " <<tot_scal_cut_hCER/tot_scal_cut_time<< endl;
+        cout << " data " << endl;
+	cout << nrun << " "<< charge_sum_cut/tot_scal_cut_time << " "<< charge_sum_cut_corr/tot_scal_cut_time << " " << clt<< " " << lt  << " " << calc_treff << " " << good_ev2/tot_scal_cut_time << " " << good_ev/charge_sum_cut << " " <<  good_ev_err/charge_sum_cut << " " << good_evTrack/charge_sum_cut << " " <<  good_evTrack_err/charge_sum_cut << " " << tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << err_hEL_CLEAN*tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << tot_scal_cut_hEL_REAL/charge_sum_cut << " " << err_hEL_REAL*tot_scal_cut_hEL_REAL/charge_sum_cut << " " <<tot_scal_cut_hEL_REAL/tot_scal_cut_time << " " <<tot_scal_cut_hCER/tot_scal_cut_time<< endl;
+	//
         cout << " Scalers " << endl;
-	cout << nrun << " "<< charge_sum_cut/tot_scal_cut_time << " " << tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << err_hEL_CLEAN*tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << tot_scal_cut_hEL_REAL/charge_sum_cut << " " << err_hEL_REAL*tot_scal_cut_hEL_REAL/charge_sum_cut << " " <<tot_scal_cut_hEL_CLEAN/tot_scal_cut_time << " " <<tot_scal_cut_hEL_REAL/tot_scal_cut_time  << endl;
+	cout << nrun << " "<< charge_sum_cut/tot_scal_cut_time << " "<< charge_sum_cut_corr/tot_scal_cut_time << " " << tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << err_hEL_CLEAN*tot_scal_cut_hEL_CLEAN/charge_sum_cut << " " << tot_scal_cut_hEL_REAL/charge_sum_cut << " " << err_hEL_REAL*tot_scal_cut_hEL_REAL/charge_sum_cut << " " <<tot_scal_cut_hEL_CLEAN/tot_scal_cut_time << " " <<tot_scal_cut_hEL_REAL/tot_scal_cut_time  << endl;
 
 	//
 }
